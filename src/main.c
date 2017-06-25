@@ -28,8 +28,11 @@
 // Máscara de transparencia
 cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
 
+const i16 trajetoriesX[10] = {0, -64, 64, 0, -128, 128, -172, 172, -240, 240};
 
+TKeys keys;
 TBall ball;
+TPlayer player;
 
 void myInterruptHandler() {
     static u8 i; // Static variable to be preserved from call to call
@@ -66,15 +69,8 @@ void init() {
     keys.abort = Key_Esc;
     keys.music = Key_M;
 
-    player.x = player.px = 40 * SCALE;
-    player.y = player.py = 100 * SCALE;
-    player.state = ST_stopped;
-    player.look   = M_right;
-    player.nframe = 0;
-    player.frame  = &g_frames[0];
-    player.moved = 1;
-
-    newBall(&ball);
+    initPlayer(&player);
+    initBall(&ball);
 }
 
 void game() {
@@ -88,11 +84,11 @@ void game() {
         c++;
         delay(5);
         // Player1 block
-        executeState();
+        executeState(&player, &ball, &keys);
         if (player.moved) {
-            selectSpritePlayer();
-            erasePlayer();
-            drawPlayer();
+            selectSpritePlayer(&player);
+            erasePlayer(&player);
+            drawPlayer(&player);
             player.px = player.x;
             player.py = player.y;
             player.moved = 0;

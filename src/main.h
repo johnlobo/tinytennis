@@ -25,7 +25,7 @@
 
 #define VERTICAL_STEP 2
 
-extern u8* pvmem;  // Pointer to video memory
+extern const i16 trajetoriesX[10];
 
 // Declare am_tablatrans, which is defined in game.c, and used in more places
 cpctm_declareMaskTable(g_tablatrans);

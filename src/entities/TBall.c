@@ -2,10 +2,11 @@
 
 #include <cpctelera.h>
 #include "../main.h"
-#include "../sprites/ball->h"
+#include "../sprites/ball.h"
 
 void eraseBall(TBall *ball) {
     i32 posx, posy;
+    u8* pvmem;
     //Shadow
     posx = ball->px / SCALE;
     posy = ball->py / SCALE;
@@ -24,6 +25,7 @@ void eraseBall(TBall *ball) {
 
 void drawBall(TBall *ball) {
     i32 posx, posy;
+    u8* pvmem;
     //Shadow
     posx = ball->x / SCALE;
     posy = ball->y / SCALE;

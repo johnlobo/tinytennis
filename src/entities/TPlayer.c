@@ -1,10 +1,22 @@
 #include "TPlayer.h"
-
 #include <cpctelera.h>
 #include "../main.h"
 #include "../util/util.h"
 #include "../sprites/player1.h"
 #include "TBall.h"
+
+// Looking to
+enum {
+    M_right   = 0
+    ,  M_left
+} ELook;
+
+// Player States
+enum {
+    ST_stopped  = 0
+    ,  ST_walking
+    ,  ST_hitting
+} EStates;
 
 const TFrame g_frames[PLAYER_FRAMES] = {
 	{ M_right, sp_player1_00 },  { M_right, sp_player1_01 }
@@ -15,9 +27,19 @@ const TFrame g_frames[PLAYER_FRAMES] = {
 };
 
 // Global Variables
-extern TFrame* const anim_walking[WALKING_FRAMES] = {&g_frames[1], &g_frames[2], &g_frames[3], &g_frames[1] };
-extern TFrame* const anim_hitting[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8], &g_frames[7]};
-const i16 trajetoriesX[10] = {0, -64, 64, 0, -128, 128, -172, 172, -240, 240};
+TFrame* const anim_walking[WALKING_FRAMES] = {&g_frames[1], &g_frames[2], &g_frames[3], &g_frames[1] };
+TFrame* const anim_hitting[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8], &g_frames[7]};
+
+
+void initPlayer(TPlayer *player){
+	player->x = player->px = 40 * SCALE;
+    player->y = player->py = 100 * SCALE;
+    player->state = ST_stopped;
+    player->look   = M_right;
+    player->nframe = 0;
+    player->frame  = &g_frames[0];
+    player->moved = 1;
+}
 
 void assignFrame(TFrame **animation, TPlayer *player) {
 	player->frame = animation[player->nframe / ANIM_PAUSE];
@@ -37,12 +59,12 @@ void selectSpritePlayer(TPlayer *player) {
 		break;
 	}
 	case ST_walking: {
-		assignFrame(anim_walking, &player);
-		turnFrame();
+		assignFrame(anim_walking, player);
+		turnFrame(player);
 		break;
 	}
 	case ST_hitting: {
-		assignFrame(anim_hitting, &player);
+		assignFrame(anim_hitting, player);
 		break;
 	}
 	}
@@ -81,6 +103,7 @@ void moveDown(TPlayer *player) {
 }
 
 void drawPlayer(TPlayer *player) {
+	u8* pvmem;
 	i32 posx, posy;
 	posx = player->x / SCALE;
 	posy = player->y / SCALE;
@@ -91,6 +114,7 @@ void drawPlayer(TPlayer *player) {
 }
 
 void erasePlayer(TPlayer *player) {
+	u8* pvmem;
 	i32 posx, posy;
 	posx = player->px / SCALE;
 	posy = player->py / SCALE;
@@ -101,15 +125,15 @@ void erasePlayer(TPlayer *player) {
 }
 
 void redrawPlayer(TPlayer *player) {
-	erasePlayer(&player);
-	drawPlayer(&player);
+	erasePlayer(player);
+	drawPlayer(player);
 }
 
 void hitting_enter(TPlayer *player, TBall *ball) {
 	player->state = ST_hitting;
 	player->hit  =  HITTING_FRAMES;
 	player->moved = 1;
-	newBall(player->x, player->y, &ball);
+	newBall(player->x, player->y, ball);
 }
 
 
@@ -137,23 +161,23 @@ void hitting(TPlayer *player) {
 	if (player->hit > 1) {
 		player->hit--;
 		delay(5);
-		hitting_animate(&player);
+		hitting_animate(player);
 	} else {
-		stopped_enter(&player);
+		stopped_enter(player);
 	}
 }
 
-void stopped(TPlayer *player) {
-	if (cpct_isKeyPressed(keys.up)) {
-		walking_enter(player->look);
-	} else if (cpct_isKeyPressed(keys.down)) {
-		walking_enter(player->look, &player);
-	} else if (cpct_isKeyPressed(keys.right)) {
-		walking_enter(M_right, &player);
-	} else if (cpct_isKeyPressed(keys.left)) {
-		walking_enter(M_left), &player;
-	} else if (cpct_isKeyPressed(keys.fire)) {
-		hitting_enter(&player, &ball);
+void stopped(TPlayer *player, TBall *ball, TKeys *keys) {
+	if (cpct_isKeyPressed(keys->up)) {
+		walking_enter(player->look, player);
+	} else if (cpct_isKeyPressed(keys->down)) {
+		walking_enter(player->look, player);
+	} else if (cpct_isKeyPressed(keys->right)) {
+		walking_enter(M_right, player);
+	} else if (cpct_isKeyPressed(keys->left)) {
+		walking_enter(M_left, player);
+	} else if (cpct_isKeyPressed(keys->fire)) {
+		hitting_enter(player, ball);
 	}
 
 }
@@ -167,34 +191,34 @@ void walking_animate(u8 look, TPlayer *player) {
 	player->moved = 1;
 }
 
-void walking(TPlayer *player) {
-	if (cpct_isKeyPressed(keys.up)) {
+void walking(TPlayer *player, TBall *ball, TKeys *keys) {
+	if (cpct_isKeyPressed(keys->up)) {
 		moveUp();
-	} else if (cpct_isKeyPressed(keys.down)) {
+	} else if (cpct_isKeyPressed(keys->down)) {
 		moveDown();
-	} else if (cpct_isKeyPressed(keys.right)) {
+	} else if (cpct_isKeyPressed(keys->right)) {
 		moveRight();
-		walking_animate(M_right);
-	} else if (cpct_isKeyPressed(keys.left)) {
+		walking_animate(M_right, player);
+	} else if (cpct_isKeyPressed(keys->left)) {
 		moveLeft();
-		walking_animate(M_left);
-	} else if (cpct_isKeyPressed(keys.fire)) {
-		hitting_enter();
+		walking_animate(M_left, player);
+	} else if (cpct_isKeyPressed(keys->fire)) {
+		hitting_enter(player, ball);
 	} else {
-		stopped_enter();
+		stopped_enter(player);
 	}
 }
 
-void executeState(TPlayer *player) {
+void executeState(TPlayer *player, TBall *ball, TKeys *keys) {
 	switch (player->state) {
 	case ST_stopped:
-		stopped(&player);
+		stopped(player, ball, keys);
 		break;
 	case ST_walking:
-		walking(&player);
+		walking(player, ball, keys);
 		break;
 	case ST_hitting:
-		hitting(&player);
+		hitting(player);
 		break;
 	}
 }
