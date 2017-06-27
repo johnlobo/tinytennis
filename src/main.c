@@ -17,13 +17,14 @@
 //------------------------------------------------------------------------------
 
 #include <cpctelera.h>
+#include "defines.h"
 #include "sprites/ball.h"
 #include "sprites/player1.h"
 #include "sprites/palette.h"
 #include "util/util.h"
 #include "entities/TBall.h"
 #include "entities/TPlayer.h"
-#include "main.h"
+
 
 // Máscara de transparencia
 cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);

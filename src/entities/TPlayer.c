@@ -1,6 +1,6 @@
-#include "TPlayer.h"
 #include <cpctelera.h>
-#include "../main.h"
+#include "../defines.h"
+#include "TPlayer.h"
 #include "../util/util.h"
 #include "../sprites/player1.h"
 #include "TBall.h"
@@ -74,32 +74,32 @@ void moveRight(TPlayer *player) {
 	if (((player->x / SCALE) + PLAYER_WIDTH + 1) < WIDTH) {
 		player->x += 1 * SCALE;
 		player->look  = M_right;
+		player->moved = 1;
 	}
-	player->moved = 1;
 }
 
 void moveLeft(TPlayer *player) {
 	if ((player->x / SCALE) > 0) {
 		player->x -= 1 * SCALE;
 		player->look  = M_left;
+		player->moved = 1;
 	}
-	player->moved = 1;
 }
 
 void moveUp(TPlayer *player) {
 	if ((player->y / SCALE) - VERTICAL_STEP > 0) {
 		player->y -= VERTICAL_STEP * SCALE;
 		//player->look  = M_right;
+		player->moved = 1;
 	}
-	player->moved = 1;
 }
 
 void moveDown(TPlayer *player) {
 	if (((player->y / SCALE) + PLAYER_HEIGHT + VERTICAL_STEP) < HEIGHT) {
 		player->y += VERTICAL_STEP * SCALE;
 		//player->look  = M_right;
+		player->moved = 1;
 	}
-	player->moved = 1;
 }
 
 void drawPlayer(TPlayer *player) {
@@ -193,14 +193,14 @@ void walking_animate(u8 look, TPlayer *player) {
 
 void walking(TPlayer *player, TBall *ball, TKeys *keys) {
 	if (cpct_isKeyPressed(keys->up)) {
-		moveUp();
+		moveUp(player);
 	} else if (cpct_isKeyPressed(keys->down)) {
-		moveDown();
+		moveDown(player);
 	} else if (cpct_isKeyPressed(keys->right)) {
-		moveRight();
+		moveRight(player);
 		walking_animate(M_right, player);
 	} else if (cpct_isKeyPressed(keys->left)) {
-		moveLeft();
+		moveLeft(player);
 		walking_animate(M_left, player);
 	} else if (cpct_isKeyPressed(keys->fire)) {
 		hitting_enter(player, ball);

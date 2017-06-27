@@ -1,7 +1,7 @@
 #include "TBall.h"
 
 #include <cpctelera.h>
-#include "../main.h"
+#include "../defines.h"
 #include "../sprites/ball.h"
 
 void eraseBall(TBall *ball) {

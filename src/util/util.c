@@ -8,7 +8,7 @@
 //    void
 //
 #include <cpctelera.h>
-#include "../main.h"
+#include "../defines.h"
 
 void delay(u32 cycles) {
     u32 i;
