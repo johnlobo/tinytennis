@@ -33,5 +33,35 @@ extern const u8 sp_player1_08[6 * 24];
 #define SP_PLAYER1_09_W 6
 #define SP_PLAYER1_09_H 24
 extern const u8 sp_player1_09[6 * 24];
+#define SP_PLAYER1_10_W 6
+#define SP_PLAYER1_10_H 24
+extern const u8 sp_player1_10[6 * 24];
+#define SP_PLAYER1_11_W 6
+#define SP_PLAYER1_11_H 24
+extern const u8 sp_player1_11[6 * 24];
+#define SP_PLAYER1_12_W 6
+#define SP_PLAYER1_12_H 24
+extern const u8 sp_player1_12[6 * 24];
+#define SP_PLAYER1_13_W 6
+#define SP_PLAYER1_13_H 24
+extern const u8 sp_player1_13[6 * 24];
+#define SP_PLAYER1_14_W 6
+#define SP_PLAYER1_14_H 24
+extern const u8 sp_player1_14[6 * 24];
+#define SP_PLAYER1_15_W 6
+#define SP_PLAYER1_15_H 24
+extern const u8 sp_player1_15[6 * 24];
+#define SP_PLAYER1_16_W 6
+#define SP_PLAYER1_16_H 24
+extern const u8 sp_player1_16[6 * 24];
+#define SP_PLAYER1_17_W 6
+#define SP_PLAYER1_17_H 24
+extern const u8 sp_player1_17[6 * 24];
+#define SP_PLAYER1_18_W 6
+#define SP_PLAYER1_18_H 24
+extern const u8 sp_player1_18[6 * 24];
+#define SP_PLAYER1_19_W 6
+#define SP_PLAYER1_19_H 24
+extern const u8 sp_player1_19[6 * 24];
 
 #endif

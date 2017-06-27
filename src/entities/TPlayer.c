@@ -7,15 +7,17 @@
 
 // Looking to
 enum {
-    M_right   = 0
-    ,  M_left
+	M_right   = 0
+	, M_left
+	, M_up
+	, M_down
 } ELook;
 
 // Player States
 enum {
-    ST_stopped  = 0
-    ,  ST_walking
-    ,  ST_hitting
+	ST_stopped  = 0
+	,  ST_walking
+	,  ST_hitting
 } EStates;
 
 const TFrame g_frames[PLAYER_FRAMES] = {
@@ -24,21 +26,26 @@ const TFrame g_frames[PLAYER_FRAMES] = {
 	,  { M_right, sp_player1_04 },  { M_right, sp_player1_05 }
 	,  { M_right, sp_player1_06 },  { M_right, sp_player1_07 }
 	,  { M_right, sp_player1_08 },  { M_right, sp_player1_09 }
+	,  { M_right, sp_player1_10 },  { M_right, sp_player1_11 }
+	,  { M_right, sp_player1_12 },  { M_right, sp_player1_13 }
+	,  { M_right, sp_player1_14 },
 };
 
 // Global Variables
 TFrame* const anim_walking[WALKING_FRAMES] = {&g_frames[1], &g_frames[2], &g_frames[3], &g_frames[1] };
+TFrame* const anim_up[UP_FRAMES] = {&g_frames[10], &g_frames[0], &g_frames[11], &g_frames[0] };
+TFrame* const anim_down[DOWN_FRAMES] = {&g_frames[12], &g_frames[13], &g_frames[14], &g_frames[13] };
 TFrame* const anim_hitting[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8], &g_frames[7]};
 
 
-void initPlayer(TPlayer *player){
+void initPlayer(TPlayer *player) {
 	player->x = player->px = 40 * SCALE;
-    player->y = player->py = 100 * SCALE;
-    player->state = ST_stopped;
-    player->look   = M_right;
-    player->nframe = 0;
-    player->frame  = &g_frames[0];
-    player->moved = 1;
+	player->y = player->py = 100 * SCALE;
+	player->state = ST_stopped;
+	player->look   = M_right;
+	player->nframe = 0;
+	player->frame  = &g_frames[0];
+	player->moved = 1;
 }
 
 void assignFrame(TFrame **animation, TPlayer *player) {
@@ -59,8 +66,14 @@ void selectSpritePlayer(TPlayer *player) {
 		break;
 	}
 	case ST_walking: {
-		assignFrame(anim_walking, player);
-		turnFrame(player);
+		if (player->look == M_up) {
+			assignFrame(anim_up, player);
+		} else if (player->look == M_down) {
+			assignFrame(anim_down, player);
+		} else {
+			assignFrame(anim_walking, player);
+			turnFrame(player);
+		}
 		break;
 	}
 	case ST_hitting: {
@@ -91,6 +104,7 @@ void moveUp(TPlayer *player) {
 		player->y -= VERTICAL_STEP * SCALE;
 		//player->look  = M_right;
 		player->moved = 1;
+		player->look = M_up;
 	}
 }
 
@@ -99,6 +113,7 @@ void moveDown(TPlayer *player) {
 		player->y += VERTICAL_STEP * SCALE;
 		//player->look  = M_right;
 		player->moved = 1;
+		player->look = M_down;
 	}
 }
 
@@ -191,11 +206,25 @@ void walking_animate(u8 look, TPlayer *player) {
 	player->moved = 1;
 }
 
+void up_animate(TPlayer *player) {
+	if (++player->nframe == UP_FRAMES * ANIM_PAUSE)
+		player->nframe = 0;
+	player->moved = 1;
+}
+
+void down_animate(TPlayer *player) {
+	if (++player->nframe == DOWN_FRAMES * ANIM_PAUSE)
+		player->nframe = 0;
+	player->moved = 1;
+}
+
 void walking(TPlayer *player, TBall *ball, TKeys *keys) {
 	if (cpct_isKeyPressed(keys->up)) {
 		moveUp(player);
+		up_animate(player);
 	} else if (cpct_isKeyPressed(keys->down)) {
 		moveDown(player);
+		down_animate(player);
 	} else if (cpct_isKeyPressed(keys->right)) {
 		moveRight(player);
 		walking_animate(M_right, player);

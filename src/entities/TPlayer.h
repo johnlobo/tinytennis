@@ -24,10 +24,12 @@ typedef struct {
 
 
 // Sprites States
-#define PLAYER_FRAMES  10
+#define PLAYER_FRAMES  15
 // Animaciones
 #define ANIM_PAUSE        8
 #define WALKING_FRAMES    4
+#define UP_FRAMES    4
+#define DOWN_FRAMES    4
 #define HITTING_FRAMES    5
 
 extern const TFrame g_frames[PLAYER_FRAMES];

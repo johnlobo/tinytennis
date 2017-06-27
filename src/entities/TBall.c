@@ -90,7 +90,7 @@ void initBall(TBall *ball) {
 void newBall(i32 x, i32 y, TBall *ball) {
     ball->x = ball->px = x;
     ball->y = ball->py = y;
-    ball->z = ball->pz = 3 * SCALE;
+    ball->z = ball->pz = ((cpct_rand8() % 3) + 3) * SCALE;
     ball->vx = trajetoriesX[cpct_rand8() % 10];
     ball->vy = - 0.8 * SCALE;
     ball->vz = 5 * SCALE;
