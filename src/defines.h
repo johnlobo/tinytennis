@@ -1,8 +1,6 @@
 #ifndef _DEFINES_H_
 #define _DEFINES_H_
 
-#include "util/util.h"
-
 #define SCALE 256U
 #define FRICTION 0.8
 #define GRAVITY -0.4 * SCALE

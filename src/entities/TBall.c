@@ -92,8 +92,8 @@ void newBall(i32 x, i32 y, TBall *ball) {
     ball->y = ball->py = y;
     ball->z = ball->pz = ((cpct_rand8() % 3) + 3) * SCALE;
     ball->vx = trajetoriesX[cpct_rand8() % 10];
-    ball->vy = - 0.8 * SCALE;
-    ball->vz = 5 * SCALE;
+    ball->vy = ((cpct_rand8() % 8) * -0.2) * SCALE;
+    ball->vz = (((cpct_rand8() % 4) * 2) + 3)  * SCALE;
     ball->sprite = (u8*) sp_ball_0;
     ball->active = 1;
 }
