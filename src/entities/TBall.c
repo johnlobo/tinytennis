@@ -4,6 +4,8 @@
 #include "../defines.h"
 #include "../sprites/ball.h"
 
+const i16 trajetoriesX[10] = {0, -64, 64, 0, -128, 128, -172, 172, -240, 240};
+
 void eraseBall(TBall *ball) {
     i32 posx, posy;
     u8* pvmem;
@@ -43,6 +45,7 @@ void drawBall(TBall *ball) {
 }
 
 void updateBall(TBall *ball) {
+
     ball->px = ball->x;
     ball->py = ball->y;
     ball->pz = ball->z;
@@ -50,6 +53,7 @@ void updateBall(TBall *ball) {
     ball->x += ball->vx;
     ball->y += ball->vy;
     ball->z += ball->vz;
+
     // Check bounce
     if (ball->z < 0) {
         ball->vx = ball->vx * FRICTION;
@@ -72,6 +76,11 @@ void updateBall(TBall *ball) {
         ball->y = (200 * SCALE) - (BALL_HEIGHT * SCALE);
         ball->vy = -ball->vy;
     }
+
+    //Deactivate ball
+    //if ((ball->vx < (0.1 * SCALE)) && (ball->vy < (0.1 * SCALE)) && (ball->vz < (0.1 * SCALE))){
+    //    ball->active = 0;
+    //}
 }
 
 void initBall(TBall *ball) {
@@ -92,8 +101,8 @@ void newBall(i32 x, i32 y, TBall *ball) {
     ball->y = ball->py = y;
     ball->z = ball->pz = ((cpct_rand8() % 3) + 3) * SCALE;
     ball->vx = trajetoriesX[cpct_rand8() % 10];
-    ball->vy = ((cpct_rand8() % 8) * -0.2) * SCALE;
-    ball->vz = (((cpct_rand8() % 4) * 2) + 3)  * SCALE;
+    ball->vy = (((cpct_rand8() % 8) * -0.4) - 0.6) * SCALE;
+    ball->vz = (((cpct_rand8() % 4) * 3) + 4)  * SCALE;
     ball->sprite = (u8*) sp_ball_0;
     ball->active = 1;
 }

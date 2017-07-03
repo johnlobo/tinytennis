@@ -40,7 +40,7 @@ TFrame* const anim_hitting[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_fra
 
 void initPlayer(TPlayer *player) {
 	player->x = player->px = 40 * SCALE;
-	player->y = player->py = 100 * SCALE;
+	player->y = player->py = 0 * SCALE;
 	player->state = ST_stopped;
 	player->look   = M_right;
 	player->nframe = 0;
@@ -122,7 +122,7 @@ void drawPlayer(TPlayer *player) {
 	i32 posx, posy;
 	posx = player->x / SCALE;
 	posy = player->y / SCALE;
-	if (((posx + PLAYER_WIDTH) < WIDTH) && ((posy + PLAYER_HEIGHT) < HEIGHT)) {
+	if (((posx + PLAYER_WIDTH) <= WIDTH) && ((posy + PLAYER_HEIGHT) <= HEIGHT)) {
 		pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, posx, posy);
 		cpct_drawSpriteMaskedAlignedTable(player->frame->sprite, pvmem, PLAYER_WIDTH, PLAYER_HEIGHT, g_tablatrans);
 	}
@@ -133,7 +133,7 @@ void erasePlayer(TPlayer *player) {
 	i32 posx, posy;
 	posx = player->px / SCALE;
 	posy = player->py / SCALE;
-	if (((posx + PLAYER_WIDTH) < WIDTH) && ((posy + PLAYER_HEIGHT) < HEIGHT)) {
+	if (((posx + PLAYER_WIDTH) <= WIDTH) && ((posy + PLAYER_HEIGHT) <= HEIGHT)) {
 		pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, posx, posy);
 		cpct_drawSolidBox(pvmem, #0,PLAYER_WIDTH, PLAYER_HEIGHT);
 	}

@@ -24,12 +24,11 @@
 #include "util/util.h"
 #include "entities/TBall.h"
 #include "entities/TPlayer.h"
+#include "text/text.h"
 
 
 // Máscara de transparencia
 cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
-
-const i16 trajetoriesX[10] = {0, -64, 64, 0, -128, 128, -172, 172, -240, 240};
 
 TKeys keys;
 TBall ball;
@@ -75,15 +74,16 @@ void init() {
 }
 
 void game() {
-    u32 c;
+    //u32 c;
+    u8* pvmem;
 
     init();
 
-    c = 0;
+    //c = 0;
     // Loop forever
     while (1) {
-        c++;
-        delay(5);
+        //c++;
+        delay(15);
         // Player1 block
         executeState(&player, &ball, &keys);
         if (player.moved) {
@@ -93,12 +93,21 @@ void game() {
             player.px = player.x;
             player.py = player.y;
             player.moved = 0;
+            pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, 0, 0);
+            cpct_drawSolidBox(pvmem, #0, 12, 24);
+            drawNumber((u16) (player.x / SCALE), 4,0,0);
+            drawNumber((u16) (player.y / SCALE), 4,0,12);
         }
         //Ball block
         if (ball.active) {
             updateBall(&ball);
             eraseBall(&ball);
             drawBall(&ball);
+            pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, 67, 0);
+            cpct_drawSolidBox(pvmem, #0, 12, 37);
+            drawNumber((i32) (ball.vx), 4,67,0);
+            drawNumber((i32) (ball.vy / SCALE), 4,67,12);
+            drawNumber((i32) (ball.vz / SCALE), 4,67,24);
         }
     }
 }

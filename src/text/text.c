@@ -12,12 +12,13 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
-
-#include "../video/video.h"
+#include <cpctelera.h>
+#include "../defines.h"
+#include "text.h"
 #include "../sprites/fonts-big.h"
 #include "../sprites/numbers-big.h"
-#include "../game.h"
-#include "text.h"
+#include "../util/util.h"
+
 
 u8* const font[39] = { g_fonts_big_00, g_fonts_big_01, g_fonts_big_02, g_fonts_big_03, g_fonts_big_04,
                        g_fonts_big_05, g_fonts_big_06, g_fonts_big_07, g_fonts_big_08, g_fonts_big_09,
@@ -27,8 +28,9 @@ u8* const font[39] = { g_fonts_big_00, g_fonts_big_01, g_fonts_big_02, g_fonts_b
                        g_fonts_big_25, g_fonts_big_26, g_fonts_big_27, g_fonts_big_28, g_fonts_big_29,
                        g_fonts_big_30, g_fonts_big_31, g_fonts_big_32
                      };
-u8* const numbers[10] = { g_numbers_big_00, g_numbers_big_01, g_numbers_big_02, g_numbers_big_03, g_numbers_big_04,
-                          g_numbers_big_05, g_numbers_big_06, g_numbers_big_07, g_numbers_big_08, g_numbers_big_09
+u8* const numbers[13] = { g_numbers_big_00, g_numbers_big_01, g_numbers_big_02, g_numbers_big_03, g_numbers_big_04,
+                          g_numbers_big_05, g_numbers_big_06, g_numbers_big_07, g_numbers_big_08, g_numbers_big_09,
+                          g_numbers_big_10, g_numbers_big_11, g_numbers_big_12
                         };
 
 //////////////////////////////////////////////////////////////////
@@ -59,7 +61,7 @@ u8 strLength(u8 str[]) {
 //    void
 //
 
-void drawNumber(u16 aNumber, u8 length, u8 xPos, u8 yPos) {
+void drawNumber(i32 aNumber, u8 length, u8 xPos, u8 yPos) {
 
     u8 str[6];
     u8* pvideo;
@@ -76,7 +78,7 @@ void drawNumber(u16 aNumber, u8 length, u8 xPos, u8 yPos) {
     while (number != '\0') {
 
         pvideo = cpct_getScreenPtr(CPCT_VMEM_START, (zeros + x) * FONT_W + xPos, yPos);
-        cpct_drawSprite(numbers[number - 48], pvideo, FONT_W, FONT_H);
+        cpct_drawSprite(numbers[number - 45], pvideo, FONT_W, FONT_H);
         number = str[++x];
     }
 
@@ -113,12 +115,12 @@ void drawText(u8 text[], u8 xPos, u8 yPos, u8 centered) {
         //NUMEROS
         if (character >= 48 && character <= 57) {
 
-            cpct_drawSpriteMaskedAlignedTable(numbers[character - 48], pvideo, FONT_W, FONT_H, am_tablatrans);
+            cpct_drawSpriteMaskedAlignedTable(numbers[character - 48], pvideo, FONT_W, FONT_H, g_tablatrans);
         }
 
         else if (character != 32) { //32 = SPACE
 
-            cpct_drawSpriteMaskedAlignedTable(font[character - 63], pvideo, FONT_W, FONT_H, am_tablatrans);
+            cpct_drawSpriteMaskedAlignedTable(font[character - 63], pvideo, FONT_W, FONT_H, g_tablatrans);
         }
 
         character = text[++x];

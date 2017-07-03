@@ -13,18 +13,16 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
 
-
-#include <cpctelera.h>
-
-
 #ifndef _TEXT_H_
 #define _TEXT_H_
+
+#include <cpctelera.h>
 
 extern u8* const font[39];
 extern u8* const number[10];
 
 u8 strLenght(u8 str[]);
-void drawNumber(u16 aNumber, u8 length, u8 xPos, u8 yPos);
+void drawNumber(i32 aNumber, u8 length, u8 xPos, u8 yPos);
 void drawText(u8 text[], u8 xPos, u8 yPos, u8 centered);
 
 

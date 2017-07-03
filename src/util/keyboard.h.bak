@@ -1,3 +1,6 @@
+#ifndef _KEYBOARD_H_
+#define _KEYBOARD_H_
+
 //-----------------------------LICENSE NOTICE------------------------------------
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -13,14 +16,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
 
-
 #include <cpctelera.h>
-#include <string.h>
-#include "../video/video.h"
-#include "../game.h"
-
-#ifndef _KEYBOARD_H_
-#define _KEYBOARD_H_
 
 u32 wait4UserKeypress();
 cpct_keyID esperaUnaTecla();

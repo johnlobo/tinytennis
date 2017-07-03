@@ -23,7 +23,9 @@
 
 #define VERTICAL_STEP 2
 
-extern const i16 trajetoriesX[10];
+//Sprites Size
+#define FONT_H 11
+#define FONT_W 3
 
 // Declare am_tablatrans, which is defined in game.c, and used in more places
 cpctm_declareMaskTable(g_tablatrans);
