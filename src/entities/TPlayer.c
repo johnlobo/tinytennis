@@ -5,21 +5,6 @@
 #include "../sprites/player1.h"
 #include "TBall.h"
 
-// Looking to
-enum {
-	M_right   = 0
-	, M_left
-	, M_up
-	, M_down
-} ELook;
-
-// Player States
-enum {
-	ST_stopped  = 0
-	,  ST_walking
-	,  ST_hitting
-} EStates;
-
 const TFrame g_frames[PLAYER_FRAMES] = {
 	{ M_right, sp_player1_00 },  { M_right, sp_player1_01 }
 	,  { M_right, sp_player1_02 },  { M_right, sp_player1_03 }
@@ -40,8 +25,10 @@ TFrame* const anim_hitting[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_fra
 
 void initPlayer(TPlayer *player) {
 	player->x = player->px = 40 * SCALE;
-	player->y = player->py = 0 * SCALE;
+	player->y = player->py = 170 * SCALE;
+	player->phase = GM_serve;
 	player->state = ST_stopped;
+	player->side = SD_down;
 	player->look   = M_right;
 	player->nframe = 0;
 	player->frame  = &g_frames[0];
@@ -183,20 +170,21 @@ void hitting(TPlayer *player) {
 }
 
 void stopped(TPlayer *player, TBall *ball, TKeys *keys) {
-	if (cpct_isKeyPressed(keys->up)) {
+	if ((player->phase != GM_play) && (cpct_isKeyPressed(keys->up))) {
 		walking_enter(player->look, player);
-	} else if (cpct_isKeyPressed(keys->down)) {
+	} else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->down))) {
 		walking_enter(player->look, player);
 	} else if (cpct_isKeyPressed(keys->right)) {
 		walking_enter(M_right, player);
 	} else if (cpct_isKeyPressed(keys->left)) {
 		walking_enter(M_left, player);
 	} else if (cpct_isKeyPressed(keys->fire)) {
-		hitting_enter(player, ball);
+		if (player->phase == GM_play)
+			hitting_enter(player, ball);
+		else
+			serving_enter(player, ball);
 	}
-
 }
-
 
 
 void walking_animate(u8 look, TPlayer *player) {
@@ -238,7 +226,46 @@ void walking(TPlayer *player, TBall *ball, TKeys *keys) {
 	}
 }
 
-void executeState(TPlayer *player, TBall *ball, TKeys *keys) {
+void preparing(TPlayer *player, TBall *ball, TKeys *keys) {
+	if (cpct_isKeyPressed(keys->right)) {
+		moveRight(player);
+		walking_animate(M_right, player);
+	} else if (cpct_isKeyPressed(keys->left)) {
+		moveLeft(player);
+		walking_animate(M_left, player);
+	} else if (cpct_isKeyPressed(keys->fire)) {
+		serving_enter(player, ball);
+	} else {
+		stopped_enter(player);
+	}
+}
+
+void serving_enter(TPlayer *player, TBall *ball) {
+	player->state = ST_hitting;
+	player->hit  =  HITTING_FRAMES;
+	player->moved = 1;
+	newBall(player->x, player->y, ball);
+}
+
+
+void serving_animate(TPlayer *player) {
+	if (++player->nframe == HITTING_FRAMES * ANIM_PAUSE) {
+		player->nframe = 0;
+	}
+	player->moved = 1;
+}
+
+void serving(TPlayer *player) {
+	if (player->hit > 1) {
+		player->hit--;
+		delay(5);
+		serving_animate(player);
+	} else {
+		stopped_enter(player);
+	}
+}
+
+void executeStatePlay(TPlayer *player, TBall *ball, TKeys *keys) {
 	switch (player->state) {
 	case ST_stopped:
 		stopped(player, ball, keys);
@@ -248,6 +275,12 @@ void executeState(TPlayer *player, TBall *ball, TKeys *keys) {
 		break;
 	case ST_hitting:
 		hitting(player);
+		break;
+	case ST_preparing:
+		preparing(player, ball, keys);
+		break;
+	case ST_serving:
+		serving(player);
 		break;
 	}
 }

@@ -5,6 +5,11 @@
 #include "TBall.h"
 #include "../util/util.h"
 
+// Looking to
+typedef enum { M_right, M_left, M_up, M_down } ELook;
+// Player States
+typedef enum { ST_stopped, ST_walking, ST_hitting, ST_preparing, ST_serving } EStates;
+
 
 typedef struct {
     u8 look;
@@ -14,10 +19,12 @@ typedef struct {
 typedef struct {
     i32 x, y;
     i32 px, py;
-    u8 state;
+    u8 phase;
+    EStates state;
+    ESides side;
     TFrame* frame;
     u8 nframe;
-    u8 look;
+    ELook look;
     u8 hit;
     u8 moved;
 } TPlayer;

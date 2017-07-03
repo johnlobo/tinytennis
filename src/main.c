@@ -33,6 +33,7 @@ cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
 TKeys keys;
 TBall ball;
 TPlayer player;
+EGamePhases phase;
 
 void myInterruptHandler() {
     static u8 i; // Static variable to be preserved from call to call
