@@ -31,8 +31,8 @@
 cpctm_declareMaskTable(g_tablatrans);
 
 // Game phases
-typedef enum{ GM_serve, GM_rest, GM_play } EGamePhases
+typedef enum{ GM_serve, GM_rest, GM_play } EGamePhases;
 //Sides
-typedef enum{ SD_up, SD_down } ESides
+typedef enum{ SD_up, SD_down } ESides;
 
 #endif

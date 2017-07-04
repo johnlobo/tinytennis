@@ -169,6 +169,31 @@ void hitting(TPlayer *player) {
 	}
 }
 
+void serving_enter(TPlayer *player, TBall *ball) {
+	player->state = ST_hitting;
+	player->hit  =  HITTING_FRAMES;
+	player->moved = 1;
+	newBall(player->x, player->y, ball);
+}
+
+
+void serving_animate(TPlayer *player) {
+	if (++player->nframe == HITTING_FRAMES * ANIM_PAUSE) {
+		player->nframe = 0;
+	}
+	player->moved = 1;
+}
+
+void serving(TPlayer *player) {
+	if (player->hit > 1) {
+		player->hit--;
+		delay(5);
+		serving_animate(player);
+	} else {
+		stopped_enter(player);
+	}
+}
+
 void stopped(TPlayer *player, TBall *ball, TKeys *keys) {
 	if ((player->phase != GM_play) && (cpct_isKeyPressed(keys->up))) {
 		walking_enter(player->look, player);
@@ -240,32 +265,8 @@ void preparing(TPlayer *player, TBall *ball, TKeys *keys) {
 	}
 }
 
-void serving_enter(TPlayer *player, TBall *ball) {
-	player->state = ST_hitting;
-	player->hit  =  HITTING_FRAMES;
-	player->moved = 1;
-	newBall(player->x, player->y, ball);
-}
 
-
-void serving_animate(TPlayer *player) {
-	if (++player->nframe == HITTING_FRAMES * ANIM_PAUSE) {
-		player->nframe = 0;
-	}
-	player->moved = 1;
-}
-
-void serving(TPlayer *player) {
-	if (player->hit > 1) {
-		player->hit--;
-		delay(5);
-		serving_animate(player);
-	} else {
-		stopped_enter(player);
-	}
-}
-
-void executeStatePlay(TPlayer *player, TBall *ball, TKeys *keys) {
+void executeState(TPlayer *player, TBall *ball, TKeys *keys) {
 	switch (player->state) {
 	case ST_stopped:
 		stopped(player, ball, keys);
