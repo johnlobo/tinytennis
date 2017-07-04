@@ -14,6 +14,7 @@ typedef struct {
     i32 px, py, pz;
     i32 vx, vy, vz;
     u8* sprite;
+    u8 bouncex, bouncey;
     u8 active;
 } TBall;
 

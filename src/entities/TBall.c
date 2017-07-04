@@ -60,6 +60,7 @@ void updateBall(TBall *ball) {
         ball->vy = ball->vy * FRICTION;
         ball->vz = -ball->vz * FRICTION;
         ball->z = 0;
+        calcBounce(ball);
     }
     // Check boundaries
     if (ball->x < 0) {
@@ -83,6 +84,14 @@ void updateBall(TBall *ball) {
     //}
 }
 
+void calcBounce(TBall *ball){
+    u8 t = 0;
+
+    t = - (ball->z / GRAVITY);
+    ball->bouncex = (ball->x + (ball->vx * t)) / SCALE;
+    ball->bouncey = (ball->y + (ball->vy * t)) / SCALE;
+}
+
 void initBall(TBall *ball) {
     ball->x = 0;
     ball->y = 0;
@@ -93,6 +102,8 @@ void initBall(TBall *ball) {
     ball->vx = 0;
     ball->vy = 0;
     ball->vz = 0;
+    ball->bouncex = 0;
+    ball->bouncey = 0;
     ball->active = 0;
 }
 
@@ -105,4 +116,5 @@ void newBall(i32 x, i32 y, TBall *ball) {
     ball->vz = (((cpct_rand8() % 4) * 1) + 5)  * SCALE;
     ball->sprite = (u8*) sp_ball_0;
     ball->active = 1;
+    calcBounce(ball);
 }
