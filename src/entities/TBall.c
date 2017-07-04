@@ -44,6 +44,14 @@ void drawBall(TBall *ball) {
     }
 }
 
+void calcBounce(TBall *ball){
+    u8 t = 0;
+
+    t = - (ball->vz / GRAVITY);
+    ball->bouncex = (ball->x + (ball->vx * t)) / SCALE;
+    ball->bouncey = (ball->y + (ball->vy * t)) / SCALE;
+}
+
 void updateBall(TBall *ball) {
 
     ball->px = ball->x;
@@ -82,14 +90,6 @@ void updateBall(TBall *ball) {
     //if ((ball->vx < (0.1 * SCALE)) && (ball->vy < (0.1 * SCALE)) && (ball->vz < (0.1 * SCALE))){
     //    ball->active = 0;
     //}
-}
-
-void calcBounce(TBall *ball){
-    u8 t = 0;
-
-    t = - (ball->z / GRAVITY);
-    ball->bouncex = (ball->x + (ball->vx * t)) / SCALE;
-    ball->bouncey = (ball->y + (ball->vy * t)) / SCALE;
 }
 
 void initBall(TBall *ball) {
