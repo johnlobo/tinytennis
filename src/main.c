@@ -32,7 +32,7 @@ cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
 
 TKeys keys;
 TBall ball;
-TPlayer player;
+TPlayer player, com;
 EGamePhases phase;
 
 void myInterruptHandler() {
@@ -71,6 +71,7 @@ void init() {
     keys.music = Key_M;
 
     initPlayer(&player);
+    initCom(&com);
     initBall(&ball);
 }
 
@@ -84,7 +85,9 @@ void game() {
     // Loop forever
     while (1) {
         //c++;
-        delay(15);
+        if (DEBUG){
+            delay(15);
+        }
         // Player1 block
         executeState(&player, &ball, &keys);
         if (player.moved) {
@@ -94,23 +97,38 @@ void game() {
             player.px = player.x;
             player.py = player.y;
             player.moved = 0;
-            pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, 0, 0);
-            cpct_drawSolidBox(pvmem, #0, 12, 24);
-            drawNumber((u16) (player.x / SCALE), 4,0,0);
-            drawNumber((u16) (player.y / SCALE), 4,0,12);
+            if (DEBUG) {
+                pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, 0, 0);
+                cpct_drawSolidBox(pvmem, #0, 12, 24);
+                drawNumber((u16) (player.x / SCALE), 4, 0, 0);
+                drawNumber((u16) (player.y / SCALE), 4, 0, 12);
+            }
         }
+
+        if (com.moved) {
+            selectSpritePlayer(&com);
+            erasePlayer(&com);
+            drawPlayer(&com);
+            com.px = com.x;
+            com.py = com.y;
+            com.moved = 0;
+            pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, 0, 0);
+        }
+
         //Ball block
         if (ball.active) {
             updateBall(&ball);
             eraseBall(&ball);
             drawBall(&ball);
-            pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, 67, 0);
-            cpct_drawSolidBox(pvmem, #0, 12, 60);
-            drawNumber((i32) (ball.vx), 4,67,0);
-            drawNumber((i32) (ball.vy / SCALE), 4,67,12);
-            drawNumber((i32) (ball.vz / SCALE), 4,67,24);
-            drawNumber((u8) ball.bouncex, 4,67,36);
-            drawNumber((u8) ball.bouncey, 4,67,48);
+            if (DEBUG) {
+                pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, 67, 0);
+                cpct_drawSolidBox(pvmem, #0, 12, 60);
+                drawNumber((i32) (ball.vx), 4, 67, 0);
+                drawNumber((i32) (ball.vy / SCALE), 4, 67, 12);
+                drawNumber((i32) (ball.vz / SCALE), 4, 67, 24);
+                drawNumber((u8) ball.bouncex, 4, 67, 36);
+                drawNumber((u8) ball.bouncey, 4, 67, 48);
+            }
         }
     }
 }

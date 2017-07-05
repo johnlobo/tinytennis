@@ -35,6 +35,18 @@ void initPlayer(TPlayer *player) {
 	player->moved = 1;
 }
 
+void initCom(TPlayer *player) {
+	player->x = player->px = 40 * SCALE;
+	player->y = player->py = 10 * SCALE;
+	player->phase = GM_rest;
+	player->state = ST_stopped;
+	player->side = SD_up;
+	player->look   = M_left;
+	player->nframe = 0;
+	player->frame  = &g_frames[12];
+	player->moved = 1;
+}
+
 void assignFrame(TFrame **animation, TPlayer *player) {
 	player->frame = animation[player->nframe / ANIM_PAUSE];
 }
@@ -49,7 +61,11 @@ void turnFrame(TPlayer *player) {
 void selectSpritePlayer(TPlayer *player) {
 	switch (player->state) {
 	case ST_stopped: {
-		player->frame = &g_frames[0];
+		if (player->side == SD_down){
+			player->frame = &g_frames[0];
+		}else {
+			player->frame = &g_frames[12];
+		}
 		break;
 	}
 	case ST_walking: {
