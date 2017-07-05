@@ -6,6 +6,8 @@
 
 const i16 trajetoriesX[10] = {0, -64, 64, 0, -128, 128, -172, 172, -240, 240};
 
+u8 t;
+
 void eraseBall(TBall *ball) {
     i32 posx, posy;
     u8* pvmem;
@@ -45,9 +47,9 @@ void drawBall(TBall *ball) {
 }
 
 void calcBounce(TBall *ball){
-    u8 t = 0;
 
-    t = - (ball->vz / GRAVITY);
+    //t = - ((2 * ball->vz) / (-0.4 * SCALE));
+    t = - (2 * ball->vz) / GRAVITY;
     ball->bouncex = (ball->x + (ball->vx * t)) / SCALE;
     ball->bouncey = (ball->y + (ball->vy * t)) / SCALE;
 }
@@ -74,16 +76,20 @@ void updateBall(TBall *ball) {
     if (ball->x < 0) {
         ball->x = 0;
         ball->vx = -ball->vx;
+        calcBounce(ball);
     } else if ((ball->x + (BALL_WIDTH * SCALE)) > (80 * SCALE)) {
         ball->x = (80 * SCALE) - (BALL_WIDTH * SCALE);
         ball->vx = -ball->vx;
+        calcBounce(ball);
     }
     if (ball->y < 0) {
         ball->y = 0;
         ball->vy = -ball->vy;
+        calcBounce(ball);
     } else if ((ball->y + (BALL_HEIGHT * SCALE)) > (200 * SCALE)) {
         ball->y = (200 * SCALE) - (BALL_HEIGHT * SCALE);
         ball->vy = -ball->vy;
+        calcBounce(ball);
     }
 
     //Deactivate ball
