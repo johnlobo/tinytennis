@@ -5,6 +5,23 @@
 #include "../sprites/player1.h"
 #include "TBall.h"
 
+const TPlayer tempPlayer = {
+		40 * SCALE, 170 * SCALE
+	, 	40 * SCALE, 170 * SCALE
+	,	GM_serve,	ST_stopped
+	,	SD_down,	&g_frames[0]
+	,	0,			M_right
+	,	0,			1
+};
+const TPlayer tempComp = {
+		40 * SCALE, 10 * SCALE
+	, 	40 * SCALE, 10 * SCALE
+	,	GM_rest,	ST_stopped
+	,	SD_up,		&g_frames[12]
+	,	0,			M_right
+	,	0,			1
+};
+
 const TFrame g_frames[PLAYER_FRAMES] = {
 	{ M_right, sp_player1_00 },  { M_right, sp_player1_01 }
 	,  { M_right, sp_player1_02 },  { M_right, sp_player1_03 }
@@ -23,42 +40,46 @@ TFrame* const anim_down[DOWN_FRAMES] = {&g_frames[12], &g_frames[13], &g_frames[
 TFrame* const anim_hitting[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8], &g_frames[7]};
 
 
-void initPlayer(TPlayer *player) {
-	player->x = player->px = 40 * SCALE;
-	player->y = player->py = 170 * SCALE;
-	player->phase = GM_serve;
-	player->state = ST_stopped;
-	player->side = SD_down;
-	player->look   = M_right;
-	player->nframe = 0;
-	player->frame  = &g_frames[0];
-	player->moved = 1;
+void initPlayer(TPlayer *player) __z88dk_fastcall {
+	//player->x = player->px = 40 * SCALE;
+	//player->y = player->py = 170 * SCALE;
+	//player->phase = GM_serve;
+	//player->state = ST_stopped;
+	//player->side = SD_down;
+	//player->frame  = &g_frames[0];
+	//player->nframe = 0;
+	//player->look   = M_right;
+	//player->hit   = 0;
+	//player->moved = 1;
+	cpct_memcpy((void*) &player, &tempPlayer, sizeof(TPlayer));
 }
 
-void initCom(TPlayer *player) {
-	player->x = player->px = 40 * SCALE;
-	player->y = player->py = 10 * SCALE;
-	player->phase = GM_rest;
-	player->state = ST_stopped;
-	player->side = SD_up;
-	player->look   = M_left;
-	player->nframe = 0;
-	player->frame  = &g_frames[12];
-	player->moved = 1;
+void initCom(TPlayer *player) __z88dk_fastcall {
+	//player->x = player->px = 40 * SCALE;
+	//player->y = player->py = 10 * SCALE;
+	//player->phase = GM_rest;
+	//player->state = ST_stopped;
+	//player->side = SD_up;
+	//player->frame  = &g_frames[12];	
+	//player->nframe = 0;
+	//player->look   = M_left;
+	//player->hit   = 0;
+	//player->moved = 1;
+	cpct_memcpy((void*) &player, &tempComp, sizeof(TPlayer));
 }
 
 void assignFrame(TFrame **animation, TPlayer *player) {
 	player->frame = animation[player->nframe / ANIM_PAUSE];
 }
 
-void turnFrame(TPlayer *player) {
+void turnFrame(TPlayer *player) __z88dk_fastcall {
 	TFrame* f = player->frame;
 	if (f->look != player->look) {
 		cpct_hflipSpriteM0(PLAYER_WIDTH, PLAYER_HEIGHT, f->sprite);
 		f->look = player->look;
 	}
 }
-void selectSpritePlayer(TPlayer *player) {
+void selectSpritePlayer(TPlayer *player) __z88dk_fastcall {
 	switch (player->state) {
 	case ST_stopped: {
 		if (player->side == SD_down){
@@ -86,7 +107,7 @@ void selectSpritePlayer(TPlayer *player) {
 	}
 }
 
-void moveRight(TPlayer *player) {
+void moveRight(TPlayer *player) __z88dk_fastcall {
 	if (((player->x / SCALE) + PLAYER_WIDTH + 1) < WIDTH) {
 		player->x += 1 * SCALE;
 		player->look  = M_right;
@@ -94,7 +115,7 @@ void moveRight(TPlayer *player) {
 	}
 }
 
-void moveLeft(TPlayer *player) {
+void moveLeft(TPlayer *player) __z88dk_fastcall {
 	if ((player->x / SCALE) > 0) {
 		player->x -= 1 * SCALE;
 		player->look  = M_left;
@@ -102,7 +123,7 @@ void moveLeft(TPlayer *player) {
 	}
 }
 
-void moveUp(TPlayer *player) {
+void moveUp(TPlayer *player) __z88dk_fastcall {
 	if ((player->y / SCALE) - VERTICAL_STEP > 0) {
 		player->y -= VERTICAL_STEP * SCALE;
 		//player->look  = M_right;
@@ -111,7 +132,7 @@ void moveUp(TPlayer *player) {
 	}
 }
 
-void moveDown(TPlayer *player) {
+void moveDown(TPlayer *player) __z88dk_fastcall {
 	if (((player->y / SCALE) + PLAYER_HEIGHT + VERTICAL_STEP) < HEIGHT) {
 		player->y += VERTICAL_STEP * SCALE;
 		//player->look  = M_right;
@@ -120,7 +141,7 @@ void moveDown(TPlayer *player) {
 	}
 }
 
-void drawPlayer(TPlayer *player) {
+void drawPlayer(TPlayer *player) __z88dk_fastcall {
 	u8* pvmem;
 	i32 posx, posy;
 	posx = player->x / SCALE;
@@ -131,7 +152,7 @@ void drawPlayer(TPlayer *player) {
 	}
 }
 
-void erasePlayer(TPlayer *player) {
+void erasePlayer(TPlayer *player) __z88dk_fastcall {
 	u8* pvmem;
 	i32 posx, posy;
 	posx = player->px / SCALE;
@@ -142,7 +163,7 @@ void erasePlayer(TPlayer *player) {
 	}
 }
 
-void redrawPlayer(TPlayer *player) {
+void redrawPlayer(TPlayer *player) __z88dk_fastcall {
 	erasePlayer(player);
 	drawPlayer(player);
 }
@@ -163,19 +184,19 @@ void walking_enter(u8 look, TPlayer *player) {
 	player->moved = 1;
 }
 
-void stopped_enter(TPlayer *player) {
+void stopped_enter(TPlayer *player) __z88dk_fastcall {
 	player->state = ST_stopped;
 	player->moved = 1;
 }
 
-void hitting_animate(TPlayer *player) {
+void hitting_animate(TPlayer *player) __z88dk_fastcall {
 	if (++player->nframe == HITTING_FRAMES * ANIM_PAUSE) {
 		player->nframe = 0;
 	}
 	player->moved = 1;
 }
 
-void hitting(TPlayer *player) {
+void hitting(TPlayer *player) __z88dk_fastcall {
 	if (player->hit > 1) {
 		player->hit--;
 		delay(5);
@@ -193,14 +214,14 @@ void serving_enter(TPlayer *player, TBall *ball) {
 }
 
 
-void serving_animate(TPlayer *player) {
+void serving_animate(TPlayer *player) __z88dk_fastcall {
 	if (++player->nframe == HITTING_FRAMES * ANIM_PAUSE) {
 		player->nframe = 0;
 	}
 	player->moved = 1;
 }
 
-void serving(TPlayer *player) {
+void serving(TPlayer *player) __z88dk_fastcall {
 	if (player->hit > 1) {
 		player->hit--;
 		delay(5);
@@ -235,13 +256,13 @@ void walking_animate(u8 look, TPlayer *player) {
 	player->moved = 1;
 }
 
-void up_animate(TPlayer *player) {
+void up_animate(TPlayer *player) __z88dk_fastcall {
 	if (++player->nframe == UP_FRAMES * ANIM_PAUSE)
 		player->nframe = 0;
 	player->moved = 1;
 }
 
-void down_animate(TPlayer *player) {
+void down_animate(TPlayer *player) __z88dk_fastcall {
 	if (++player->nframe == DOWN_FRAMES * ANIM_PAUSE)
 		player->nframe = 0;
 	player->moved = 1;

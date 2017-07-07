@@ -26,7 +26,6 @@
 #include "entities/TPlayer.h"
 #include "text/text.h"
 
-
 // Máscara de transparencia
 cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
 
@@ -35,7 +34,8 @@ TBall ball;
 TPlayer player, com;
 EGamePhases phase;
 
-void myInterruptHandler() {
+void myInterruptHandler()
+{
     static u8 i; // Static variable to be preserved from call to call
 
     // Set the color of the border differently for each interrupt
@@ -44,7 +44,8 @@ void myInterruptHandler() {
     // Count one more interrupt. There are 6 interrupts in total (0-5)
     //if (++i > 5) i=0;
     i++;
-    switch (i) {
+    switch (i)
+    {
     case 4:
         cpct_scanKeyboard_if();
         break;
@@ -54,74 +55,59 @@ void myInterruptHandler() {
 }
 
 
-void init() {
-    cpct_setVideoMode(0);
-    // Clean up Screen and BackBuffer filling them up with 0's
-    cpct_memset(CPCT_VMEM_START, 0x00, 0x4000);
-    cpct_setPalette(sp_palette, 16);
-    cpct_setBorder(HW_BLUE);
-
-    keys.up    = Key_CursorUp;
-    keys.down  = Key_CursorDown;
-    keys.left  = Key_CursorLeft;
-    keys.right = Key_CursorRight;
-    keys.fire  = Key_Space;
-    keys.pause = Key_Del;
-    keys.abort = Key_Esc;
-    keys.music = Key_M;
-
-    initPlayer(&player);
-    initCom(&com);
-    initBall(&ball);
-}
-
-void game() {
+void game()
+{
     //u32 c;
-    u8* pvmem;
-
-    init();
+    u8 *pvmem;
 
     //c = 0;
     // Loop forever
-    while (1) {
+    while (1)
+    {
         //c++;
-        if (DEBUG){
+        if (DEBUG)
+        {
             delay(15);
         }
         // Player1 block
         executeState(&player, &ball, &keys);
-        if (player.moved) {
+        if (player.moved)
+        {
             selectSpritePlayer(&player);
             erasePlayer(&player);
             drawPlayer(&player);
             player.px = player.x;
             player.py = player.y;
             player.moved = 0;
-            if (DEBUG) {
-                pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, 0, 0);
+            if (DEBUG)
+            {
+                pvmem = cpct_getScreenPtr((u8 *) CPCT_VMEM_START, 0, 0);
                 cpct_drawSolidBox(pvmem, #0, 12, 24);
                 drawNumber((u16) (player.x / SCALE), 4, 0, 0);
                 drawNumber((u16) (player.y / SCALE), 4, 0, 12);
             }
         }
 
-        if (com.moved) {
+        if (com.moved)
+        {
             selectSpritePlayer(&com);
             erasePlayer(&com);
             drawPlayer(&com);
             com.px = com.x;
             com.py = com.y;
             com.moved = 0;
-            pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, 0, 0);
+            pvmem = cpct_getScreenPtr((u8 *) CPCT_VMEM_START, 0, 0);
         }
 
         //Ball block
-        if (ball.active) {
+        if (ball.active)
+        {
             updateBall(&ball);
             eraseBall(&ball);
             drawBall(&ball);
-            if (DEBUG) {
-                pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, 67, 0);
+            if (DEBUG)
+            {
+                pvmem = cpct_getScreenPtr((u8 *) CPCT_VMEM_START, 67, 0);
                 cpct_drawSolidBox(pvmem, #0, 12, 60);
                 drawNumber((i32) (ball.vx), 4, 67, 0);
                 drawNumber((i32) (ball.vy / SCALE), 4, 67, 12);
@@ -133,9 +119,54 @@ void game() {
     }
 }
 
-void main(void) {
+//Begin of recycled area
+CPCT_ABSOLUTE_LOCATION_AREA(0x8000);
+
+// Data created with Img2CPC - (c) Retroworks - 2007-2015
+// Palette uses hardware values.
+const u8 sp_palette[16] = { 0x54, 0x44, 0x4e, 0x53, 0x4c, 0x55, 0x4d, 0x56, 0x5e, 0x5f, 0x5d, 0x52, 0x5c, 0x4a, 0x57, 0x4b };
+
+const TKeys tempKeys =
+{
+    Key_CursorUp,   Key_CursorDown, Key_CursorLeft
+    ,   Key_CursorRight, Key_Space,      Key_Del
+    ,   Key_Esc,        Key_M
+}
+
+// Main init
+void init()
+{
+    cpct_setVideoMode(0);
+    // Clean up Screen and BackBuffer filling them up with 0's
+    cpct_memset(CPCT_VMEM_START, 0x00, 0x4000);
+    cpct_setPalette(sp_palette, 16);
+    cpct_setBorder(HW_BLUE);
+
+    //keys.up    = Key_CursorUp;
+    //keys.down  = Key_CursorDown;
+    //keys.left  = Key_CursorLeft;
+    //keys.right = Key_CursorRight;
+    //keys.fire  = Key_Space;
+    //keys.pause = Key_Del;
+    //keys.abort = Key_Esc;
+    //keys.music = Key_M;
+
+    //Inicializar teclas
+    cpct_memcpy((void *) &keys, &tempKeys, sizeof(TKeys));
+
+    initPlayer(&player);
+    initCom(&com);
+    initBall(&ball);
+}
+
+void main(void)
+{
     cpct_disableFirmware();
     cpct_setInterruptHandler( myInterruptHandler );
     cpct_setStackLocation(NEW_STACK_LOCATION);
+    init();
     game();
 }
+
+//End of Absolut area
+CPCT_RELOCATABLE_AREA();

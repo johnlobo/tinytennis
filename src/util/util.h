@@ -12,7 +12,6 @@ typedef struct{
     cpct_keyID pause;
     cpct_keyID abort;
     cpct_keyID music;
-    cpct_keyID camelotmode;
 } TKeys;
 
 u8 fast_collision(u8 x1, u8 y1, u8 w1, u8 h1, u8 x2, u8 y2, u8 w2, u8 h2);
