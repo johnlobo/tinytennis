@@ -6,7 +6,7 @@
 #include "TBall.h"
 
 const TPlayer tempPlayer = {
-		40 * SCALE, 170 * SCALE
+	40 * SCALE, 170 * SCALE
 	, 	40 * SCALE, 170 * SCALE
 	,	GM_serve,	ST_stopped
 	,	SD_down,	&g_frames[0]
@@ -14,7 +14,7 @@ const TPlayer tempPlayer = {
 	,	0,			1
 };
 const TPlayer tempComp = {
-		40 * SCALE, 10 * SCALE
+	40 * SCALE, 10 * SCALE
 	, 	40 * SCALE, 10 * SCALE
 	,	GM_rest,	ST_stopped
 	,	SD_up,		&g_frames[12]
@@ -40,74 +40,54 @@ TFrame* const anim_down[DOWN_FRAMES] = {&g_frames[12], &g_frames[13], &g_frames[
 TFrame* const anim_hitting[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8], &g_frames[7]};
 
 
-void initPlayer(TPlayer *player) __z88dk_fastcall {
-	//player->x = player->px = 40 * SCALE;
-	//player->y = player->py = 170 * SCALE;
-	//player->phase = GM_serve;
-	//player->state = ST_stopped;
-	//player->side = SD_down;
-	//player->frame  = &g_frames[0];
-	//player->nframe = 0;
-	//player->look   = M_right;
-	//player->hit   = 0;
-	//player->moved = 1;
-	cpct_memcpy((void*) &player, &tempPlayer, sizeof(TPlayer));
+void initPlayer(TPlayer *player) {
+	cpct_memcpy(player, &tempPlayer, sizeof(TPlayer));
 }
 
-void initCom(TPlayer *player) __z88dk_fastcall {
-	//player->x = player->px = 40 * SCALE;
-	//player->y = player->py = 10 * SCALE;
-	//player->phase = GM_rest;
-	//player->state = ST_stopped;
-	//player->side = SD_up;
-	//player->frame  = &g_frames[12];	
-	//player->nframe = 0;
-	//player->look   = M_left;
-	//player->hit   = 0;
-	//player->moved = 1;
-	cpct_memcpy((void*) &player, &tempComp, sizeof(TPlayer));
+void initCom(TPlayer *player) {
+	cpct_memcpy(player, &tempComp, sizeof(TPlayer));
 }
 
-void assignFrame(TFrame **animation, TPlayer *player) {
-	player->frame = animation[player->nframe / ANIM_PAUSE];
+void assignFrame(TFrame **animation, TPlayer *player, u8 pause) {
+	player->frame = animation[player->nframe / pause];
 }
 
-void turnFrame(TPlayer *player) __z88dk_fastcall {
+void turnFrame(TPlayer *player) {
 	TFrame* f = player->frame;
 	if (f->look != player->look) {
 		cpct_hflipSpriteM0(PLAYER_WIDTH, PLAYER_HEIGHT, f->sprite);
 		f->look = player->look;
 	}
 }
-void selectSpritePlayer(TPlayer *player) __z88dk_fastcall {
+void selectSpritePlayer(TPlayer *player) {
 	switch (player->state) {
 	case ST_stopped: {
-		if (player->side == SD_down){
+		if (player->side == SD_down) {
 			player->frame = &g_frames[0];
-		}else {
+		} else {
 			player->frame = &g_frames[12];
 		}
 		break;
 	}
 	case ST_walking: {
 		if (player->look == M_up) {
-			assignFrame(anim_up, player);
+			assignFrame(anim_up, player, ANIM_PAUSE);
 		} else if (player->look == M_down) {
-			assignFrame(anim_down, player);
+			assignFrame(anim_down, player, ANIM_PAUSE);
 		} else {
-			assignFrame(anim_walking, player);
+			assignFrame(anim_walking, player, ANIM_PAUSE);
 			turnFrame(player);
 		}
 		break;
 	}
 	case ST_hitting: {
-		assignFrame(anim_hitting, player);
+		assignFrame(anim_hitting, player, ANIM_HIT_PAUSE);
 		break;
 	}
 	}
 }
 
-void moveRight(TPlayer *player) __z88dk_fastcall {
+void moveRight(TPlayer *player) {
 	if (((player->x / SCALE) + PLAYER_WIDTH + 1) < WIDTH) {
 		player->x += 1 * SCALE;
 		player->look  = M_right;
@@ -115,7 +95,7 @@ void moveRight(TPlayer *player) __z88dk_fastcall {
 	}
 }
 
-void moveLeft(TPlayer *player) __z88dk_fastcall {
+void moveLeft(TPlayer *player) {
 	if ((player->x / SCALE) > 0) {
 		player->x -= 1 * SCALE;
 		player->look  = M_left;
@@ -123,7 +103,7 @@ void moveLeft(TPlayer *player) __z88dk_fastcall {
 	}
 }
 
-void moveUp(TPlayer *player) __z88dk_fastcall {
+void moveUp(TPlayer *player) {
 	if ((player->y / SCALE) - VERTICAL_STEP > 0) {
 		player->y -= VERTICAL_STEP * SCALE;
 		//player->look  = M_right;
@@ -132,7 +112,7 @@ void moveUp(TPlayer *player) __z88dk_fastcall {
 	}
 }
 
-void moveDown(TPlayer *player) __z88dk_fastcall {
+void moveDown(TPlayer *player) {
 	if (((player->y / SCALE) + PLAYER_HEIGHT + VERTICAL_STEP) < HEIGHT) {
 		player->y += VERTICAL_STEP * SCALE;
 		//player->look  = M_right;
@@ -141,7 +121,7 @@ void moveDown(TPlayer *player) __z88dk_fastcall {
 	}
 }
 
-void drawPlayer(TPlayer *player) __z88dk_fastcall {
+void drawPlayer(TPlayer *player) {
 	u8* pvmem;
 	i32 posx, posy;
 	posx = player->x / SCALE;
@@ -152,7 +132,7 @@ void drawPlayer(TPlayer *player) __z88dk_fastcall {
 	}
 }
 
-void erasePlayer(TPlayer *player) __z88dk_fastcall {
+void erasePlayer(TPlayer *player) {
 	u8* pvmem;
 	i32 posx, posy;
 	posx = player->px / SCALE;
@@ -163,16 +143,15 @@ void erasePlayer(TPlayer *player) __z88dk_fastcall {
 	}
 }
 
-void redrawPlayer(TPlayer *player) __z88dk_fastcall {
+void redrawPlayer(TPlayer *player) {
 	erasePlayer(player);
 	drawPlayer(player);
 }
 
-void hitting_enter(TPlayer *player, TBall *ball) {
+void hitting_enter(TPlayer *player) {
 	player->state = ST_hitting;
 	player->hit  =  HITTING_FRAMES;
 	player->moved = 1;
-	newBall(player->x, player->y, ball);
 }
 
 
@@ -184,19 +163,19 @@ void walking_enter(u8 look, TPlayer *player) {
 	player->moved = 1;
 }
 
-void stopped_enter(TPlayer *player) __z88dk_fastcall {
+void stopped_enter(TPlayer *player) {
 	player->state = ST_stopped;
 	player->moved = 1;
 }
 
-void hitting_animate(TPlayer *player) __z88dk_fastcall {
+void hitting_animate(TPlayer *player) {
 	if (++player->nframe == HITTING_FRAMES * ANIM_PAUSE) {
 		player->nframe = 0;
 	}
 	player->moved = 1;
 }
 
-void hitting(TPlayer *player) __z88dk_fastcall {
+void hitting(TPlayer *player) {
 	if (player->hit > 1) {
 		player->hit--;
 		delay(5);
@@ -210,18 +189,17 @@ void serving_enter(TPlayer *player, TBall *ball) {
 	player->state = ST_hitting;
 	player->hit  =  HITTING_FRAMES;
 	player->moved = 1;
-	newBall(player->x, player->y, ball);
 }
 
 
-void serving_animate(TPlayer *player) __z88dk_fastcall {
+void serving_animate(TPlayer *player) {
 	if (++player->nframe == HITTING_FRAMES * ANIM_PAUSE) {
 		player->nframe = 0;
 	}
 	player->moved = 1;
 }
 
-void serving(TPlayer *player) __z88dk_fastcall {
+void serving(TPlayer *player) {
 	if (player->hit > 1) {
 		player->hit--;
 		delay(5);
@@ -240,11 +218,13 @@ void stopped(TPlayer *player, TBall *ball, TKeys *keys) {
 		walking_enter(M_right, player);
 	} else if (cpct_isKeyPressed(keys->left)) {
 		walking_enter(M_left, player);
-	} else if (cpct_isKeyPressed(keys->fire)) {
+	} else if (cpct_isKeyPressed(keys->fire1)) {
 		if (player->phase == GM_play)
-			hitting_enter(player, ball);
+			hitting_enter(player);
 		else
 			serving_enter(player, ball);
+	} else if (cpct_isKeyPressed(keys->fire2)) {
+		newBall(player->x, player->y, ball);
 	}
 }
 
@@ -256,20 +236,35 @@ void walking_animate(u8 look, TPlayer *player) {
 	player->moved = 1;
 }
 
-void up_animate(TPlayer *player) __z88dk_fastcall {
+void up_animate(TPlayer *player) {
 	if (++player->nframe == UP_FRAMES * ANIM_PAUSE)
 		player->nframe = 0;
 	player->moved = 1;
 }
 
-void down_animate(TPlayer *player) __z88dk_fastcall {
+void down_animate(TPlayer *player) {
 	if (++player->nframe == DOWN_FRAMES * ANIM_PAUSE)
 		player->nframe = 0;
 	player->moved = 1;
 }
 
 void walking(TPlayer *player, TBall *ball, TKeys *keys) {
-	if (cpct_isKeyPressed(keys->up)) {
+	if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->right))) {
+		moveUp(player);
+		moveRight(player);
+		walking_animate(M_right, player);
+	} else if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->left))) {
+		moveUp(player);
+		moveLeft(player);
+		walking_animate(M_left, player);
+	} else if ((cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(keys->right))) {
+		moveDown(player);
+		moveRight(player);
+		walking_animate(M_right, player);
+	} else if ((cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(keys->left))) {
+		moveDown(player);
+		moveLeft(player);
+	} else if (cpct_isKeyPressed(keys->up)) {
 		moveUp(player);
 		up_animate(player);
 	} else if (cpct_isKeyPressed(keys->down)) {
@@ -281,8 +276,10 @@ void walking(TPlayer *player, TBall *ball, TKeys *keys) {
 	} else if (cpct_isKeyPressed(keys->left)) {
 		moveLeft(player);
 		walking_animate(M_left, player);
-	} else if (cpct_isKeyPressed(keys->fire)) {
-		hitting_enter(player, ball);
+	} else if (cpct_isKeyPressed(keys->fire1)) {
+		hitting_enter(player);
+	} else if (cpct_isKeyPressed(keys->fire2)) {
+		newBall(player->x, player->y, ball);
 	} else {
 		stopped_enter(player);
 	}
@@ -295,7 +292,7 @@ void preparing(TPlayer *player, TBall *ball, TKeys *keys) {
 	} else if (cpct_isKeyPressed(keys->left)) {
 		moveLeft(player);
 		walking_animate(M_left, player);
-	} else if (cpct_isKeyPressed(keys->fire)) {
+	} else if (cpct_isKeyPressed(keys->fire1)) {
 		serving_enter(player, ball);
 	} else {
 		stopped_enter(player);

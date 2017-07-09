@@ -99,19 +99,7 @@ void updateBall(TBall *ball) {
 }
 
 void initBall(TBall *ball) {
-    //ball->x = 0;
-    //ball->y = 0;
-    //ball->z = 0;
-    //ball->px = 0;
-    //ball->py = 0;
-    //ball->pz = 0;
-    //ball->vx = 0;
-    //ball->vy = 0;
-    //ball->vz = 0;
-    //ball->bouncex = 0;
-    //ball->bouncey = 0;
-    //ball->active = 0;
-    cpct_memset((void*) &ball, 0, sizeof(TBall));
+    cpct_memset(ball, 0, sizeof(TBall));
 }
 
 void newBall(i32 x, i32 y, TBall *ball) {

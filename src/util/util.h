@@ -8,7 +8,8 @@ typedef struct{
     cpct_keyID down;
     cpct_keyID left;
     cpct_keyID right;
-    cpct_keyID fire;
+    cpct_keyID fire1;
+    cpct_keyID fire2;
     cpct_keyID pause;
     cpct_keyID abort;
     cpct_keyID music;

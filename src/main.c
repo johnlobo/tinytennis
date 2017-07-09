@@ -25,6 +25,8 @@
 #include "entities/TBall.h"
 #include "entities/TPlayer.h"
 #include "text/text.h"
+#include "sprites/court01.h"
+#include "levels/court01.h"
 
 // Máscara de transparencia
 cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
@@ -55,10 +57,27 @@ void myInterruptHandler()
 }
 
 
+// Main init
+void initGame()
+{
+    u8 *pvmem;
+
+    cpct_etm_setTileset2x4(tile_tileset);
+    initPlayer(&player);
+    initCom(&com);
+    initBall(&ball);
+
+    pvmem = cpct_getScreenPtr(CPCT_VMEM_START, 0, 0);
+    cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, pvmem, court);
+}
+
+
 void game()
 {
     //u32 c;
     u8 *pvmem;
+
+    initGame();
 
     //c = 0;
     // Loop forever
@@ -74,7 +93,7 @@ void game()
         if (player.moved)
         {
             selectSpritePlayer(&player);
-            erasePlayer(&player);
+            //erasePlayer(&player);
             drawPlayer(&player);
             player.px = player.x;
             player.py = player.y;
@@ -128,35 +147,19 @@ const u8 sp_palette[16] = { 0x54, 0x44, 0x4e, 0x53, 0x4c, 0x55, 0x4d, 0x56, 0x5e
 
 const TKeys tempKeys =
 {
-    Key_CursorUp,   Key_CursorDown, Key_CursorLeft
-    ,   Key_CursorRight, Key_Space,      Key_Del
-    ,   Key_Esc,        Key_M
-}
+    Key_CursorUp, Key_CursorDown, Key_CursorLeft, Key_CursorRight,
+    Key_Space, Key_Enter, Key_Del, Key_Esc, Key_M
+};
 
-// Main init
-void init()
-{
+void initMain() {
     cpct_setVideoMode(0);
     // Clean up Screen and BackBuffer filling them up with 0's
     cpct_memset(CPCT_VMEM_START, 0x00, 0x4000);
     cpct_setPalette(sp_palette, 16);
     cpct_setBorder(HW_BLUE);
 
-    //keys.up    = Key_CursorUp;
-    //keys.down  = Key_CursorDown;
-    //keys.left  = Key_CursorLeft;
-    //keys.right = Key_CursorRight;
-    //keys.fire  = Key_Space;
-    //keys.pause = Key_Del;
-    //keys.abort = Key_Esc;
-    //keys.music = Key_M;
-
     //Inicializar teclas
     cpct_memcpy((void *) &keys, &tempKeys, sizeof(TKeys));
-
-    initPlayer(&player);
-    initCom(&com);
-    initBall(&ball);
 }
 
 void main(void)
@@ -164,7 +167,7 @@ void main(void)
     cpct_disableFirmware();
     cpct_setInterruptHandler( myInterruptHandler );
     cpct_setStackLocation(NEW_STACK_LOCATION);
-    init();
+    initMain();
     game();
 }
 

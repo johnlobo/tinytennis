@@ -20,6 +20,9 @@
 #define WIDTH  80
 #define HEIGHT  200
 
+#define MAP_WIDTH  40
+#define MAP_HEIGHT  50
+
 #define PLAYER_WIDTH   SP_PLAYER1_00_W
 #define PLAYER_HEIGHT   SP_PLAYER1_00_H
 
