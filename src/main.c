@@ -57,13 +57,13 @@ void myInterruptHandler()
     }
 }
 
-void entityDrawUpdate(TEntity e){
+void entityDrawUpdate(TEntity *e){
     u32* x = e->x + 2;
     u32* y = e->y + 2;
     u32* z = e->z + 2;
-    *x = *(x-1); --x; *x = *(x-1)
-    *y = *(y-1); --x; *y = *(y-1)
-    *z = *(z-1); --x; *z = *(z-1)
+    *x = *(x-1); --x; *x = *(x-1);
+    *y = *(y-1); --x; *y = *(y-1);
+    *z = *(z-1); --x; *z = *(z-1);
     --e->draw;
 }
 

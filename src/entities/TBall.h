@@ -2,7 +2,7 @@
 #define _TBALL_H_
 
 #include <types.h>
-#include "../defines."
+#include "../defines.h"
 
 #define BALL_WIDTH SP_BALL_0_W
 #define BALL_HEIGHT SP_BALL_0_H

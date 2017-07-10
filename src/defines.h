@@ -1,6 +1,8 @@
 #ifndef _DEFINES_H_
 #define _DEFINES_H_
 
+#include <cpctelera.h>
+
 #define DEBUG 0
 
 #define SCALE 256U
@@ -9,6 +11,7 @@
 
 // Pointers to the hardware backbuffer, placed in bank 1
 // of the memory (0x8000-0xBFFF)
+#define SCR_VMEM  (u8*)0xC000
 #define SCR_BUFF  (u8*)0x8000
 
 // Program Stack locations
@@ -35,6 +38,11 @@
 // Declare am_tablatrans, which is defined in game.c, and used in more places
 cpctm_declareMaskTable(g_tablatrans);
 
+// Looking to
+typedef enum { M_right, M_left, M_up, M_down } ELook;
+// Player States
+typedef enum { ST_stopped, ST_walking, ST_hitting, ST_preparing, ST_serving } EStates;
+
 // Game phases
 typedef enum{ GM_serve, GM_rest, GM_play } EGamePhases;
 //Sides
@@ -46,9 +54,9 @@ typedef struct {
 } TFrame;
 
 typedef struct{
-	u32 x[3];
-	u32 y[3];
-	u32 z[3];
+	i32 x[3];
+	i32 y[3];
+	i32 z[3];
 	u8 w, h;
 	i32 hstep, vstep;
 	TFrame* frame;

@@ -2,14 +2,10 @@
 #define _TPLAYER_H_
 
 #include <types.h>
-#include "../defines."
+#include "../defines.h"
 #include "TBall.h"
 #include "../util/util.h"
 
-// Looking to
-typedef enum { M_right, M_left, M_up, M_down } ELook;
-// Player States
-typedef enum { ST_stopped, ST_walking, ST_hitting, ST_preparing, ST_serving } EStates;
 
 typedef struct {
     TEntity e;

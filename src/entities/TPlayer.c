@@ -4,34 +4,40 @@
 #include "../util/util.h"
 #include "../sprites/player1.h"
 #include "TBall.h"
+#include "../util/video.h"
 
 const TPlayer tempPlayer = {
-		40 * SCALE, 40 * SCALE, 40 * SCALE
-	, 	170 * SCALE, 170 * SCALE, 170 * SCALE
-	,	player->e.w, player->e.h
-	,   256, 512
-	,	&g_frames[0]
-	,	0
-	,	M_right
-	,	2
+
+	{	{ 40 * SCALE, 40 * SCALE, 40 * SCALE }
+		, 	{ 170 * SCALE, 170 * SCALE, 170 * SCALE }
+		, 	{ 0, 0, 0 }
+		,	PLAYER_WIDTH, PLAYER_HEIGHT
+		,   256, 512
+		,	&g_frames[0]
+		,	0
+		,	M_right
+		,	2
+	}
 	,	GM_serve
 	,	ST_stopped
-	,	SD_down,	
+	,	SD_down
 	,	0
 };
 const TPlayer tempComp = {
-		40 * SCALE, 40 * SCALE, 40 * SCALE
-	, 	170 * SCALE, 170 * SCALE, 170 * SCALE
-	,	player->e.w, player->e.h
-	,   256, 512
-	,	&g_frames[12]
-	,	0
-	,	M_right
-	,	2
+	{	{ 40 * SCALE, 40 * SCALE, 40 * SCALE }
+		, 	{ 170 * SCALE, 170 * SCALE, 170 * SCALE }
+		, 	{ 0, 0, 0 }
+		,	PLAYER_WIDTH, PLAYER_HEIGHT
+		,   256, 512
+		,	&g_frames[12]
+		,	0
+		,	M_right
+		,	2
+	}
 	,	GM_rest
 	,	ST_stopped
-	,	SD_up,	
-	,	0		
+	,	SD_up
+	,	0
 };
 
 const TFrame g_frames[PLAYER_FRAMES] = {
@@ -52,39 +58,39 @@ TFrame* const anim_down[DOWN_FRAMES] = {&g_frames[12], &g_frames[13], &g_frames[
 TFrame* const anim_hitting[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8], &g_frames[7]};
 
 
-void initPlayer(TPlayer *player) {
+void initPlayer(TPlayer * player) {
 	cpct_memcpy(player, &tempPlayer, sizeof(TPlayer));
 }
 
-void initCom(TPlayer *player) {
+void initCom(TPlayer * player) {
 	cpct_memcpy(player, &tempComp, sizeof(TPlayer));
 }
 
-void assignFrame(TFrame **animation, TPlayer *player, u8 pause) {
-	player->frame = animation[player->nframe / pause];
+void assignFrame(TFrame **animation, TPlayer * player, u8 pause) {
+	player->e.frame = animation[player->e.nframe / pause];
 }
 
-void turnFrame(TPlayer *player) {
-	TFrame* f = player->frame;
-	if (f->look != player->look) {
+void turnFrame(TPlayer * player) {
+	TFrame* f = player->e.frame;
+	if (f->look != player->e.look) {
 		cpct_hflipSpriteM0(player->e.w, player->e.h, f->sprite);
-		f->look = player->look;
+		f->look = player->e.look;
 	}
 }
-void selectSpritePlayer(TPlayer *player) {
+void selectSpritePlayer(TPlayer * player) {
 	switch (player->state) {
 	case ST_stopped: {
 		if (player->side == SD_down) {
-			player->frame = &g_frames[0];
+			player->e.frame = &g_frames[0];
 		} else {
-			player->frame = &g_frames[12];
+			player->e.frame = &g_frames[12];
 		}
 		break;
 	}
 	case ST_walking: {
-		if (player->look == M_up) {
+		if (player->e.look == M_up) {
 			assignFrame(anim_up, player, ANIM_PAUSE);
-		} else if (player->look == M_down) {
+		} else if (player->e.look == M_down) {
 			assignFrame(anim_down, player, ANIM_PAUSE);
 		} else {
 			assignFrame(anim_walking, player, ANIM_PAUSE);
@@ -99,7 +105,7 @@ void selectSpritePlayer(TPlayer *player) {
 	}
 }
 
-void moveRight(TPlayer *player) {
+void moveRight(TPlayer * player) {
 	if (((player->e.x[0] / SCALE) + player->e.w + 1) < WIDTH) {
 		player->e.x[0] += player->e.hstep;
 		player->e.look  = M_right;
@@ -107,15 +113,15 @@ void moveRight(TPlayer *player) {
 	}
 }
 
-void moveLeft(TPlayer *player) {
+void moveLeft(TPlayer * player) {
 	if ((player->e.x[0] / SCALE) > 0) {
-		player->e.x[0] -= player->hstep;
+		player->e.x[0] -= player->e.hstep;
 		player->e.look  = M_left;
 		player->e.draw = 2;
 	}
 }
 
-void moveUp(TPlayer *player) {
+void moveUp(TPlayer * player) {
 	if ((player->e.y[0] / SCALE) - VERTICAL_STEP > 0) {
 		player->e.y[0] -= player->e.vstep;
 		//player->look  = M_right;
@@ -124,27 +130,27 @@ void moveUp(TPlayer *player) {
 	}
 }
 
-void moveDown(TPlayer *player) {
+void moveDown(TPlayer * player) {
 	if (((player->e.y[0] / SCALE) + player->e.h + VERTICAL_STEP) < HEIGHT) {
-		player->.e.y[0] += player-vhstep;
+		player->e.y[0] += player->e.vstep;
 		//player->look  = M_right;
-		player->look = M_down;
+		player->e.look = M_down;
 		player->e.draw = 2;
 	}
 }
 
-void drawPlayer(TPlayer *player) {
+void drawPlayer(TPlayer * player) {
 	u8* pvmem;
 	i32 posx, posy;
 	posx = player->e.x[0] / SCALE;
 	posy = player->e.y[0] / SCALE;
 	if (((posx + player->e.w) <= WIDTH) && ((posy + player->e.h) <= HEIGHT)) {
 		pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
-		cpct_drawSpriteMaskedAlignedTable(player->frame->sprite, pvmem, player->e.w, player->e.h, g_tablatrans);
+		cpct_drawSpriteMaskedAlignedTable(player->e.frame->sprite, pvmem, player->e.w, player->e.h, g_tablatrans);
 	}
 }
 
-void erasePlayer(TPlayer *player) {
+void erasePlayer(TPlayer * player) {
 	u8* pvmem;
 	i32 posx, posy;
 	posx = player->e.x[2] / SCALE;
@@ -155,12 +161,12 @@ void erasePlayer(TPlayer *player) {
 	}
 }
 
-void redrawPlayer(TPlayer *player) {
+void redrawPlayer(TPlayer * player) {
 	erasePlayer(player);
 	drawPlayer(player);
 }
 
-void hitting_enter(TPlayer *player) {
+void hitting_enter(TPlayer * player) {
 	player->state = ST_hitting;
 	player->hit  =  HITTING_FRAMES;
 	player->e.draw = 2;
@@ -168,26 +174,26 @@ void hitting_enter(TPlayer *player) {
 
 
 
-void walking_enter(u8 look, TPlayer *player) {
+void walking_enter(u8 look, TPlayer * player) {
 	player->e.nframe = 0;
 	player->state = ST_walking;
 	player->e.look   = look;
 	player->e.draw = 2;
 }
 
-void stopped_enter(TPlayer *player) {
+void stopped_enter(TPlayer * player) {
 	player->state = ST_stopped;
 	player->e.draw = 2;
 }
 
-void hitting_animate(TPlayer *player) {
+void hitting_animate(TPlayer * player) {
 	if (++player->e.nframe == HITTING_FRAMES * ANIM_PAUSE) {
 		player->e.nframe = 0;
 	}
 	player->e.draw = 2;
 }
 
-void hitting(TPlayer *player) {
+void hitting(TPlayer * player) {
 	if (player->hit > 1) {
 		player->hit--;
 		delay(5);
@@ -197,21 +203,21 @@ void hitting(TPlayer *player) {
 	}
 }
 
-void serving_enter(TPlayer *player, TBall *ball) {
+void serving_enter(TPlayer * player, TBall * ball) {
 	player->state = ST_hitting;
 	player->hit  =  HITTING_FRAMES;
 	player->e.draw = 2;
 }
 
 
-void serving_animate(TPlayer *player) {
-	if (++player-e.nframe == HITTING_FRAMES * ANIM_PAUSE) {
+void serving_animate(TPlayer * player) {
+	if (++player->e.nframe == HITTING_FRAMES * ANIM_PAUSE) {
 		player->e.nframe = 0;
 	}
 	player->e.draw = 2;
 }
 
-void serving(TPlayer *player) {
+void serving(TPlayer * player) {
 	if (player->hit > 1) {
 		player->hit--;
 		delay(5);
@@ -221,11 +227,11 @@ void serving(TPlayer *player) {
 	}
 }
 
-void stopped(TPlayer *player, TBall *ball, TKeys *keys) {
+void stopped(TPlayer * player, TBall * ball, TKeys * keys) {
 	if ((player->phase != GM_play) && (cpct_isKeyPressed(keys->up))) {
-		walking_enter(player->look, player);
+		walking_enter(player->e.look, player);
 	} else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->down))) {
-		walking_enter(player->look, player);
+		walking_enter(player->e.look, player);
 	} else if (cpct_isKeyPressed(keys->right)) {
 		walking_enter(M_right, player);
 	} else if (cpct_isKeyPressed(keys->left)) {
@@ -241,26 +247,26 @@ void stopped(TPlayer *player, TBall *ball, TKeys *keys) {
 }
 
 
-void walking_animate(u8 look, TPlayer *player) {
-	player->look  = look;
+void walking_animate(u8 look, TPlayer * player) {
+	player->e.look  = look;
 	if (++player->e.nframe == WALKING_FRAMES * ANIM_PAUSE)
 		player->e.nframe = 0;
 	player->e.draw = 2;
 }
 
-void up_animate(TPlayer *player) {
+void up_animate(TPlayer * player) {
 	if (++player->e.nframe == UP_FRAMES * ANIM_PAUSE)
 		player->e.nframe = 0;
 	player->e.draw = 2;
 }
 
-void down_animate(TPlayer *player) {
+void down_animate(TPlayer * player) {
 	if (++player->e.nframe == DOWN_FRAMES * ANIM_PAUSE)
 		player->e.nframe = 0;
 	player->e.draw = 2;
 }
 
-void walking(TPlayer *player, TBall *ball, TKeys *keys) {
+void walking(TPlayer * player, TBall * ball, TKeys * keys) {
 	if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->right))) {
 		moveUp(player);
 		moveRight(player);
@@ -298,7 +304,7 @@ void walking(TPlayer *player, TBall *ball, TKeys *keys) {
 }
 
 
-void preparing(TPlayer *player, TBall *ball, TKeys *keys) {
+void preparing(TPlayer * player, TBall * ball, TKeys * keys) {
 	if (cpct_isKeyPressed(keys->right)) {
 		moveRight(player);
 		walking_animate(M_right, player);
@@ -313,7 +319,7 @@ void preparing(TPlayer *player, TBall *ball, TKeys *keys) {
 }
 
 
-void executeState(TPlayer *player, TBall *ball, TKeys *keys) {
+void executeState(TPlayer * player, TBall * ball, TKeys * keys) {
 	switch (player->state) {
 	case ST_stopped:
 		stopped(player, ball, keys);

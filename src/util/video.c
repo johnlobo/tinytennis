@@ -17,6 +17,7 @@
 //------------------------------------------------------------------------------
 
 #include "video.h"
+#include "../defines.h"
 
 u8* const g_scrbuffers[2] = {SCR_VMEM, SCR_BUFF};
 

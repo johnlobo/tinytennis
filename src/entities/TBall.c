@@ -3,6 +3,7 @@
 #include <cpctelera.h>
 #include "../defines.h"
 #include "../sprites/ball.h"
+#include "../util/video.h"
 
 const i16 trajetoriesX[10] = {0, -64, 64, 0, -128, 128, -172, 172, -240, 240};
 
@@ -62,7 +63,7 @@ void updateBall(TBall *ball) {
     ball->e.z[0] += ball->vz;
 
     // Check bounce
-    if (ball->z < 0) {
+    if (ball->e.z[0] < 0) {
         ball->vx = ball->vx * FRICTION;
         ball->vy = ball->vy * FRICTION;
         ball->vz = -ball->vz * FRICTION;
