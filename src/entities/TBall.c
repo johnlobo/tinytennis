@@ -12,17 +12,17 @@ void eraseBall(TBall *ball) {
     i32 posx, posy;
     u8* pvmem;
     //Shadow
-    posx = ball->px / SCALE;
-    posy = ball->py / SCALE;
+    posx = ball->e.x[2] / SCALE;
+    posy = ball->e.y[2] / SCALE;
     if (((posx + SHADOW_BALL_WIDTH) < 80) && ((posy + SHADOW_BALL_HEIGHT) < 200)) {
-        pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, posx, posy);
+        pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
         cpct_drawSolidBox(pvmem, #0,SHADOW_BALL_WIDTH,SHADOW_BALL_HEIGHT);
     }
     //Ball
-    posx = ball->px / SCALE;
-    posy = ball->py / SCALE - (ball->pz / SCALE / 2);
+    posx = ball->e.x[2] / SCALE;
+    posy = ball->e.y[2] / SCALE - (ball->e.z[2] / SCALE / 2);
     if (((posx + BALL_WIDTH) < 80) && ((posy >= 0) && ((posy + BALL_HEIGHT) < 200))) {
-        pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, posx, posy);
+        pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
         cpct_drawSolidBox(pvmem, #0,BALL_WIDTH,BALL_HEIGHT);
     }
 }
@@ -31,17 +31,17 @@ void drawBall(TBall *ball) {
     i32 posx, posy;
     u8* pvmem;
     //Shadow
-    posx = ball->x / SCALE;
-    posy = ball->y / SCALE;
+    posx = ball->e.x[0] / SCALE;
+    posy = ball->e.y[0] / SCALE;
     if (((posx + SHADOW_BALL_WIDTH) < 80) && ((posy + SHADOW_BALL_HEIGHT) < 200)) {
-        pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, posx, posy);
+        pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
         cpct_drawSpriteMaskedAlignedTable(sp_ball_1, pvmem, SHADOW_BALL_WIDTH, SHADOW_BALL_HEIGHT, g_tablatrans);
     }
     //Ball
-    posx = ball->x / SCALE;
-    posy = (ball->y / SCALE) - (ball->z / SCALE / 2);
+    posx = ball->e.x[0] / SCALE;
+    posy = (ball->e.y[0] / SCALE) - (ball->e.z[0] / SCALE / 2);
     if (((posx + BALL_WIDTH) < 80) && ((posy >= 0) && ((posy + BALL_HEIGHT) < 200))) {
-        pvmem = cpct_getScreenPtr((u8*) CPCT_VMEM_START, posx, posy);
+        pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
         cpct_drawSpriteMaskedAlignedTable((u8*) ball->sprite, pvmem, BALL_WIDTH, BALL_HEIGHT, g_tablatrans);
     }
 }
@@ -50,44 +50,41 @@ void calcBounce(TBall *ball){
 
     //t = - ((2 * ball->vz) / (-0.4 * SCALE));
     t = - (2 * ball->vz) / GRAVITY;
-    ball->bouncex = (ball->x + (ball->vx * t)) / SCALE;
-    ball->bouncey = (ball->y + (ball->vy * t)) / SCALE;
+    ball->bouncex = (ball->e.x[0] + (ball->vx * t)) / SCALE;
+    ball->bouncey = (ball->e.y[0] + (ball->vy * t)) / SCALE;
 }
 
 void updateBall(TBall *ball) {
 
-    ball->px = ball->x;
-    ball->py = ball->y;
-    ball->pz = ball->z;
     ball->vz += GRAVITY;
-    ball->x += ball->vx;
-    ball->y += ball->vy;
-    ball->z += ball->vz;
+    ball->e.x[0] += ball->vx;
+    ball->e.y[0] += ball->vy;
+    ball->e.z[0] += ball->vz;
 
     // Check bounce
     if (ball->z < 0) {
         ball->vx = ball->vx * FRICTION;
         ball->vy = ball->vy * FRICTION;
         ball->vz = -ball->vz * FRICTION;
-        ball->z = 0;
+        ball->e.z[0] = 0;
         calcBounce(ball);
     }
     // Check boundaries
-    if (ball->x < 0) {
-        ball->x = 0;
+    if (ball->e.x[0] < 0) {
+        ball->e.x[0] = 0;
         ball->vx = -ball->vx;
         calcBounce(ball);
-    } else if ((ball->x + (BALL_WIDTH * SCALE)) > (80 * SCALE)) {
-        ball->x = (80 * SCALE) - (BALL_WIDTH * SCALE);
+    } else if ((ball->e.x[0] + (BALL_WIDTH * SCALE)) > (80 * SCALE)) {
+        ball->e.x[0] = (80 * SCALE) - (BALL_WIDTH * SCALE);
         ball->vx = -ball->vx;
         calcBounce(ball);
     }
-    if (ball->y < 0) {
-        ball->y = 0;
+    if (ball->e.y[0] < 0) {
+        ball->e.y[0] = 0;
         ball->vy = -ball->vy;
         calcBounce(ball);
-    } else if ((ball->y + (BALL_HEIGHT * SCALE)) > (200 * SCALE)) {
-        ball->y = (200 * SCALE) - (BALL_HEIGHT * SCALE);
+    } else if ((ball->e.y[0] + (BALL_HEIGHT * SCALE)) > (200 * SCALE)) {
+        ball->e.y[0] = (200 * SCALE) - (BALL_HEIGHT * SCALE);
         ball->vy = -ball->vy;
         calcBounce(ball);
     }
@@ -103,9 +100,10 @@ void initBall(TBall *ball) {
 }
 
 void newBall(i32 x, i32 y, TBall *ball) {
-    ball->x = ball->px = x;
-    ball->y = ball->py = y;
-    ball->z = ball->pz = ((cpct_rand8() % 3) + 3) * SCALE;
+    ball->e.x[0] = ball->e.x[1] = ball->e.x[2] = x;
+    ball->e.y[0] = ball->e.y[1] = ball->e.y[2] = y;
+    ball->e.z[0] = ball->e.z[1] = ball->e.z[2] = ((cpct_rand8() % 3) + 3) * SCALE;
+    ball->e.draw = 2;
     ball->vx = trajetoriesX[cpct_rand8() % 10];
     ball->vy = (((cpct_rand8() % 4) * -1.6) - 1) * SCALE;
     ball->vz = (((cpct_rand8() % 4) * 1) + 5)  * SCALE;

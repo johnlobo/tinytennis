@@ -12,7 +12,7 @@
 #define SCR_BUFF  (u8*)0x8000
 
 // Program Stack locations
-#define NEW_STACK_LOCATION (void*)0x1000
+#define NEW_STACK_LOCATION (void*)0x8000
 
 #define YES 1
 #define NO 0
@@ -39,5 +39,22 @@ cpctm_declareMaskTable(g_tablatrans);
 typedef enum{ GM_serve, GM_rest, GM_play } EGamePhases;
 //Sides
 typedef enum{ SD_up, SD_down } ESides;
+
+typedef struct {
+    u8 look;
+    u8* sprite;
+} TFrame;
+
+typedef struct{
+	u32 x[3];
+	u32 y[3];
+	u32 z[3];
+	u8 w, h;
+	i32 hstep, vstep;
+	TFrame* frame;
+    u8 nframe;
+    ELook look;
+	u8 draw;
+} TEntity;
 
 #endif

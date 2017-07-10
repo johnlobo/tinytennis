@@ -2,6 +2,7 @@
 #define _TBALL_H_
 
 #include <types.h>
+#include "../defines."
 
 #define BALL_WIDTH SP_BALL_0_W
 #define BALL_HEIGHT SP_BALL_0_H
@@ -10,8 +11,7 @@
 
 
 typedef struct {
-    i32 x, y, z;
-    i32 px, py, pz;
+	TEntity e;
     i32 vx, vy, vz;
     u8* sprite;
     u8 bouncex, bouncey;
