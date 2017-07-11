@@ -77,10 +77,10 @@ void initGame()
     initCom(&com);
     initBall(&ball);
 
-    pvmem = cpct_getScreenPtr(g_scrbuffers[0], 0, 0);
-    cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, pvmem, court);
-    pvmem = cpct_getScreenPtr(g_scrbuffers[1], 0, 0);
-    cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, pvmem, court);
+    //pvmem = cpct_getScreenPtr(g_scrbuffers[0], 0, 0);
+    cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[0], court);
+    //pvmem = cpct_getScreenPtr(g_scrbuffers[1], 0, 0);
+    cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[1], court);
 }
 
 
@@ -91,14 +91,9 @@ void game()
 
     initGame();
 
-    //c = 0;
     // Loop forever
     while (1)
     {
-        //c++;
-#ifdef DEBUG
-        delay(15);
-#endif
         // Player1 block
         executeState(&player, &ball, &keys);
         if (player.e.draw)
@@ -107,12 +102,6 @@ void game()
             selectSpritePlayer(&player);
             drawPlayer(&player);
             entityDrawUpdate(&player.e);
-#ifdef DEBUG
-            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[1], 0, 0);
-            cpct_drawSolidBox(pvmem, #0, 12, 24);
-            drawNumber((u16) (player.e.x[0] / SCALE), 4, 0, 0);
-            drawNumber((u16) (player.e.y[0] / SCALE), 4, 0, 12);
-#endif
         }
 
         if (com.e.draw)
@@ -130,15 +119,6 @@ void game()
             eraseBall(&ball);
             drawBall(&ball);
             entityDrawUpdate(&ball.e);
-#ifdef DEBUG
-            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[1], 67, 0);
-            cpct_drawSolidBox(pvmem, #0, 12, 60);
-            drawNumber((i32) (ball.vx), 4, 67, 0);
-            drawNumber((i32) (ball.vy / SCALE), 4, 67, 12);
-            drawNumber((i32) (ball.vz / SCALE), 4, 67, 24);
-            drawNumber((u8) ball.bouncex, 4, 67, 36);
-            drawNumber((u8) ball.bouncey, 4, 67, 48);
-#endif
         }
 
         cpct_waitVSYNC();
@@ -147,7 +127,7 @@ void game()
 }
 
 //Begin of recycled area
-CPCT_ABSOLUTE_LOCATION_AREA(0x8000);
+//CPCT_ABSOLUTE_LOCATION_AREA(0x8000);
 
 // Data created with Img2CPC - (c) Retroworks - 2007-2015
 // Palette uses hardware values.
@@ -179,4 +159,4 @@ void main(void)
 }
 
 //End of Absolut area
-CPCT_RELOCATABLE_AREA();
+//CPCT_RELOCATABLE_AREA();
