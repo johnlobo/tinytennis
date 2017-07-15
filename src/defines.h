@@ -5,7 +5,7 @@
 
 #define DEBUG 0
 
-#define SCALE 256U
+#define SCALE 256
 #define FRICTION 0.8
 #define GRAVITY (-0.4 * SCALE)
 
@@ -54,11 +54,11 @@ typedef struct {
 } TFrame;
 
 typedef struct{
-	i32 x[3];
-	i32 y[3];
-	i32 z[3];
+	u16 x[3];
+	u16 y[3];
+	u16 z[3];
 	u8 w, h;
-	i32 hstep, vstep;
+	i16 hstep, vstep;
 	TFrame* frame;
     u8 nframe;
     ELook look;

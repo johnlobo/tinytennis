@@ -28,7 +28,7 @@ const TPlayer tempPlayer =
 const TPlayer tempComp =
 {
 	{	{ 40 * SCALE, 40 * SCALE, 40 * SCALE }
-		, 	{ 170 * SCALE, 170 * SCALE, 170 * SCALE }
+		, 	{ 10 * SCALE, 10 * SCALE, 10 * SCALE }
 		, 	{ 0, 0, 0 }
 		,	PLAYER_WIDTH, PLAYER_HEIGHT
 		,   256, 512
@@ -129,7 +129,7 @@ void selectSpritePlayer(TPlayer *player)
 
 void moveRight(TPlayer *player)
 {
-	if (((player->e.x[0] / SCALE) + player->e.w + 1) < WIDTH)
+	if ((player->e.x[0] + (player->e.w * SCALE) + player->e.hstep) < (WIDTH * SCALE))
 	{
 		player->e.x[0] += player->e.hstep;
 		player->e.look  = M_right;
@@ -139,28 +139,32 @@ void moveRight(TPlayer *player)
 
 void moveLeft(TPlayer *player)
 {
-	if ((player->e.x[0] / SCALE) > 0)
-	{
+	if (player->e.x[0] - player->e.hstep > (160*SCALE)) {
+		player->e.x[0] = 0;
+	} else {
 		player->e.x[0] -= player->e.hstep;
-		player->e.look  = M_left;
-		player->e.draw = 2;
 	}
+	player->e.look  = M_left;
+	player->e.draw = 2;
+
 }
 
 void moveUp(TPlayer *player)
 {
-	if ((player->e.y[0] / SCALE) - VERTICAL_STEP > 0)
-	{
+	if (player->e.y[0] - player->e.vstep > (200*SCALE)) {
+		player->e.y[0] = 0;
+	} else {
 		player->e.y[0] -= player->e.vstep;
-		//player->look  = M_right;
-		player->e.look = M_up;
-		player->e.draw = 2;
 	}
+	//player->look  = M_right;
+	player->e.look = M_up;
+	player->e.draw = 2;
+
 }
 
 void moveDown(TPlayer *player)
 {
-	if (((player->e.y[0] / SCALE) + player->e.h + VERTICAL_STEP) < HEIGHT)
+	if ((player->e.y[0] + (player->e.h * SCALE) + player->e.vstep) < (HEIGHT * SCALE))
 	{
 		player->e.y[0] += player->e.vstep;
 		//player->look  = M_right;
@@ -172,20 +176,20 @@ void moveDown(TPlayer *player)
 void drawPlayer(TPlayer *player)
 {
 	u8 *pvmem;
-	i32 posx, posy;
+	u8 posx, posy;
 	posx = player->e.x[0] / SCALE;
 	posy = player->e.y[0] / SCALE;
-	if (((posx + player->e.w) <= WIDTH) && ((posy + player->e.h) <= HEIGHT))
-	{
-		pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[1], posx, posy);
-		cpct_drawSpriteMaskedAlignedTable(player->e.frame->sprite, pvmem, player->e.w, player->e.h, g_tablatrans);
-	}
+	//if (((posx + player->e.w) <= WIDTH) && ((posy + player->e.h) <= HEIGHT))
+	//{
+	pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[1], posx, posy);
+	cpct_drawSpriteMaskedAlignedTable(player->e.frame->sprite, pvmem, player->e.w, player->e.h, g_tablatrans);
+	//}
 }
 
 void erasePlayer(TPlayer *player)
 {
 	//u8 *pvmem;
-	i32 posx, posy;
+	u8 posx, posy;
 	posx = player->e.x[2] / SCALE;
 	posy = player->e.y[2] / SCALE;
 	/*if (((posx + player->e.w) <= WIDTH) && ((posy + player->e.h) <= HEIGHT)) {
@@ -194,15 +198,9 @@ void erasePlayer(TPlayer *player)
 	}*/
 	if (((posx + player->e.w) <= WIDTH) && ((posy + player->e.h) <= HEIGHT))
 	{
-		cpct_etm_drawTileBox2x4 (posx / 2, posy / 4, (player->e.w / 2) + 1, (player->e.h / 4) +1, MAP_WIDTH, g_scrbuffers[1], court);
+		cpct_etm_drawTileBox2x4 (posx / 2, posy / 4, (player->e.w / 2) + 1, (player->e.h / 4) + 1, MAP_WIDTH, g_scrbuffers[1], court);
 	}
 
-}
-
-void redrawPlayer(TPlayer *player)
-{
-	erasePlayer(player);
-	drawPlayer(player);
 }
 
 void hitting_enter(TPlayer *player)
@@ -251,7 +249,7 @@ void hitting(TPlayer *player)
 	}
 }
 
-void serving_enter(TPlayer *player, TBall *ball)
+void serving_enter(TPlayer *player)
 {
 	player->state = ST_hitting;
 	player->hit  =  HITTING_FRAMES;
@@ -320,7 +318,7 @@ void stopped(TPlayer *player, TBall *ball, TKeys *keys)
 		if (player->phase == GM_play)
 			hitting_enter(player);
 		else
-			serving_enter(player, ball);
+			serving_enter(player);
 	}
 	else if (cpct_isKeyPressed(keys->fire2))
 	{
@@ -411,7 +409,7 @@ void walking(TPlayer *player, TBall *ball, TKeys *keys)
 }
 
 
-void preparing(TPlayer *player, TBall *ball, TKeys *keys)
+void preparing(TPlayer *player, TKeys *keys)
 {
 	if (cpct_isKeyPressed(keys->right))
 	{
@@ -425,7 +423,7 @@ void preparing(TPlayer *player, TBall *ball, TKeys *keys)
 	}
 	else if (cpct_isKeyPressed(keys->fire1))
 	{
-		serving_enter(player, ball);
+		serving_enter(player);
 	}
 	else
 	{
@@ -448,7 +446,7 @@ void executeState(TPlayer *player, TBall *ball, TKeys *keys)
 		hitting(player);
 		break;
 	case ST_preparing:
-		preparing(player, ball, keys);
+		preparing(player, keys);
 		break;
 	case ST_serving:
 		serving(player);

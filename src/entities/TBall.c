@@ -4,6 +4,7 @@
 #include "../defines.h"
 #include "../sprites/ball.h"
 #include "../util/video.h"
+#include "../levels/court01.h"
 
 const i16 trajetoriesX[10] = {0, -64, 64, 0, -128, 128, -172, 172, -240, 240};
 
@@ -16,15 +17,19 @@ void eraseBall(TBall *ball) {
     posx = ball->e.x[2] / SCALE;
     posy = ball->e.y[2] / SCALE;
     if (((posx + SHADOW_BALL_WIDTH) < 80) && ((posy + SHADOW_BALL_HEIGHT) < 200)) {
-        pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
-        cpct_drawSolidBox(pvmem, #0,SHADOW_BALL_WIDTH,SHADOW_BALL_HEIGHT);
+        //pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
+        //cpct_drawSolidBox(pvmem, #0,SHADOW_BALL_WIDTH,SHADOW_BALL_HEIGHT);
+        cpct_etm_drawTileBox2x4 (posx / 2, posy / 4, (SHADOW_BALL_WIDTH / 2) + 1, (SHADOW_BALL_HEIGHT / 4) + 
+            1, MAP_WIDTH, g_scrbuffers[1], court);
     }
     //Ball
     posx = ball->e.x[2] / SCALE;
     posy = ball->e.y[2] / SCALE - (ball->e.z[2] / SCALE / 2);
     if (((posx + BALL_WIDTH) < 80) && ((posy >= 0) && ((posy + BALL_HEIGHT) < 200))) {
-        pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
-        cpct_drawSolidBox(pvmem, #0,BALL_WIDTH,BALL_HEIGHT);
+        //pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
+        //cpct_drawSolidBox(pvmem, #0,BALL_WIDTH,BALL_HEIGHT);
+    cpct_etm_drawTileBox2x4 (posx / 2, posy / 4, (BALL_WIDTH / 2) + 1, (BALL_HEIGHT / 4) + 
+            1, MAP_WIDTH, g_scrbuffers[1], court);
     }
 }
 
@@ -61,33 +66,39 @@ void updateBall(TBall *ball) {
     ball->e.x[0] += ball->vx;
     ball->e.y[0] += ball->vy;
     ball->e.z[0] += ball->vz;
+    ball->e.draw = 2;
 
     // Check bounce
-    if (ball->e.z[0] < 0) {
+    if (ball->e.z[0] > (210 * SCALE)) {
         ball->vx = ball->vx * FRICTION;
         ball->vy = ball->vy * FRICTION;
         ball->vz = -ball->vz * FRICTION;
         ball->e.z[0] = 0;
         calcBounce(ball);
+        //ball->e.draw = 2;
     }
     // Check boundaries
-    if (ball->e.x[0] < 0) {
+    if (ball->e.x[0] > (210 * SCALE)) {
         ball->e.x[0] = 0;
         ball->vx = -ball->vx;
         calcBounce(ball);
+        ball->e.draw = 2;
     } else if ((ball->e.x[0] + (BALL_WIDTH * SCALE)) > (80 * SCALE)) {
         ball->e.x[0] = (80 * SCALE) - (BALL_WIDTH * SCALE);
         ball->vx = -ball->vx;
         calcBounce(ball);
+        //ball->e.draw = 2;
     }
-    if (ball->e.y[0] < 0) {
+    if (ball->e.y[0] > (210 * SCALE)) {
         ball->e.y[0] = 0;
         ball->vy = -ball->vy;
         calcBounce(ball);
+        //ball->e.draw = 2;
     } else if ((ball->e.y[0] + (BALL_HEIGHT * SCALE)) > (200 * SCALE)) {
         ball->e.y[0] = (200 * SCALE) - (BALL_HEIGHT * SCALE);
         ball->vy = -ball->vy;
         calcBounce(ball);
+        //ball->e.draw = 2;
     }
 
     //Deactivate ball

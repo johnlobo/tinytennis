@@ -12,7 +12,7 @@
 
 typedef struct {
 	TEntity e;
-    i32 vx, vy, vz;
+    i16 vx, vy, vz;
     u8* sprite;
     u8 bouncex, bouncey;
     u8 active;
