@@ -61,15 +61,29 @@ void calcBounce(TBall *ball){
 }
 
 void updateBall(TBall *ball) {
+    u8 height;
+    u8 posy;
 
     ball->vz += GRAVITY;
     ball->e.x[0] += ball->vx;
     ball->e.y[0] += ball->vy;
     ball->e.z[0] += ball->vz;
     ball->e.draw = 2;
+    height = (ball->e.z[0] / SCALE);
+    posy = ball->e.y[0] / SCALE;
+
+    // Check net
+    if ((height < 20) && ((ball->e.x[0] > (10 * SCALE)) && (ball->e.x[0] < (70 * SCALE))) && 
+        ((ball->e.y[2] >= (90*SCALE)) && ((ball->e.y[0] < (90*SCALE)) && (ball->vy < 0))) || 
+         ((ball->e.y[2] <= (90*SCALE)) && ((ball->e.y[0] > (90*SCALE)) && (ball->vy > 0)))){
+        ball->vx = ball->vx * FRICTION;
+        ball->vy = -ball->vy * FRICTION;
+        ball->vz = ball->vz * FRICTION;
+        calcBounce(ball);
+    }
 
     // Check bounce
-    if (ball->e.z[0] > (210 * SCALE)) {
+    if (height > 210) {
         ball->vx = ball->vx * FRICTION;
         ball->vy = ball->vy * FRICTION;
         ball->vz = -ball->vz * FRICTION;
@@ -77,6 +91,8 @@ void updateBall(TBall *ball) {
         calcBounce(ball);
         //ball->e.draw = 2;
     }
+
+
     // Check boundaries
     if (ball->e.x[0] > (210 * SCALE)) {
         ball->e.x[0] = 0;
