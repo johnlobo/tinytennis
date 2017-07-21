@@ -34,7 +34,7 @@ cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
 
 TKeys keys;
 TBall ball;
-TPlayer player, com;
+TPlayer player1, player2;
 EGamePhases phase;
 
 void myInterruptHandler()
@@ -57,14 +57,12 @@ void myInterruptHandler()
     }
 }
 
-void entityDrawUpdate(TEntity *e){
-    u16* x = e->x + 2;
-    u16* y = e->y + 2;
-    u16* z = e->z + 2;
-    *x = *(x-1); --x; *x = *(x-1);
-    *y = *(y-1); --y; *y = *(y-1);
-    *z = *(z-1); --z; *z = *(z-1);
-    --e->draw;
+void entityDrawUpdate(TEntity *e)
+{
+    e->x[1] = e->x[0];
+    e->y[1] = e->y[0];
+    e->z[1] = e->z[0];
+    e->draw = 0;
 }
 
 // Main init
@@ -78,7 +76,7 @@ void initGame()
     //pvmem = cpct_getScreenPtr(g_scrbuffers[0], 0, 0);
     cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[0], court);
     //pvmem = cpct_getScreenPtr(g_scrbuffers[1], 0, 0);
-    cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[1], court);
+    //cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[1], court);
 }
 
 
@@ -93,34 +91,35 @@ void game()
     while (1)
     {
         // Player1 block
-        executeState(&player, &ball, &keys);
+        executeState(&player1, &ball, &keys);
+        selectSpritePlayer(&player1);
+        executeState(&player2, &ball, &keys);
+        selectSpritePlayer(&player2);
+        updateBall(&ball);
+        
+        cpct_waitVSYNC();
+        
         if (player.e.draw)
         {
-            erasePlayer(&player);
-            selectSpritePlayer(&player);
-            drawPlayer(&player);
-            entityDrawUpdate(&player.e);
+            erasePlayer(&player1);
+            drawPlayer(&player1);
+            entityDrawUpdate(&player1.e);
         }
-
+        // Player1 block
         if (com.e.draw)
         {
-            //erasePlayer(&com);
-            //selectSpritePlayer(&com);
-            //drawPlayer(&com);
-            //entityDrawUpdate(&com.e);
+            erasePlayer(&player2);
+            drawPlayer(&player2);
+            entityDrawUpdate(&player2.e);
         }
 
         //Ball block
-        if (ball.active && ball.e.draw)
+        if (ball.e.draw)
         {
-            updateBall(&ball);
             eraseBall(&ball);
             drawBall(&ball);
             entityDrawUpdate(&ball.e);
         }
-
-        cpct_waitVSYNC();
-        swapBuffers(g_scrbuffers);
     }
 }
 
@@ -132,7 +131,8 @@ void game()
 const u8 sp_palette[16] = { 0x54, 0x44, 0x4e, 0x53, 0x4c, 0x55, 0x4d, 0x56, 0x5e, 0x5f, 0x5d, 0x52, 0x5c, 0x4a, 0x57, 0x4b };
 
 const TKeys tempKeys = {    Key_CursorUp, Key_CursorDown, Key_CursorLeft, Key_CursorRight,
-                            Key_Space, Key_Return, Key_Del, Key_Esc, Key_M };
+                            Key_Space, Key_Return, Key_Del, Key_Esc, Key_M
+                       };
 
 void initMain()
 {
