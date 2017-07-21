@@ -32,8 +32,8 @@ extern TFrame* const anim_hitting[HITTING_FRAMES];
 
 extern TPlayer player;
 
-void initPlayer(TPlayer *player);
-void initCom(TPlayer *player);
+void initPlayer1(TPlayer *player);
+void initPlayer2(TPlayer *player);
 void selectSpritePlayer(TPlayer *player);
 void drawPlayer(TPlayer *player);
 void erasePlayer(TPlayer *player);
