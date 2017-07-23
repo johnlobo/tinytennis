@@ -15,6 +15,7 @@ typedef struct{
     cpct_keyID music;
 } TKeys;
 
+u16 fast_abs(i16 value);
 u8 fast_collision(u8 x1, u8 y1, u8 w1, u8 h1, u8 x2, u8 y2, u8 w2, u8 h2);
 void reset_cpc();
 

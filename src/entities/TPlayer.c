@@ -10,9 +10,9 @@
 const TPlayer tempPlayer1 =
 {
 
-	{	{ 40 * SCALE, 40 * SCALE, 40 * SCALE }
-		, 	{ 170 * SCALE, 170 * SCALE, 170 * SCALE }
-		, 	{ 0, 0, 0 }
+	{	{ 40 * SCALE, 40 * SCALE }
+		, 	{ 170 * SCALE, 170 * SCALE }
+		, 	{ 0, 0 }
 		,	PLAYER_WIDTH, PLAYER_HEIGHT
 		,   256, 512
 		,	&g_frames[0]
@@ -24,23 +24,12 @@ const TPlayer tempPlayer1 =
 	,	ST_stopped
 	,	SD_down
 	,	0
-};
-const TPlayer tempPLayer2 =
-{
-	{	{ 40 * SCALE, 40 * SCALE, 40 * SCALE }
-		, 	{ 10 * SCALE, 10 * SCALE, 10 * SCALE }
-		, 	{ 0, 0, 0 }
-		,	PLAYER_WIDTH, PLAYER_HEIGHT
-		,   256, 512
-		,	&g_frames[12]
-		,	0
-		,	M_right
-		,	2
+	,	ST_IAstopped
+	, {
+		255, 512, 255, 255
+
 	}
-	,	GM_play
-	,	ST_stopped
-	,	SD_up
-	,	0
+	, 0, 0
 };
 
 const TFrame g_frames[PLAYER_FRAMES] =
@@ -64,12 +53,7 @@ TFrame *const anim_hitting[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_fra
 
 void initPlayer1(TPlayer *player)
 {
-	cpct_memcpy(player, &tempPlayer, sizeof(TPlayer));
-}
-
-void initPlayer2(TPlayer *player)
-{
-	cpct_memcpy(player, &tempComp, sizeof(TPlayer));
+	cpct_memcpy(player, &tempPlayer1, sizeof(TPlayer));
 }
 
 void assignFrame(TFrame **animation, TPlayer *player, u8 pause)

@@ -28,13 +28,15 @@
 #include "sprites/court01.h"
 #include "levels/court01.h"
 #include "util/video.h"
+#include "ia/ia.h"
 
 // Máscara de transparencia
 cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
 
 TKeys keys;
 TBall ball;
-TPlayer player1, player2;
+TPlayer player1;
+TPlayer player2;
 EGamePhases phase;
 
 void myInterruptHandler()
@@ -69,8 +71,8 @@ void entityDrawUpdate(TEntity *e)
 void initGame()
 {
     cpct_etm_setTileset2x4(tile_tileset);
-    initPlayer(&player);
-    initCom(&com);
+    initPlayer1(&player1);
+    initIAPlayer(&player2);
     initBall(&ball);
 
     //pvmem = cpct_getScreenPtr(g_scrbuffers[0], 0, 0);
@@ -85,28 +87,28 @@ void game()
     //u32 c;
     initGame();
 
-    selectSpritePlayer(&com);
-    drawPlayer(&com);
+    selectSpritePlayer(&player2);
+    drawPlayer(&player2);
     // Loop forever
     while (1)
     {
         // Player1 block
         executeState(&player1, &ball, &keys);
         selectSpritePlayer(&player1);
-        executeState(&player2, &ball, &keys);
-        selectSpritePlayer(&player2);
+        executeStateIA(&player2, &ball);
+        //selectSpritePlayer(&player2);
         updateBall(&ball);
         
         cpct_waitVSYNC();
         
-        if (player.e.draw)
+        if (player1.e.draw)
         {
             erasePlayer(&player1);
             drawPlayer(&player1);
             entityDrawUpdate(&player1.e);
         }
         // Player1 block
-        if (com.e.draw)
+        if (player2.e.draw)
         {
             erasePlayer(&player2);
             drawPlayer(&player2);
@@ -139,8 +141,6 @@ void initMain()
     cpct_setVideoMode(0);
     // Clean up Screen and BackBuffer filling them up with 0's
     cpct_memset(g_scrbuffers[0], 0x00, 0x4000);
-    cpct_memset(g_scrbuffers[1], 0x00, 0x4000);
-    forceFrontBuffer(g_scrbuffers);
     cpct_setPalette(sp_palette, 16);
     cpct_setBorder(HW_BLUE);
 

@@ -54,7 +54,7 @@ typedef struct {
 } TFrame;
 
 typedef struct{
-	u16 x[2], y[2], z[2]
+	u16 x[2], y[2], z[2];
 	u8 w, h;
 	i16 hstep, vstep;
 	TFrame* frame;

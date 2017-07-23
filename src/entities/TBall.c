@@ -4,6 +4,7 @@
 #include "../defines.h"
 #include "../sprites/ball.h"
 #include "../util/video.h"
+#include "../util/util.h"
 #include "../levels/court01.h"
 
 const i16 trajetoriesX[10] = {0, -64, 64, 0, -128, 128, -172, 172, -240, 240};
@@ -26,7 +27,7 @@ void eraseBall(TBall *ball)
     }
     //Ball
     posx = ball->e.x[1] / SCALE;
-    posy = ball->e.y[1] / SCALE - (ball->e.z[2] / SCALE / 2);
+    posy = ball->e.y[1] / SCALE - (ball->e.z[1] / SCALE / 2);
     if (((posx + BALL_WIDTH) < 80) && ((posy >= 0) && ((posy + BALL_HEIGHT) < 200)))
     {
         //pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
@@ -69,60 +70,67 @@ void calcBounce(TBall *ball)
 
 void updateBall(TBall *ball)
 {
+    u8 height;
+    u8 posy;
 
-    if (ball->active)
-    {
-        ball->vz += GRAVITY;
-        ball->e.x[0] += ball->vx;
-        ball->e.y[0] += ball->vy;
-        ball->e.z[0] += ball->vz;
-        ball->e.draw = 1;
+    ball->vz += GRAVITY;
+    ball->e.x[0] += ball->vx;
+    ball->e.y[0] += ball->vy;
+    ball->e.z[0] += ball->vz;
+    ball->e.draw = 2;
+    height = (ball->e.z[0] / SCALE);
+    posy = ball->e.y[0] / SCALE;
 
-        // Check bounce
-        if (ball->e.z[0] > (210 * SCALE))
-        {
-            ball->vx = ball->vx * FRICTION;
-            ball->vy = ball->vy * FRICTION;
-            ball->vz = -ball->vz * FRICTION;
-            ball->e.z[0] = 0;
-            calcBounce(ball);
-            //ball->e.draw = 1;
-        }
-        // Check boundaries
-        if (ball->e.x[0] > (210 * SCALE))
-        {
-            ball->e.x[0] = 0;
-            ball->vx = -ball->vx;
-            calcBounce(ball);
-            ball->e.draw = 1;
-        }
-        else if ((ball->e.x[0] + (BALL_WIDTH * SCALE)) > (80 * SCALE))
-        {
-            ball->e.x[0] = (80 * SCALE) - (BALL_WIDTH * SCALE);
-            ball->vx = -ball->vx;
-            calcBounce(ball);
-            //ball->e.draw = 1;
-        }
-        if (ball->e.y[0] > (210 * SCALE))
-        {
-            ball->e.y[0] = 0;
-            ball->vy = -ball->vy;
-            calcBounce(ball);
-            //ball->e.draw = 1;
-        }
-        else if ((ball->e.y[0] + (BALL_HEIGHT * SCALE)) > (200 * SCALE))
-        {
-            ball->e.y[0] = (200 * SCALE) - (BALL_HEIGHT * SCALE);
-            ball->vy = -ball->vy;
-            calcBounce(ball);
-            //ball->e.draw = 1;
-        }
-
-        //Deactivate ball
-        //if ((ball->vx < (0.1 * SCALE)) && (ball->vy < (0.1 * SCALE)) && (ball->vz < (0.1 * SCALE))){
-        //    ball->active = 0;
-        //}
+    // Check net
+    if ((height < 20) && ((ball->e.x[0] > (10 * SCALE)) && (ball->e.x[0] < (70 * SCALE))) && 
+        ((ball->e.y[1] >= (90*SCALE)) && ((ball->e.y[0] < (90*SCALE)) && (ball->vy < 0))) || 
+         ((ball->e.y[1] <= (90*SCALE)) && ((ball->e.y[0] > (90*SCALE)) && (ball->vy > 0)))){
+        ball->vx = ball->vx * FRICTION;
+        ball->vy = -ball->vy * FRICTION;
+        ball->vz = ball->vz * FRICTION;
+        calcBounce(ball);
     }
+
+    // Check bounce
+    if (height > 210) {
+        ball->vx = ball->vx * FRICTION;
+        ball->vy = ball->vy * FRICTION;
+        ball->vz = -ball->vz * FRICTION;
+        ball->e.z[0] = 0;
+        calcBounce(ball);
+        //ball->e.draw = 2;
+    }
+
+
+    // Check boundaries
+    if (ball->e.x[0] > (210 * SCALE)) {
+        ball->e.x[0] = 0;
+        ball->vx = -ball->vx;
+        calcBounce(ball);
+        ball->e.draw = 2;
+    } else if ((ball->e.x[0] + (BALL_WIDTH * SCALE)) > (80 * SCALE)) {
+        ball->e.x[0] = (80 * SCALE) - (BALL_WIDTH * SCALE);
+        ball->vx = -ball->vx;
+        calcBounce(ball);
+        //ball->e.draw = 2;
+    }
+    if (ball->e.y[0] > (210 * SCALE)) {
+        ball->e.y[0] = 0;
+        ball->vy = -ball->vy;
+        calcBounce(ball);
+        //ball->e.draw = 2;
+    } else if ((ball->e.y[0] + (BALL_HEIGHT * SCALE)) > (200 * SCALE)) {
+        ball->e.y[0] = (200 * SCALE) - (BALL_HEIGHT * SCALE);
+        ball->vy = -ball->vy;
+        calcBounce(ball);
+        //ball->e.draw = 2;
+    }
+
+    //Deactivate ball
+    //if ((ball->vx < (0.1 * SCALE)) && (ball->vy < (0.1 * SCALE)) && (ball->vz < (0.1 * SCALE))){
+    //    ball->active = 0;
+    //}
+
 }
 
 void initBall(TBall *ball)

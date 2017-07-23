@@ -6,6 +6,13 @@
 #include "TBall.h"
 #include "../util/util.h"
 
+typedef enum { ST_IAstopped, ST_IAmovingToTarget, ST_IAhitting } EIAStates;
+
+typedef struct {
+	i16 speedX, speedY;
+	i16 accuracy;
+	i16 offense;
+} TCharacter;
 
 typedef struct {
     TEntity e;
@@ -13,6 +20,10 @@ typedef struct {
     EStates state;
     ESides side;
     u8 hit;
+    EIAStates iaState;
+    TCharacter car;
+    u8 targetX;
+    u8 targetY;
 } TPlayer;
 
 

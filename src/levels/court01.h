@@ -1,5 +1,5 @@
 //
-// File assets/court01.tmx converted to csv using cpct_tmx2csv [20170715 19:40:06 CEST]
+// File assets/court01.tmx converted to csv using cpct_tmx2csv [20170723 21:33:25 CEST]
 //   * Width:  40 columns (40 bytes, 8 bits per column)
 //   * Height: 50 rows
 //   * Bytes:  2000 bytes (40 x 50)
