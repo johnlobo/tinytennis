@@ -60,3 +60,15 @@ u8 checkKeys(const cpct_keyID* k, u8 numk) {
     }
     return 0;
 }
+
+u8 hasReachedTarget(TEntity *e, u8 x, u8 y){
+    u8 posX0, posY0;
+    u8 posX1, posY1;
+
+    posX0 = e->x[0] / SCALE;
+    posY0 = e->y[0] / SCALE;
+    posX1 = (e->x[0] + e->hstep) / SCALE;
+    posY1 = (e->y[0] + e->vstep) / SCALE;
+
+    return (((posX0 <= x <= posX1 + ) || (posX0 >= x >= posX1)) && ((posY0 <= y <= posY1) || (posY0 >= y >= posY1)));
+}

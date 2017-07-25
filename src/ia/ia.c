@@ -39,7 +39,7 @@ void IAWalking(TPlayer *player, TBall *ball) {
 	posX = player->e.x[0] / SCALE;
 	posY = player->e.y[0] / SCALE;
 
-	if ((posX == player->targetX) && (posY == player->targetY)) {
+	if (hasReachedTarget(player->e, player->targetX, player->targetY)) {
 		player->iaState = ST_stopped;
 	} else {
 		if (posX < player->targetX) {
@@ -63,11 +63,11 @@ void IAWalking(TPlayer *player, TBall *ball) {
 
 void IAStopped(TPlayer *player, TBall *ball)
 {
-	if (((player->e.x[0] / SCALE) != TARGET_CENTER_X) && ((player->e.y[0] / SCALE) != TARGET_CENTER_Y) && (ball->vy > 0)) {
+	if ((!hasReachedTarget(player->e, TARGET_CENTER_X, TARGET_CENTER_Y) && (ball->vy < 0)) {
 		player->targetX = TARGET_CENTER_X;
 		player->targetY = TARGET_CENTER_Y;
 		player->state = ST_walking;
-	} else if (ball->vy < 0) {
+	} else if (ball->vy > 0) {
 		player->targetX = ball->bouncex + ball->vx;
 		player->targetY = ball->bouncey + ball->vy;
 		player->state = ST_walking;

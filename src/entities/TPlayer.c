@@ -26,7 +26,7 @@ const TPlayer tempPlayer1 =
 	,	0
 	,	ST_IAstopped
 	, {
-		255, 512, 255, 255
+		255, 512, 255, 255, 255, 255
 
 	}
 	, 0, 0
