@@ -48,6 +48,13 @@ void initPlayer2(TPlayer *player);
 void selectSpritePlayer(TPlayer *player);
 void drawPlayer(TPlayer *player);
 void erasePlayer(TPlayer *player);
+void moveUp(TPlayer *player);
+void moveDown(TPlayer *player);
+void moveRight(TPlayer *player);
+void moveLeft(TPlayer *player);
+void up_animate(TPlayer *player);
+void down_animate(TPlayer *player);
+void walking_animate(u8 look, TPlayer *player);
 void executeState(TPlayer *player, TBall *ball, TKeys *keys);
 
 #endif

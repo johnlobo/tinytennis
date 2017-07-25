@@ -107,7 +107,7 @@ void game()
             drawPlayer(&player1);
             entityDrawUpdate(&player1.e);
         }
-        // Player1 block
+        // Player2 block
         if (player2.e.draw)
         {
             erasePlayer(&player2);

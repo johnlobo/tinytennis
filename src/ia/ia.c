@@ -1,4 +1,5 @@
 #include "ia.h"
+#include "../entities/TPlayer.h"
 #include "../sprites/player1.h"
 
 const TPlayer tempIAPlayer =
@@ -42,18 +43,18 @@ void IAWalking(TPlayer *player, TBall *ball) {
 		player->iaState = ST_stopped;
 	} else {
 		if (posX < player->targetX) {
-			player->e.x[0] += player->car.speedX;
-			player->e.look  = M_right;
+			moveRight(player);
+			walking_animate(M_right, player);
 		} else if (posX > player->targetX) {
-			player->e.x[0] -= player->car.speedX;
-			player->e.look  = M_left;
+			moveLeft(player);
+			walking_animate(M_left, player);
 		}
 		if (posY < player->targetY) {
-			player->e.y[0] += player->car.speedY;
-			player->e.look  = M_down;
+			moveDown(player);
+			down_animate(player);
 		} else {
-			player->e.x[0] -= player->car.speedY;
-			player->e.look  = M_up;
+			moveUp(player);
+			up_animate(player);
 		}
 		player->e.draw = 1;
 	}
@@ -65,11 +66,11 @@ void IAStopped(TPlayer *player, TBall *ball)
 	if (((player->e.x[0] / SCALE) != TARGET_CENTER_X) && ((player->e.y[0] / SCALE) != TARGET_CENTER_Y) && (ball->vy > 0)) {
 		player->targetX = TARGET_CENTER_X;
 		player->targetY = TARGET_CENTER_Y;
-		player->state = ST_walking
+		player->state = ST_walking;
 	} else if (ball->vy < 0) {
 		player->targetX = ball->bouncex + ball->vx;
 		player->targetY = ball->bouncey + ball->vy;
-		player->state = ST_walking
+		player->state = ST_walking;
 	}
 }
 
