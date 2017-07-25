@@ -70,5 +70,5 @@ u8 hasReachedTarget(TEntity *e, u8 x, u8 y){
     posX1 = (e->x[0] + e->hstep) / SCALE;
     posY1 = (e->y[0] + e->vstep) / SCALE;
 
-    return (((posX0 <= x <= posX1 + ) || (posX0 >= x >= posX1)) && ((posY0 <= y <= posY1) || (posY0 >= y >= posY1)));
+    return (((posX0 <= x <= posX1 ) || (posX0 >= x >= posX1)) && ((posY0 <= y <= posY1) || (posY0 >= y >= posY1)));
 }
