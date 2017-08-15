@@ -87,8 +87,8 @@ void game()
     //u32 c;
     initGame();
 
-    selectSpritePlayer(&player2);
-    drawPlayer(&player2);
+    //selectSpritePlayer(&player2);
+    //drawPlayer(&player2);
     // Loop forever
     while (1)
     {
@@ -96,8 +96,10 @@ void game()
         executeState(&player1, &ball, &keys);
         selectSpritePlayer(&player1);
         executeStateIA(&player2, &ball);
-        //selectSpritePlayer(&player2);
-        updateBall(&ball);
+        selectSpritePlayer(&player2);
+        if (ball.active){
+            updateBall(&ball);
+        }
         
         cpct_waitVSYNC();
         
