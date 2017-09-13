@@ -100,9 +100,7 @@ void game()
         if (ball.active){
             updateBall(&ball);
         }
-        
         cpct_waitVSYNC();
-        
         if (player1.e.draw)
         {
             erasePlayer(&player1);
@@ -116,7 +114,6 @@ void game()
             drawPlayer(&player2);
             entityDrawUpdate(&player2.e);
         }
-
         //Ball block
         if (ball.e.draw)
         {

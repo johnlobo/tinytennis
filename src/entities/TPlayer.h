@@ -31,7 +31,7 @@ typedef struct {
 #define PLAYER_FRAMES  	15
 // Animaciones
 #define ANIM_PAUSE      8
-#define ANIM_HIT_PAUSE  16
+#define ANIM_HIT_PAUSE  2
 #define WALKING_FRAMES  4
 #define UP_FRAMES    	4
 #define DOWN_FRAMES    	4

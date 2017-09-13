@@ -67,7 +67,7 @@ void IAStopped(TPlayer *player, TBall *ball)
 		player->targetX = TARGET_CENTER_X;
 		player->targetY = TARGET_CENTER_Y;
 		player->state = ST_walking;
-	} else if (ball->vy > 0) {
+	} else if (ball->vy < 0) {
 		player->targetX = ball->bouncex + ball->vx;
 		player->targetY = ball->bouncey + ball->vy;
 		player->state = ST_walking;

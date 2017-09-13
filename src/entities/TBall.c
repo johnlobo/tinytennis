@@ -14,7 +14,6 @@ u8 t;
 void eraseBall(TBall *ball)
 {
     i32 posx, posy;
-    u8 *pvmem;
     //Shadow
     posx = ball->e.x[1] / SCALE;
     posy = ball->e.y[1] / SCALE;
@@ -140,9 +139,9 @@ void initBall(TBall *ball)
 
 void newBall(i32 x, i32 y, TBall *ball)
 {
-    ball->e.x[0] = ball->e.x[1] = ball->e.x[2] = x;
-    ball->e.y[0] = ball->e.y[1] = ball->e.y[2] = y;
-    ball->e.z[0] = ball->e.z[1] = ball->e.z[2] = ((cpct_rand8() % 3) + 3) * SCALE;
+    ball->e.x[0] = ball->e.x[1] = x;
+    ball->e.y[0] = ball->e.y[1] = y;
+    ball->e.z[0] = ball->e.z[1] = ((cpct_rand8() % 3) + 3) * SCALE;
     ball->e.draw = 1;
     ball->vx = trajetoriesX[cpct_rand8() % 10];
     ball->vy = (((cpct_rand8() % 4) * -1.6) - 1) * SCALE;

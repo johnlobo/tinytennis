@@ -48,7 +48,8 @@ const TFrame g_frames[PLAYER_FRAMES] =
 TFrame *const anim_walking[WALKING_FRAMES] = {&g_frames[1], &g_frames[2], &g_frames[3], &g_frames[1] };
 TFrame *const anim_up[UP_FRAMES] = {&g_frames[10], &g_frames[0], &g_frames[11], &g_frames[0] };
 TFrame *const anim_down[DOWN_FRAMES] = {&g_frames[12], &g_frames[13], &g_frames[14], &g_frames[13] };
-TFrame *const anim_hitting[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8], &g_frames[7]};
+TFrame *const anim_hitting[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8], 
+	&g_frames[7]};
 
 
 void initPlayer1(TPlayer *player)
@@ -190,7 +191,8 @@ void erasePlayer(TPlayer *player)
 void hitting_enter(TPlayer *player)
 {
 	player->state = ST_hitting;
-	player->hit  =  HITTING_FRAMES;
+	player->hit  =  HITTING_FRAMES * ANIM_HIT_PAUSE;
+	player->e.nframe = 0;
 	player->e.draw = 1;
 }
 
@@ -212,7 +214,7 @@ void stopped_enter(TPlayer *player)
 
 void hitting_animate(TPlayer *player)
 {
-	if (++player->e.nframe == HITTING_FRAMES * ANIM_PAUSE)
+	if (++player->e.nframe == HITTING_FRAMES * ANIM_HIT_PAUSE)
 	{
 		player->e.nframe = 0;
 	}
@@ -335,58 +337,69 @@ void down_animate(TPlayer *player)
 
 void walking(TPlayer *player, TBall *ball, TKeys *keys)
 {
+	u8 moved = 0;
 	if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->right)))
 	{
 		moveUp(player);
 		moveRight(player);
 		walking_animate(M_right, player);
+		moved = 1;
 	}
 	else if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->left)))
 	{
 		moveUp(player);
 		moveLeft(player);
 		walking_animate(M_left, player);
+		moved = 1;
 	}
 	else if ((cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(keys->right)))
 	{
 		moveDown(player);
 		moveRight(player);
 		walking_animate(M_right, player);
+		moved = 1;
 	}
 	else if ((cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(keys->left)))
 	{
 		moveDown(player);
 		moveLeft(player);
+		moved = 1;
 	}
 	else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->up)))
 	{
 		moveUp(player);
 		up_animate(player);
+		moved = 1;
 	}
 	else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->down)))
 	{
 		moveDown(player);
 		down_animate(player);
+		moved = 1;
 	}
 	else if (cpct_isKeyPressed(keys->right))
 	{
 		moveRight(player);
 		walking_animate(M_right, player);
+		moved = 1;
 	}
 	else if (cpct_isKeyPressed(keys->left))
 	{
 		moveLeft(player);
 		walking_animate(M_left, player);
+		moved = 1;
 	}
-	else if (cpct_isKeyPressed(keys->fire1))
+	if (cpct_isKeyPressed(keys->fire1))
 	{
 		hitting_enter(player);
+		moved = 1;
 	}
-	else if (cpct_isKeyPressed(keys->fire2))
+	if (cpct_isKeyPressed(keys->fire2))
 	{
 		newBall(player->e.x[0], player->e.y[0], ball);
+		moved = 1;
 	}
-	else
+	if (!moved)
 	{
 		stopped_enter(player);
 	}
