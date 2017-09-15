@@ -9,6 +9,7 @@
 
 
 void initIAPlayer(TPlayer *player);
+void setIATarget(u8 x, u8 y, TPlayer *player);
 void executeStateIA(TPlayer *player, TBall *ball); 
 
 #endif

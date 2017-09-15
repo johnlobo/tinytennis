@@ -22,7 +22,7 @@ void reset_cpc();
 char* itoa(int value, char* result, int base);
 void delay(u32 cycles);
 u8 checkKeys(const cpct_keyID* k, u8 numk);
-
 u8 hasReachedTarget(TEntity *e, u8 x, u8 y);
+u8 distance (u8 x1, u8 y1, u8 x2, u8 y2)
 
 #endif
