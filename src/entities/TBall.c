@@ -149,4 +149,5 @@ void newBall(i32 x, i32 y, TBall *ball)
     ball->sprite = (u8 *) sp_ball_0;
     ball->active = 1;
     calcBounce(ball);
+    
 }

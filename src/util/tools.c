@@ -9,6 +9,7 @@
 //
 #include <cpctelera.h>
 #include "../defines.h"
+#include "util.h"
 
 /**
  * C++ version 0.4 char* style "itoa":
@@ -61,21 +62,21 @@ u8 checkKeys(const cpct_keyID* k, u8 numk) {
     return 0;
 }
 
-u8 hasReachedTarget(TEntity *e, u8 x, u8 y){
+u8 hasReachedTarget(TEntity *e, u8 x, u8 y, i16 stepX, i16 stepY){
     u8 posX0, posY0;
     u8 posX1, posY1;
 
     posX0 = e->x[0] / SCALE;
     posY0 = e->y[0] / SCALE;
-    posX1 = (e->x[0] + e->hstep) / SCALE;
-    posY1 = (e->y[0] + e->vstep) / SCALE;
+    posX1 = (e->x[0] + stepX) / SCALE;
+    posY1 = (e->y[0] + stepY) / SCALE;
 
     return (((posX0 <= x <= posX1 ) || (posX0 >= x >= posX1)) && ((posY0 <= y <= posY1) || (posY0 >= y >= posY1)));
 }
 
 u8 distance (u8 x1, u8 y1, u8 x2, u8 y2){
-  u8 x = abs( x2 - x1 );  // x = valor absoluto de x2 – x1, es decir, la distancia entre las x
-  u8 y = abs( y2 - y1 );  // y = valor absoluto de y2 – y1, es decir, la distancia entre las y
+  u8 x = fast_abs( x2 - x1 );  // x = valor absoluto de x2 – x1, es decir, la distancia entre las x
+  u8 y = fast_abs( y2 - y1 );  // y = valor absoluto de y2 – y1, es decir, la distancia entre las y
 
   u8 min = x < y ? x : y; // Si x < y min = x, si no, vale y. Es decir, el menor de los 2
 

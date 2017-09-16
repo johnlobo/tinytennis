@@ -1,6 +1,8 @@
 #include "ia.h"
+#include "../defines.h"
 #include "../entities/TPlayer.h"
 #include "../sprites/player1.h"
+#include "../util/util.h"
 
 const TPlayer tempIAPlayer =
 {
@@ -18,7 +20,7 @@ const TPlayer tempIAPlayer =
 	,	ST_stopped
 	,	SD_up
 	,	0
-	,	ST_IAstopped
+	,	ST_IAStopped
 	, {
 		255, 512, 255, 255 // Character definition
 
@@ -40,21 +42,21 @@ void IAMovingToTarget(TPlayer *player, TBall *ball) {
 	posX = player->e.x[0] / SCALE;
 	posY = player->e.y[0] / SCALE;
 
-	if (hasReachedTarget(&player->e, player->targetX, player->targetY)) {
-		player->iaState = ST_stopped;
+	if (hasReachedTarget(&player->e, player->targetX, player->targetY, player->stepX, player->stepY)) {
+		player->iaState = ST_IAStopped;
 	} else {
 		if (posX < player->targetX) {
-			moveRight(player);
+			moveRight(player, player->stepX);
 			walking_animate(M_right, player);
 		} else if (posX > player->targetX) {
-			moveLeft(player);
+			moveLeft(player, player->stepX);
 			walking_animate(M_left, player);
 		}
 		if (posY < player->targetY) {
-			moveDown(player);
+			moveDown(player, player->stepY);
 			down_animate(player);
 		} else {
-			moveUp(player);
+			moveUp(player, player->stepY);
 			up_animate(player);
 		}
 		player->e.draw = 1;
@@ -69,9 +71,9 @@ void setIATarget(u8 x, u8 y, TPlayer *player){
 	player->targetX = x;
 	player->targetY = y;
 	// Calculate the steps to target
-	distX = x - player->e.x;  	//distance X
-	distY = y - player->e.y;  	//distance Y
-	t = max((abs(distX)/player->car.speedX), (abs(distY)/player->car.speedY));  // # of steps
+	distX = x - player->e.x[0];  	//distance X
+	distY = y - player->e.y[0];  	//distance Y
+	t = max((fast_abs(distX)/player->car.speedX), (fast_abs(distY)/player->car.speedY));  // # of steps
 	stX = distX / t; 			// size of step X
 	stY = distY / t;			// size of step Y
 	// Set the steps to target 
@@ -86,12 +88,12 @@ void setIATarget(u8 x, u8 y, TPlayer *player){
 		player->stepY = stY;
 	}
 	// Set IA state
-	player->iaState = IAMovingToTarget;
+	player->iaState = ST_IAMovingToTarget;
 }
 
 void IAStopped(TPlayer *player, TBall *ball)
 {
-	if (!hasReachedTarget(&player->e, TARGET_CENTER_X, TARGET_CENTER_Y) && (ball->vy < 0)) {
+	if (!hasReachedTarget(&player->e, TARGET_CENTER_X, TARGET_CENTER_Y, player->stepX, player->stepY) && (ball->vy < 0)) {
 		player->targetX = TARGET_CENTER_X;
 		player->targetY = TARGET_CENTER_Y;
 		player->state = ST_walking;

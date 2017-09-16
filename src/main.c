@@ -93,7 +93,7 @@ void game()
     while (1)
     {
         // Player1 block
-        executeState(&player1, &ball, &keys);
+        executeState(&player1, &player2, &ball, &keys);
         selectSpritePlayer(&player1);
         executeStateIA(&player2, &ball);
         selectSpritePlayer(&player2);

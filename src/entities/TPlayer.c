@@ -6,6 +6,7 @@
 #include "TBall.h"
 #include "../util/video.h"
 #include "../levels/court01.h"
+#include "../ia/ia.h"
 
 const TPlayer tempPlayer1 =
 {
@@ -24,11 +25,12 @@ const TPlayer tempPlayer1 =
 	,	ST_stopped
 	,	SD_down
 	,	0
-	,	ST_IAstopped
+	,	ST_IAStopped
 	, {
 		255, 512, 255, 255, 255, 255
 
 	}
+	, 0, 0
 	, 0, 0
 };
 
@@ -112,34 +114,34 @@ void selectSpritePlayer(TPlayer *player)
 	}
 }
 
-void moveRight(TPlayer *player)
+void moveRight(TPlayer *player, i16 step)
 {
-	if ((player->e.x[0] + (player->e.w * SCALE) + player->e.hstep) < (WIDTH * SCALE))
+	if ((player->e.x[0] + (player->e.w * SCALE) + step) < (WIDTH * SCALE))
 	{
-		player->e.x[0] += player->e.hstep;
+		player->e.x[0] += step;
 		player->e.look  = M_right;
 		player->e.draw = 1;
 	}
 }
 
-void moveLeft(TPlayer *player)
+void moveLeft(TPlayer *player, i16 step)
 {
-	if (player->e.x[0] - player->e.hstep > (160*SCALE)) {
+	if (player->e.x[0] - step > (160*SCALE)) {
 		player->e.x[0] = 0;
 	} else {
-		player->e.x[0] -= player->e.hstep;
+		player->e.x[0] -= step;
 	}
 	player->e.look  = M_left;
 	player->e.draw = 1;
 
 }
 
-void moveUp(TPlayer *player)
+void moveUp(TPlayer *player, i16 step)
 {
-	if (player->e.y[0] - player->e.vstep > (200*SCALE)) {
+	if (player->e.y[0] - step > (200*SCALE)) {
 		player->e.y[0] = 0;
 	} else {
-		player->e.y[0] -= player->e.vstep;
+		player->e.y[0] -= step;
 	}
 	//player->look  = M_right;
 	player->e.look = M_up;
@@ -147,11 +149,11 @@ void moveUp(TPlayer *player)
 
 }
 
-void moveDown(TPlayer *player)
+void moveDown(TPlayer *player, i16 step)
 {
-	if ((player->e.y[0] + (player->e.h * SCALE) + player->e.vstep) < (HEIGHT * SCALE))
+	if ((player->e.y[0] + (player->e.h * SCALE) + step) < (HEIGHT * SCALE))
 	{
-		player->e.y[0] += player->e.vstep;
+		player->e.y[0] += step;
 		//player->look  = M_right;
 		player->e.look = M_down;
 		player->e.draw = 1;
@@ -266,7 +268,7 @@ void serving(TPlayer *player)
 	}
 }
 
-void stopped(TPlayer *player, TBall *ball, TKeys *keys)
+void stopped(TPlayer *player, TPlayer *playerIA,TBall *ball, TKeys *keys)
 {
 	if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->right)))
 	{
@@ -309,6 +311,7 @@ void stopped(TPlayer *player, TBall *ball, TKeys *keys)
 	else if (cpct_isKeyPressed(keys->fire2))
 	{
 		newBall(player->e.x[0], player->e.y[0], ball);
+		setIATarget(ball->bouncex, ball->bouncey, playerIA);
 	}
 }
 
@@ -335,57 +338,57 @@ void down_animate(TPlayer *player)
 	player->e.draw = 1;
 }
 
-void walking(TPlayer *player, TBall *ball, TKeys *keys)
+void walking(TPlayer *player, TPlayer *playerIA,TBall *ball, TKeys *keys)
 {
 	u8 moved = 0;
 	if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->right)))
 	{
-		moveUp(player);
-		moveRight(player);
+		moveUp(player, player->e.vstep);
+		moveRight(player, player->e.hstep);
 		walking_animate(M_right, player);
 		moved = 1;
 	}
 	else if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->left)))
 	{
-		moveUp(player);
-		moveLeft(player);
+		moveUp(player, player->e.vstep);
+		moveLeft(player, player->e.hstep);
 		walking_animate(M_left, player);
 		moved = 1;
 	}
 	else if ((cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(keys->right)))
 	{
-		moveDown(player);
-		moveRight(player);
+		moveDown(player, player->e.vstep);
+		moveRight(player, player->e.hstep);
 		walking_animate(M_right, player);
 		moved = 1;
 	}
 	else if ((cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(keys->left)))
 	{
-		moveDown(player);
-		moveLeft(player);
+		moveDown(player, player->e.vstep);
+		moveLeft(player, player->e.hstep);
 		moved = 1;
 	}
 	else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->up)))
 	{
-		moveUp(player);
+		moveUp(player, player->e.vstep);
 		up_animate(player);
 		moved = 1;
 	}
 	else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->down)))
 	{
-		moveDown(player);
+		moveDown(player, player->e.vstep);
 		down_animate(player);
 		moved = 1;
 	}
 	else if (cpct_isKeyPressed(keys->right))
 	{
-		moveRight(player);
+		moveRight(player, player->e.hstep);
 		walking_animate(M_right, player);
 		moved = 1;
 	}
 	else if (cpct_isKeyPressed(keys->left))
 	{
-		moveLeft(player);
+		moveLeft(player, player->e.hstep);
 		walking_animate(M_left, player);
 		moved = 1;
 	}
@@ -397,6 +400,7 @@ void walking(TPlayer *player, TBall *ball, TKeys *keys)
 	if (cpct_isKeyPressed(keys->fire2))
 	{
 		newBall(player->e.x[0], player->e.y[0], ball);
+		setIATarget(ball->bouncex, ball->bouncey, playerIA);
 		moved = 1;
 	}
 	if (!moved)
@@ -410,12 +414,12 @@ void preparing(TPlayer *player, TKeys *keys)
 {
 	if (cpct_isKeyPressed(keys->right))
 	{
-		moveRight(player);
+		moveRight(player, player->e.hstep);
 		walking_animate(M_right, player);
 	}
 	else if (cpct_isKeyPressed(keys->left))
 	{
-		moveLeft(player);
+		moveLeft(player, player->e.hstep);
 		walking_animate(M_left, player);
 	}
 	else if (cpct_isKeyPressed(keys->fire1))
@@ -429,15 +433,15 @@ void preparing(TPlayer *player, TKeys *keys)
 }
 
 
-void executeState(TPlayer *player, TBall *ball, TKeys *keys)
+void executeState(TPlayer *player, TPlayer *playerIA, TBall *ball, TKeys *keys)
 {
 	switch (player->state)
 	{
 	case ST_stopped:
-		stopped(player, ball, keys);
+		stopped(player, playerIA, ball, keys);
 		break;
 	case ST_walking:
-		walking(player, ball, keys);
+		walking(player, playerIA, ball, keys);
 		break;
 	case ST_hitting:
 		hitting(player);

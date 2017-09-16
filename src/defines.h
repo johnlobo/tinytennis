@@ -35,6 +35,9 @@
 #define FONT_H 11
 #define FONT_W 3
 
+#define min(X, Y) ((X) < (Y) ? (X) : (Y))
+#define max(X, Y) (X > Y ? X : Y)
+
 // Declare am_tablatrans, which is defined in game.c, and used in more places
 cpctm_declareMaskTable(g_tablatrans);
 
