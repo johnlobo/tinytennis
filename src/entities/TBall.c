@@ -67,8 +67,12 @@ void calcBounce(TBall *ball)
     ball->bouncey = (ball->e.y[0] + (ball->vy * t)) / SCALE;
 }
 
+<<<<<<< HEAD
 void updateBall(TBall *ball)
 {
+=======
+void updateBall(TBall *ball) {
+>>>>>>> fecc9b7153b8d556f91bd4bd83c472e82f0a6e9e
     u8 height;
     u8 posy;
 
@@ -82,8 +86,13 @@ void updateBall(TBall *ball)
 
     // Check net
     if ((height < 20) && ((ball->e.x[0] > (10 * SCALE)) && (ball->e.x[0] < (70 * SCALE))) && 
+<<<<<<< HEAD
         ((ball->e.y[1] >= (90*SCALE)) && ((ball->e.y[0] < (90*SCALE)) && (ball->vy < 0))) || 
          ((ball->e.y[1] <= (90*SCALE)) && ((ball->e.y[0] > (90*SCALE)) && (ball->vy > 0)))){
+=======
+        ((ball->e.y[2] >= (90*SCALE)) && ((ball->e.y[0] < (90*SCALE)) && (ball->vy < 0))) || 
+         ((ball->e.y[2] <= (90*SCALE)) && ((ball->e.y[0] > (90*SCALE)) && (ball->vy > 0)))){
+>>>>>>> fecc9b7153b8d556f91bd4bd83c472e82f0a6e9e
         ball->vx = ball->vx * FRICTION;
         ball->vy = -ball->vy * FRICTION;
         ball->vz = ball->vz * FRICTION;

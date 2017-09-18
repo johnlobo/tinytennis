@@ -84,11 +84,15 @@ void initGame()
 
 void game()
 {
+    u8* pvmem;
     //u32 c;
     initGame();
 
+<<<<<<< HEAD
     //selectSpritePlayer(&player2);
     //drawPlayer(&player2);
+=======
+>>>>>>> fecc9b7153b8d556f91bd4bd83c472e82f0a6e9e
     // Loop forever
     while (1)
     {
@@ -110,9 +114,16 @@ void game()
         // Player2 block
         if (player2.e.draw)
         {
+<<<<<<< HEAD
             erasePlayer(&player2);
             drawPlayer(&player2);
             entityDrawUpdate(&player2.e);
+=======
+            erasePlayer(&com);
+            selectSpritePlayer(&com);
+            drawPlayer(&com);
+            entityDrawUpdate(&com.e);
+>>>>>>> fecc9b7153b8d556f91bd4bd83c472e82f0a6e9e
         }
         //Ball block
         if (ball.e.draw)
@@ -120,6 +131,12 @@ void game()
             eraseBall(&ball);
             drawBall(&ball);
             entityDrawUpdate(&ball.e);
+            /*pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[1], 67, 0);
+            cpct_drawSolidBox(pvmem, #0, 12, 60);
+            drawNumber((i16) (ball.e.x[0] / SCALE), 4, 67, 0);
+            drawNumber((i16) (ball.e.y[0] / SCALE), 4, 67, 12);
+            drawNumber((i16) (ball.e.z[0] / SCALE), 4, 67, 24);
+            drawNumber((i16) (ball.vy / SCALE), 4, 67, 36);*/
         }
     }
 }
