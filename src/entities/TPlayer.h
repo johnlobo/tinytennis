@@ -6,7 +6,7 @@
 #include "TBall.h"
 #include "../util/util.h"
 
-typedef enum { ST_IAStopped, ST_IAMovingToTarget, ST_IAHitting } EIAStates;
+typedef enum { ST_IAstopped, ST_IAmovingToTarget, ST_IAhitting } EIAStates;
 
 typedef struct {
 	i16 speedX, speedY;
@@ -23,7 +23,7 @@ typedef struct {
     EIAStates iaState;
     TCharacter car;
     u8 targetX, targetY;
-    u16 stepX, stepY;
+    i16 stepX, stepY;
 } TPlayer;
 
 
@@ -55,6 +55,7 @@ void moveLeft(TPlayer *player, i16 step);
 void up_animate(TPlayer *player);
 void down_animate(TPlayer *player);
 void walking_animate(u8 look, TPlayer *player);
+void hitting_animate(TPlayer *player);
 void executeState(TPlayer *player, TPlayer *playerIA, TBall *ball, TKeys *keys);
 
 #endif

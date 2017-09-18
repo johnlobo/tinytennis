@@ -38,6 +38,8 @@
 #define min(X, Y) ((X) < (Y) ? (X) : (Y))
 #define max(X, Y) (X > Y ? X : Y)
 
+#define HIT_RANGE 512
+
 // Declare am_tablatrans, which is defined in game.c, and used in more places
 cpctm_declareMaskTable(g_tablatrans);
 
