@@ -71,7 +71,8 @@ u8 hasReachedTarget(TEntity *e, u8 x, u8 y, i16 stepX, i16 stepY){
     posX1 = (e->x[0] + stepX) / SCALE;
     posY1 = (e->y[0] + stepY) / SCALE;
 
-    return (((posX0 <= x <= posX1 ) || (posX0 >= x >= posX1)) && ((posY0 <= y <= posY1) || (posY0 >= y >= posY1)));
+    return ((((posX0 <= x) && (x <= posX1)) || ((posX0 >= x) && (x >= posX1))) && 
+            (((posY0 <= y) && (y <= posY1)) || ((posY0 >= y) && (y >= posY1))));
 }
 
 u16 distance (u16 x1, u16 y1, u16 x2, u16 y2){

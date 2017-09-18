@@ -77,7 +77,7 @@ void IAmovingToTarget(TPlayer *player, TBall *ball) {
 			moveLeft(player, player->stepX);
 			walking_animate(M_left, player);
 		}
-		if (posY < player->targetY) {
+		if (posY > player->targetY) {
 			moveDown(player, player->stepY);
 			down_animate(player);
 		} else {

@@ -72,7 +72,11 @@ void updateBall(TBall *ball)
 {
 =======
 void updateBall(TBall *ball) {
+<<<<<<< HEAD
 >>>>>>> fecc9b7153b8d556f91bd4bd83c472e82f0a6e9e
+=======
+>>>>>>> master
+>>>>>>> single_buffer
     u8 height;
     u8 posy;
 
@@ -92,7 +96,11 @@ void updateBall(TBall *ball) {
 =======
         ((ball->e.y[2] >= (90*SCALE)) && ((ball->e.y[0] < (90*SCALE)) && (ball->vy < 0))) || 
          ((ball->e.y[2] <= (90*SCALE)) && ((ball->e.y[0] > (90*SCALE)) && (ball->vy > 0)))){
+<<<<<<< HEAD
 >>>>>>> fecc9b7153b8d556f91bd4bd83c472e82f0a6e9e
+=======
+>>>>>>> master
+>>>>>>> single_buffer
         ball->vx = ball->vx * FRICTION;
         ball->vy = -ball->vy * FRICTION;
         ball->vz = ball->vz * FRICTION;

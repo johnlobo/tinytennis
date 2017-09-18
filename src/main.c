@@ -86,13 +86,19 @@ void game()
 {
     u8* pvmem;
     //u32 c;
+    u8 *pvmem;
+
     initGame();
 
 <<<<<<< HEAD
     //selectSpritePlayer(&player2);
     //drawPlayer(&player2);
 =======
+<<<<<<< HEAD
 >>>>>>> fecc9b7153b8d556f91bd4bd83c472e82f0a6e9e
+=======
+>>>>>>> master
+>>>>>>> single_buffer
     // Loop forever
     while (1)
     {
@@ -118,12 +124,26 @@ void game()
             erasePlayer(&player2);
             drawPlayer(&player2);
             entityDrawUpdate(&player2.e);
+<<<<<<< HEAD
+=======
+
+            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[1], 67, 0);
+            cpct_drawSolidBox(pvmem, #0, 12, 60);
+            drawNumber((u8) (player2.targetX), 4, 67, 0);
+            drawNumber((u8) (player2.targetY), 4, 67, 12);
+            drawNumber((i16) (player2.stepX / SCALE), 4, 67, 36);
+            drawNumber((i16) (player2.stepY / SCALE), 4, 67, 24);
+>>>>>>> single_buffer
 =======
             erasePlayer(&com);
             selectSpritePlayer(&com);
             drawPlayer(&com);
             entityDrawUpdate(&com.e);
+<<<<<<< HEAD
 >>>>>>> fecc9b7153b8d556f91bd4bd83c472e82f0a6e9e
+=======
+>>>>>>> master
+>>>>>>> single_buffer
         }
         //Ball block
         if (ball.e.draw)
