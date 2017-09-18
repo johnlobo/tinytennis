@@ -74,11 +74,16 @@ u8 hasReachedTarget(TEntity *e, u8 x, u8 y, i16 stepX, i16 stepY){
     return (((posX0 <= x <= posX1 ) || (posX0 >= x >= posX1)) && ((posY0 <= y <= posY1) || (posY0 >= y >= posY1)));
 }
 
-u8 distance (u8 x1, u8 y1, u8 x2, u8 y2){
-  u8 x = fast_abs( x2 - x1 );  // x = valor absoluto de x2 – x1, es decir, la distancia entre las x
-  u8 y = fast_abs( y2 - y1 );  // y = valor absoluto de y2 – y1, es decir, la distancia entre las y
+u16 distance (u16 x1, u16 y1, u16 x2, u16 y2){
+  u16 x = fast_abs( x2 - x1 );  // x = valor absoluto de x2 – x1, es decir, la distancia entre las x
+  u16 y = fast_abs( y2 - y1 );  // y = valor absoluto de y2 – y1, es decir, la distancia entre las y
 
-  u8 min = x < y ? x : y; // Si x < y min = x, si no, vale y. Es decir, el menor de los 2
+  u16 min = x < y ? x : y; // Si x < y min = x, si no, vale y. Es decir, el menor de los 2
 
   return ( x+y - (min>>1) - (min>>2) + (min>>4) );
+}
+
+
+i16 sign(i16 x) {
+    return (x > 0) - (x < 0);
 }

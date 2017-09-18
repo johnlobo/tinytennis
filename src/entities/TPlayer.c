@@ -25,7 +25,7 @@ const TPlayer tempPlayer1 =
 	,	ST_stopped
 	,	SD_down
 	,	0
-	,	ST_IAStopped
+	,	ST_IAstopped
 	, {
 		255, 512, 255, 255, 255, 255
 
@@ -50,8 +50,8 @@ const TFrame g_frames[PLAYER_FRAMES] =
 TFrame *const anim_walking[WALKING_FRAMES] = {&g_frames[1], &g_frames[2], &g_frames[3], &g_frames[1] };
 TFrame *const anim_up[UP_FRAMES] = {&g_frames[10], &g_frames[0], &g_frames[11], &g_frames[0] };
 TFrame *const anim_down[DOWN_FRAMES] = {&g_frames[12], &g_frames[13], &g_frames[14], &g_frames[13] };
-TFrame *const anim_hitting[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8], 
-	&g_frames[7]};
+TFrame *const anim_hittingUp[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8],	&g_frames[7]};
+TFrame *const anim_hittingDown[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8],	&g_frames[7]};
 
 
 void initPlayer1(TPlayer *player)
@@ -78,6 +78,7 @@ void selectSpritePlayer(TPlayer *player)
 	switch (player->state)
 	{
 	case ST_stopped:
+	case ST_IAstopped:
 	{
 		if (player->side == SD_down)
 		{
@@ -90,6 +91,7 @@ void selectSpritePlayer(TPlayer *player)
 		break;
 	}
 	case ST_walking:
+	case ST_IAmovigToTarget:
 	{
 		if (player->e.look == M_up)
 		{
@@ -108,7 +110,12 @@ void selectSpritePlayer(TPlayer *player)
 	}
 	case ST_hitting:
 	{
-		assignFrame(anim_hitting, player, ANIM_HIT_PAUSE);
+		assignFrame(anim_hittingUp, player, ANIM_HIT_PAUSE);
+		break;
+	}
+	case ST_IAhitting:
+	{
+		assignFrame(anim_hittingDown, player, ANIM_HIT_PAUSE);
 		break;
 	}
 	}
@@ -228,7 +235,7 @@ void hitting(TPlayer *player)
 	if (player->hit > 1)
 	{
 		player->hit--;
-		delay(5);
+		delay(5);  //  ??????????????????????????????????????????????????????????????????????????????
 		hitting_animate(player);
 	}
 	else

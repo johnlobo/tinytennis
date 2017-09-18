@@ -20,9 +20,9 @@ const TPlayer tempIAPlayer =
 	,	ST_stopped
 	,	SD_up
 	,	0
-	,	ST_IAStopped
+	,	ST_IAstopped
 	, {
-		255, 512, 255, 255 // Character definition
+		256, 512, 256, 256 // Character definition
 
 	}
 	, 0, 0  // targetX and targetY
@@ -33,17 +33,42 @@ void initIAPlayer(TPlayer *player) {
 	cpct_memcpy(player, &tempIAPlayer, sizeof(TPlayer));
 }
 
-void IAHitting(TPlayer *player, TBall *ball) {
+void IAstopped_enter(TPlayer *player)
+{
+	player->state = ST_IAstopped;
+	player->e.draw = 1;
 }
 
-void IAMovingToTarget(TPlayer *player, TBall *ball) {
+void IAhitting(TPlayer *player, TBall *ball) {
+	if (player->hit > 1)
+	{
+		player->hit--;
+		delay(5);  //  ??????????????????????????????????????????????????????????????????????????????
+		hitting_animate(player);
+	}
+	else
+	{
+		IAstopped_enter(player);
+	}
+	setIATarget(TARGET_CENTER_X, TARGET_CENTER_Y, player)
+}
+
+void IAhitting_enter(TPlayer *player)
+{
+	player->state = ST_IAhitting;
+	player->hit  =  HITTING_FRAMES * ANIM_HIT_PAUSE;
+	player->e.nframe = 0;
+	player->e.draw = 1;
+}
+
+void IAmovingToTarget(TPlayer *player, TBall *ball) {
 	u8 posX, posY;
 
 	posX = player->e.x[0] / SCALE;
 	posY = player->e.y[0] / SCALE;
 
 	if (hasReachedTarget(&player->e, player->targetX, player->targetY, player->stepX, player->stepY)) {
-		player->iaState = ST_IAStopped;
+		 IAstopped_enter(player);
 	} else {
 		if (posX < player->targetX) {
 			moveRight(player, player->stepX);
@@ -71,51 +96,47 @@ void setIATarget(u8 x, u8 y, TPlayer *player){
 	player->targetX = x;
 	player->targetY = y;
 	// Calculate the steps to target
-	distX = x - player->e.x[0];  	//distance X
-	distY = y - player->e.y[0];  	//distance Y
+	distX = (x * SCALE) - player->e.x[0];  	//distance X
+	distY = (y * SCALE) - player->e.y[0];  	//distance Y
 	t = max((fast_abs(distX)/player->car.speedX), (fast_abs(distY)/player->car.speedY));  // # of steps
 	stX = distX / t; 			// size of step X
 	stY = distY / t;			// size of step Y
 	// Set the steps to target 
-	if (player->car.speedX<stX){
-		player->stepX = player->car.speedX;
+	if (player->car.speedX<fast_abs(stX)){
+		player->stepX = player->car.speedX * sign(stX);
 	}else{
 		player->stepX = stX;
 	}
-	if (player->car.speedY<stY){
-		player->stepY = player->car.speedY;
+	if (player->car.speedY<fast_abs(stY)){
+		player->stepY = player->car.speedY * sign(stY);
 	}else{
 		player->stepY = stY;
 	}
 	// Set IA state
-	player->iaState = ST_IAMovingToTarget;
+	player->state = ST_IAmovingToTarget;
 }
 
-void IAStopped(TPlayer *player, TBall *ball)
+void IAstopped(TPlayer *player, TBall *ball)
 {
-	if (!hasReachedTarget(&player->e, TARGET_CENTER_X, TARGET_CENTER_Y, player->stepX, player->stepY) && (ball->vy < 0)) {
-		player->targetX = TARGET_CENTER_X;
-		player->targetY = TARGET_CENTER_Y;
-		player->state = ST_walking;
-	} else if (ball->vy < 0) {
-		player->targetX = ball->bouncex + ball->vx;
-		player->targetY = ball->bouncey + ball->vy;
-		player->state = ST_walking;
+	if ((ball->vy < 0) && (distance(player->e.x[0], player->e.y[0], ball->e.x[0], ball->e.y[0]) < HIT_RANGE)) {
+		player->state = ST_IAhitting;
+	} else if (ball->vy < 0){
+		setIATarget(ball->bouncex + ball->vx, ball->bouncey + ball->vy, player)
 	}
 }
 
 void executeStateIA(TPlayer *player, TBall *ball)
 {
-	switch (player->iaState)
+	switch (player->state)
 	{
-	case ST_IAStopped:
-		IAStopped(player, ball);
+	case ST_IAstopped:
+		IAstopped(player, ball);
 		break;
-	case ST_IAMovingToTarget:
-		IAMovingToTarget(player, ball);
+	case ST_IAmovingToTarget:
+		IAmovingToTarget(player, ball);
 		break;
-	case ST_IAHitting:
-		IAHitting(player, ball);
+	case ST_IAhitting:
+		IAhitting(player, ball);
 		break;
 	}
 }
