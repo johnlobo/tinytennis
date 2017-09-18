@@ -6,7 +6,7 @@
 #include "TBall.h"
 #include "../util/video.h"
 #include "../levels/court01.h"
-#include "../ia/ia.h"
+#include "../ai/ai.h"
 
 const TPlayer tempPlayer1 =
 {
@@ -25,7 +25,6 @@ const TPlayer tempPlayer1 =
 	,	ST_stopped
 	,	SD_down
 	,	0
-	,	ST_IAstopped
 	, {
 		255, 512, 255, 255, 255, 255
 
@@ -78,7 +77,7 @@ void selectSpritePlayer(TPlayer *player)
 	switch (player->state)
 	{
 	case ST_stopped:
-	case ST_IAstopped:
+	case ST_AIstopped:
 	{
 		if (player->side == SD_down)
 		{
@@ -91,7 +90,7 @@ void selectSpritePlayer(TPlayer *player)
 		break;
 	}
 	case ST_walking:
-	case ST_IAmovigToTarget:
+	case ST_AImovingToTarget:
 	{
 		if (player->e.look == M_up)
 		{
@@ -113,7 +112,7 @@ void selectSpritePlayer(TPlayer *player)
 		assignFrame(anim_hittingUp, player, ANIM_HIT_PAUSE);
 		break;
 	}
-	case ST_IAhitting:
+	case ST_AIhitting:
 	{
 		assignFrame(anim_hittingDown, player, ANIM_HIT_PAUSE);
 		break;
@@ -318,7 +317,7 @@ void stopped(TPlayer *player, TPlayer *playerIA,TBall *ball, TKeys *keys)
 	else if (cpct_isKeyPressed(keys->fire2))
 	{
 		newBall(player->e.x[0], player->e.y[0], ball);
-		setIATarget(ball->bouncex, ball->bouncey, playerIA);
+		setAITarget(ball->bouncex, ball->bouncey, playerIA);
 	}
 }
 
@@ -407,7 +406,7 @@ void walking(TPlayer *player, TPlayer *playerIA,TBall *ball, TKeys *keys)
 	if (cpct_isKeyPressed(keys->fire2))
 	{
 		newBall(player->e.x[0], player->e.y[0], ball);
-		setIATarget(ball->bouncex, ball->bouncey, playerIA);
+		setAITarget(ball->bouncex, ball->bouncey, playerIA);
 		moved = 1;
 	}
 	if (!moved)

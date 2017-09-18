@@ -28,7 +28,7 @@
 #include "sprites/court01.h"
 #include "levels/court01.h"
 #include "util/video.h"
-#include "ia/ia.h"
+#include "ai/ai.h"
 
 // Máscara de transparencia
 cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
@@ -72,7 +72,7 @@ void initGame()
 {
     cpct_etm_setTileset2x4(tile_tileset);
     initPlayer1(&player1);
-    initIAPlayer(&player2);
+    initAIPlayer(&player2);
     initBall(&ball);
 
     //pvmem = cpct_getScreenPtr(g_scrbuffers[0], 0, 0);
@@ -86,26 +86,16 @@ void game()
 {
     u8* pvmem;
     //u32 c;
-    u8 *pvmem;
 
     initGame();
 
-<<<<<<< HEAD
-    //selectSpritePlayer(&player2);
-    //drawPlayer(&player2);
-=======
-<<<<<<< HEAD
->>>>>>> fecc9b7153b8d556f91bd4bd83c472e82f0a6e9e
-=======
->>>>>>> master
->>>>>>> single_buffer
     // Loop forever
     while (1)
     {
         // Player1 block
         executeState(&player1, &player2, &ball, &keys);
         selectSpritePlayer(&player1);
-        executeStateIA(&player2, &ball);
+        executeStateAI(&player2, &ball);
         selectSpritePlayer(&player2);
         if (ball.active){
             updateBall(&ball);
@@ -120,12 +110,9 @@ void game()
         // Player2 block
         if (player2.e.draw)
         {
-<<<<<<< HEAD
             erasePlayer(&player2);
             drawPlayer(&player2);
             entityDrawUpdate(&player2.e);
-<<<<<<< HEAD
-=======
 
             pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[1], 67, 0);
             cpct_drawSolidBox(pvmem, #0, 12, 60);
@@ -133,17 +120,7 @@ void game()
             drawNumber((u8) (player2.targetY), 4, 67, 12);
             drawNumber((i16) (player2.stepX / SCALE), 4, 67, 36);
             drawNumber((i16) (player2.stepY / SCALE), 4, 67, 24);
->>>>>>> single_buffer
-=======
-            erasePlayer(&com);
-            selectSpritePlayer(&com);
-            drawPlayer(&com);
-            entityDrawUpdate(&com.e);
-<<<<<<< HEAD
->>>>>>> fecc9b7153b8d556f91bd4bd83c472e82f0a6e9e
-=======
->>>>>>> master
->>>>>>> single_buffer
+
         }
         //Ball block
         if (ball.e.draw)

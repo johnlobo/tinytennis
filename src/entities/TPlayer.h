@@ -6,7 +6,6 @@
 #include "TBall.h"
 #include "../util/util.h"
 
-typedef enum { ST_IAstopped, ST_IAmovingToTarget, ST_IAhitting } EIAStates;
 
 typedef struct {
 	i16 speedX, speedY;
@@ -20,7 +19,6 @@ typedef struct {
     EStates state;
     ESides side;
     u8 hit;
-    EIAStates iaState;
     TCharacter car;
     u8 targetX, targetY;
     i16 stepX, stepY;

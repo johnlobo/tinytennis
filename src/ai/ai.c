@@ -1,10 +1,10 @@
-#include "ia.h"
+#include "ai.h"
 #include "../defines.h"
 #include "../entities/TPlayer.h"
 #include "../sprites/player1.h"
 #include "../util/util.h"
 
-const TPlayer tempIAPlayer =
+const TPlayer tempAIPlayer =
 {
 	{	{ 40 * SCALE, 40 * SCALE }
 		, 	{ 10 * SCALE, 10 * SCALE }
@@ -20,7 +20,6 @@ const TPlayer tempIAPlayer =
 	,	ST_stopped
 	,	SD_up
 	,	0
-	,	ST_IAstopped
 	, {
 		256, 512, 256, 256 // Character definition
 
@@ -29,17 +28,17 @@ const TPlayer tempIAPlayer =
 	, 0, 0	// stepX and stepY
 };
 
-void initIAPlayer(TPlayer *player) {
-	cpct_memcpy(player, &tempIAPlayer, sizeof(TPlayer));
+void initAIPlayer(TPlayer *player) {
+	cpct_memcpy(player, &tempAIPlayer, sizeof(TPlayer));
 }
 
-void IAstopped_enter(TPlayer *player)
+void AIstopped_enter(TPlayer *player)
 {
-	player->state = ST_IAstopped;
+	player->state = ST_AIstopped;
 	player->e.draw = 1;
 }
 
-void IAhitting(TPlayer *player, TBall *ball) {
+void AIhitting(TPlayer *player, TBall *ball) {
 	if (player->hit > 1)
 	{
 		player->hit--;
@@ -48,27 +47,27 @@ void IAhitting(TPlayer *player, TBall *ball) {
 	}
 	else
 	{
-		IAstopped_enter(player);
+		AIstopped_enter(player);
 	}
-	setIATarget(TARGET_CENTER_X, TARGET_CENTER_Y, player)
+	setAITarget(TARGET_CENTER_X, TARGET_CENTER_Y, player);
 }
 
-void IAhitting_enter(TPlayer *player)
+void AIhitting_enter(TPlayer *player)
 {
-	player->state = ST_IAhitting;
+	player->state = ST_AIhitting;
 	player->hit  =  HITTING_FRAMES * ANIM_HIT_PAUSE;
 	player->e.nframe = 0;
 	player->e.draw = 1;
 }
 
-void IAmovingToTarget(TPlayer *player, TBall *ball) {
+void AImovingToTarget(TPlayer *player, TBall *ball) {
 	u8 posX, posY;
 
 	posX = player->e.x[0] / SCALE;
 	posY = player->e.y[0] / SCALE;
 
 	if (hasReachedTarget(&player->e, player->targetX, player->targetY, player->stepX, player->stepY)) {
-		 IAstopped_enter(player);
+		 AIstopped_enter(player);
 	} else {
 		if (posX < player->targetX) {
 			moveRight(player, player->stepX);
@@ -89,7 +88,7 @@ void IAmovingToTarget(TPlayer *player, TBall *ball) {
 }
 
 
-void setIATarget(u8 x, u8 y, TPlayer *player){
+void setAITarget(u8 x, u8 y, TPlayer *player){
 	i16 distX, distY;
 	i16 t, stX, stY;
 
@@ -112,31 +111,31 @@ void setIATarget(u8 x, u8 y, TPlayer *player){
 	}else{
 		player->stepY = stY;
 	}
-	// Set IA state
-	player->state = ST_IAmovingToTarget;
+	// Set AI state
+	player->state = ST_AImovingToTarget;
 }
 
-void IAstopped(TPlayer *player, TBall *ball)
+void AIstopped(TPlayer *player, TBall *ball)
 {
 	if ((ball->vy < 0) && (distance(player->e.x[0], player->e.y[0], ball->e.x[0], ball->e.y[0]) < HIT_RANGE)) {
-		player->state = ST_IAhitting;
+		player->state = ST_AIhitting;
 	} else if (ball->vy < 0){
-		setIATarget(ball->bouncex + ball->vx, ball->bouncey + ball->vy, player)
+		setAITarget(ball->bouncex + ball->vx, ball->bouncey + ball->vy, player);
 	}
 }
 
-void executeStateIA(TPlayer *player, TBall *ball)
+void executeStateAI(TPlayer *player, TBall *ball)
 {
 	switch (player->state)
 	{
-	case ST_IAstopped:
-		IAstopped(player, ball);
+	case ST_AIstopped:
+		AIstopped(player, ball);
 		break;
-	case ST_IAmovingToTarget:
-		IAmovingToTarget(player, ball);
+	case ST_AImovingToTarget:
+		AImovingToTarget(player, ball);
 		break;
-	case ST_IAhitting:
-		IAhitting(player, ball);
+	case ST_AIhitting:
+		AIhitting(player, ball);
 		break;
 	}
 }

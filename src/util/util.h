@@ -24,6 +24,6 @@ void delay(u32 cycles);
 u8 checkKeys(const cpct_keyID* k, u8 numk);
 u8 hasReachedTarget(TEntity *e, u8 x, u8 y, i16 stepX, i16 stepY);
 u16 distance (u16 x1, u16 y1, u16 x2, u16 y2);
-i8 sign(i16 x)
+i8 sign(i16 x);
 
 #endif

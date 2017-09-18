@@ -46,7 +46,7 @@ cpctm_declareMaskTable(g_tablatrans);
 // Looking to
 typedef enum { M_right, M_left, M_up, M_down } ELook;
 // Player States
-typedef enum { ST_stopped, ST_walking, ST_hitting, ST_preparing, ST_serving } EStates;
+typedef enum { ST_stopped, ST_walking, ST_hitting, ST_preparing, ST_serving, ST_AIstopped, ST_AImovingToTarget, ST_AIhitting } EStates;
 
 // Game phases
 typedef enum{ GM_serve, GM_rest, GM_play } EGamePhases;
