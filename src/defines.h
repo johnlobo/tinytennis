@@ -35,6 +35,11 @@
 #define FONT_H 11
 #define FONT_W 3
 
+#define min(X, Y) ((X) < (Y) ? (X) : (Y))
+#define max(X, Y) (X > Y ? X : Y)
+
+#define HIT_RANGE 512
+
 // Declare am_tablatrans, which is defined in game.c, and used in more places
 cpctm_declareMaskTable(g_tablatrans);
 
@@ -54,9 +59,7 @@ typedef struct {
 } TFrame;
 
 typedef struct{
-	u16 x[3];
-	u16 y[3];
-	u16 z[3];
+	u16 x[2], y[2], z[2];
 	u8 w, h;
 	i16 hstep, vstep;
 	TFrame* frame;

@@ -28,13 +28,15 @@
 #include "sprites/court01.h"
 #include "levels/court01.h"
 #include "util/video.h"
+#include "ia/ia.h"
 
 // Máscara de transparencia
 cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
 
 TKeys keys;
 TBall ball;
-TPlayer player, com;
+TPlayer player1;
+TPlayer player2;
 EGamePhases phase;
 
 void myInterruptHandler()
@@ -57,28 +59,26 @@ void myInterruptHandler()
     }
 }
 
-void entityDrawUpdate(TEntity *e){
-    u16* x = e->x + 2;
-    u16* y = e->y + 2;
-    u16* z = e->z + 2;
-    *x = *(x-1); --x; *x = *(x-1);
-    *y = *(y-1); --y; *y = *(y-1);
-    *z = *(z-1); --z; *z = *(z-1);
-    --e->draw;
+void entityDrawUpdate(TEntity *e)
+{
+    e->x[1] = e->x[0];
+    e->y[1] = e->y[0];
+    e->z[1] = e->z[0];
+    e->draw = 0;
 }
 
 // Main init
 void initGame()
 {
     cpct_etm_setTileset2x4(tile_tileset);
-    initPlayer(&player);
-    initCom(&com);
+    initPlayer1(&player1);
+    initIAPlayer(&player2);
     initBall(&ball);
 
     //pvmem = cpct_getScreenPtr(g_scrbuffers[0], 0, 0);
     cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[0], court);
     //pvmem = cpct_getScreenPtr(g_scrbuffers[1], 0, 0);
-    cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[1], court);
+    //cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[1], court);
 }
 
 
@@ -87,40 +87,40 @@ void game()
     //u32 c;
     initGame();
 
-    selectSpritePlayer(&com);
-    drawPlayer(&com);
+    //selectSpritePlayer(&player2);
+    //drawPlayer(&player2);
     // Loop forever
     while (1)
     {
         // Player1 block
-        executeState(&player, &ball, &keys);
-        if (player.e.draw)
-        {
-            erasePlayer(&player);
-            selectSpritePlayer(&player);
-            drawPlayer(&player);
-            entityDrawUpdate(&player.e);
-        }
-
-        if (com.e.draw)
-        {
-            //erasePlayer(&com);
-            //selectSpritePlayer(&com);
-            //drawPlayer(&com);
-            //entityDrawUpdate(&com.e);
-        }
-
-        //Ball block
-        if (ball.active && ball.e.draw)
-        {
+        executeState(&player1, &player2, &ball, &keys);
+        selectSpritePlayer(&player1);
+        executeStateIA(&player2, &ball);
+        selectSpritePlayer(&player2);
+        if (ball.active){
             updateBall(&ball);
+        }
+        cpct_waitVSYNC();
+        if (player1.e.draw)
+        {
+            erasePlayer(&player1);
+            drawPlayer(&player1);
+            entityDrawUpdate(&player1.e);
+        }
+        // Player2 block
+        if (player2.e.draw)
+        {
+            erasePlayer(&player2);
+            drawPlayer(&player2);
+            entityDrawUpdate(&player2.e);
+        }
+        //Ball block
+        if (ball.e.draw)
+        {
             eraseBall(&ball);
             drawBall(&ball);
             entityDrawUpdate(&ball.e);
         }
-
-        cpct_waitVSYNC();
-        swapBuffers(g_scrbuffers);
     }
 }
 
@@ -132,15 +132,14 @@ void game()
 const u8 sp_palette[16] = { 0x54, 0x44, 0x4e, 0x53, 0x4c, 0x55, 0x4d, 0x56, 0x5e, 0x5f, 0x5d, 0x52, 0x5c, 0x4a, 0x57, 0x4b };
 
 const TKeys tempKeys = {    Key_CursorUp, Key_CursorDown, Key_CursorLeft, Key_CursorRight,
-                            Key_Space, Key_Return, Key_Del, Key_Esc, Key_M };
+                            Key_Space, Key_Return, Key_Del, Key_Esc, Key_M
+                       };
 
 void initMain()
 {
     cpct_setVideoMode(0);
     // Clean up Screen and BackBuffer filling them up with 0's
     cpct_memset(g_scrbuffers[0], 0x00, 0x4000);
-    cpct_memset(g_scrbuffers[1], 0x00, 0x4000);
-    forceFrontBuffer(g_scrbuffers);
     cpct_setPalette(sp_palette, 16);
     cpct_setBorder(HW_BLUE);
 

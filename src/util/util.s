@@ -8,6 +8,24 @@ _reset_cpc::
 	ret
 
 
+;*************************************
+; FAST ABS
+;
+; Returns the absolute value of a given u1 number
+;*************************************
+
+.globl _fast_abs
+_fast_abs::
+     bit 7,h
+     ret z
+     xor a 
+     sub l  
+     ld l,a
+     sbc a,a  
+     sub h  
+     ld h,a
+     ret
+
 ;******************************
 ; 	unsigned char fastCollision(unsigned char x1,unsigned char y1,unsigned char w1,unsigned char h1,unsigned char x2,unsigned char y2,unsigned char w2,unsigned char h2){
 ; 	Descripción:	Devuelve 1 si se ha producido una colisión y 0 en caso contrario
