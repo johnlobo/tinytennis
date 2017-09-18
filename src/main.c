@@ -85,6 +85,8 @@ void initGame()
 void game()
 {
     //u32 c;
+    u8 *pvmem;
+
     initGame();
 
     //selectSpritePlayer(&player2);
@@ -113,6 +115,13 @@ void game()
             erasePlayer(&player2);
             drawPlayer(&player2);
             entityDrawUpdate(&player2.e);
+
+            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[1], 67, 0);
+            cpct_drawSolidBox(pvmem, #0, 12, 60);
+            drawNumber((u8) (player2.targetX), 4, 67, 0);
+            drawNumber((u8) (player2.targetY), 4, 67, 12);
+            drawNumber((i16) (player2.stepX / SCALE), 4, 67, 36);
+            drawNumber((i16) (player2.stepY / SCALE), 4, 67, 24);
         }
         //Ball block
         if (ball.e.draw)
