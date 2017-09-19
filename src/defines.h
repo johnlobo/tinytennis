@@ -7,7 +7,7 @@
 
 #define SCALE 256
 #define FRICTION 0.8
-#define GRAVITY (-0.4 * SCALE)
+#define GRAVITY (-0.2 * SCALE)
 
 // Pointers to the hardware backbuffer, placed in bank 1
 // of the memory (0x8000-0xBFFF)

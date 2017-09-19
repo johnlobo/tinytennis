@@ -112,6 +112,13 @@ void setAITarget(u8 x, u8 y, TPlayer *player){
 		player->stepY = stY;
 	}
 	// Set AI state
+	player->e.nframe = 0;
+	if (player->stepX > 0){
+		player->e.look = M_right;
+	}else{
+		player->e.look = M_left;
+	}
+	player->e.draw = 1;
 	player->state = ST_AImovingToTarget;
 }
 

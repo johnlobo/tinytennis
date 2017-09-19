@@ -86,5 +86,5 @@ u16 distance (u16 x1, u16 y1, u16 x2, u16 y2){
 
 
 i16 sign(i16 x) {
-    return (x > 0) - (x < 0);
+    return  (x > 0) - (x < 0);
 }

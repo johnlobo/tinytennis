@@ -92,6 +92,7 @@ void game()
     // Loop forever
     while (1)
     {
+        delay(20);
         // Player1 block
         executeState(&player1, &player2, &ball, &keys);
         selectSpritePlayer(&player1);
@@ -114,12 +115,14 @@ void game()
             drawPlayer(&player2);
             entityDrawUpdate(&player2.e);
 
-            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[1], 67, 0);
+            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], 67, 0);
             cpct_drawSolidBox(pvmem, #0, 12, 60);
-            drawNumber((u8) (player2.targetX), 4, 67, 0);
-            drawNumber((u8) (player2.targetY), 4, 67, 12);
-            drawNumber((i16) (player2.stepX / SCALE), 4, 67, 36);
-            drawNumber((i16) (player2.stepY / SCALE), 4, 67, 24);
+            drawNumber((u32) (player2.e.x[0] / SCALE), 4, 67, 0);
+            drawNumber((u32) (player2.e.y[0] / SCALE), 4, 67, 12);
+            drawNumber((u8) (player2.targetX), 4, 67, 24);
+            drawNumber((u8) (player2.targetY), 4, 67, 36);
+            drawNumber((i16) (player2.stepX), 4, 67, 48);
+            drawNumber((i16) (player2.stepY), 4, 67, 60);
 
         }
         //Ball block
