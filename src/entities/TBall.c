@@ -102,7 +102,6 @@ void updateBall(TBall *ball) {
         //ball->e.draw = 2;
     }
 
-
     // Check boundaries
     if (ball->e.x[0] > (210 * SCALE)) {
         ball->e.x[0] = 0;
@@ -113,18 +112,15 @@ void updateBall(TBall *ball) {
         ball->e.x[0] = (80 * SCALE) - (BALL_WIDTH * SCALE);
         ball->vx = -ball->vx;
         calcBounce(ball);
-        //ball->e.draw = 2;
     }
     if (ball->e.y[0] > (210 * SCALE)) {
         ball->e.y[0] = 0;
         ball->vy = -ball->vy;
         calcBounce(ball);
-        //ball->e.draw = 2;
     } else if ((ball->e.y[0] + (BALL_HEIGHT * SCALE)) > (200 * SCALE)) {
         ball->e.y[0] = (200 * SCALE) - (BALL_HEIGHT * SCALE);
         ball->vy = -ball->vy;
         calcBounce(ball);
-        //ball->e.draw = 2;
     }
 
     //Deactivate ball
