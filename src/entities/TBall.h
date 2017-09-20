@@ -9,11 +9,11 @@
 #define SHADOW_BALL_WIDTH SP_BALL_1_W
 #define SHADOW_BALL_HEIGHT SP_BALL_1_H
 
-
-typedef struct {
-	TEntity e;
+typedef struct
+{
+    TEntity e;
     i16 vx, vy, vz;
-    u8* sprite;
+    u8 *sprite;
     u8 bouncex, bouncey;
     u8 active;
 } TBall;

@@ -7,13 +7,15 @@
 #include "../util/util.h"
 
 
-typedef struct {
-	i16 speedX, speedY;
-	i16 accuracy;
-	i16 offense;
+typedef struct
+{
+    i16 speedX, speedY;
+    i16 accuracy;
+    i16 offense;
 } TCharacter;
 
-typedef struct {
+typedef struct
+{
     TEntity e;
     u8 phase;
     EStates state;
@@ -26,18 +28,18 @@ typedef struct {
 
 
 // Sprites States
-#define PLAYER_FRAMES  	15
+#define PLAYER_FRAMES   15
 // Animaciones
 #define ANIM_PAUSE      8
 #define ANIM_HIT_PAUSE  2
 #define WALKING_FRAMES  4
-#define UP_FRAMES    	4
-#define DOWN_FRAMES    	4
+#define UP_FRAMES       4
+#define DOWN_FRAMES     4
 #define HITTING_FRAMES  5
 
 extern const TFrame g_frames[PLAYER_FRAMES];
-extern TFrame* const anim_walking[WALKING_FRAMES];
-extern TFrame* const anim_hitting[HITTING_FRAMES];
+extern TFrame *const anim_walking[WALKING_FRAMES];
+extern TFrame *const anim_hitting[HITTING_FRAMES];
 
 extern TPlayer player;
 

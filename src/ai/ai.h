@@ -10,6 +10,6 @@
 
 void initAIPlayer(TPlayer *player);
 void setAITarget(u8 x, u8 y, TPlayer *player);
-void executeStateAI(TPlayer *player, TBall *ball); 
+void executeStateAI(TPlayer *player, TBall *ball);
 
 #endif

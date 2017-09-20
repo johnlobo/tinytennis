@@ -1,6 +1,5 @@
-#include "TBall.h"
-
 #include <cpctelera.h>
+#include "TBall.h"
 #include "../defines.h"
 #include "../sprites/ball.h"
 #include "../util/video.h"
@@ -8,8 +7,6 @@
 #include "../levels/court01.h"
 
 const i16 trajetoriesX[10] = {0, -64, 64, 0, -128, 128, -172, 172, -240, 240};
-
-u8 t;
 
 void eraseBall(TBall *ball)
 {
@@ -19,8 +16,6 @@ void eraseBall(TBall *ball)
     posy = ball->e.y[1] / SCALE;
     if (((posx + SHADOW_BALL_WIDTH) < 80) && ((posy + SHADOW_BALL_HEIGHT) < 200))
     {
-        //pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
-        //cpct_drawSolidBox(pvmem, #0,SHADOW_BALL_WIDTH,SHADOW_BALL_HEIGHT);
         cpct_etm_drawTileBox2x4 (posx / 2, posy / 4, (SHADOW_BALL_WIDTH / 2) + 1, (SHADOW_BALL_HEIGHT / 4) +
                                  1, MAP_WIDTH, g_scrbuffers[0], court);
     }
@@ -29,8 +24,6 @@ void eraseBall(TBall *ball)
     posy = ball->e.y[1] / SCALE - (ball->e.z[1] / SCALE / 2);
     if (((posx + BALL_WIDTH) < 80) && ((posy >= 0) && ((posy + BALL_HEIGHT) < 200)))
     {
-        //pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
-        //cpct_drawSolidBox(pvmem, #0,BALL_WIDTH,BALL_HEIGHT);
         cpct_etm_drawTileBox2x4 (posx / 2, posy / 4, (BALL_WIDTH / 2) + 1, (BALL_HEIGHT / 4) +
                                  1, MAP_WIDTH, g_scrbuffers[0], court);
     }
@@ -60,32 +53,34 @@ void drawBall(TBall *ball)
 
 void calcBounce(TBall *ball)
 {
-
-    //t = - ((2 * ball->vz) / (-0.4 * SCALE));
+    u8 t;
     t = - (2 * ball->vz) / GRAVITY;
     ball->bouncex = (ball->e.x[0] + (ball->vx * t)) / SCALE;
     ball->bouncey = (ball->e.y[0] + (ball->vy * t)) / SCALE;
 }
 
 
-void updateBall(TBall *ball) {
-    u8 height;
-    u8 posy;
+void updateBall(TBall *ball)
+{
+    u8 posx, posy posz;
 
     ball->vz += GRAVITY;
     ball->e.x[0] += ball->vx;
     ball->e.y[0] += ball->vy;
     ball->e.z[0] += ball->vz;
     ball->e.draw = 2;
-    height = (ball->e.z[0] / SCALE);
-    posy = ball->e.y[0] / SCALE;
+
+    x = ball->e.x[0] / SCALE;
+    y = ball->e.y[0] / SCALE;
+    z = ball->e.z[0] / SCALE;
+    py = ball->e.y[1] / SCALE;
+
 
     // Check net
-    if ((height < 20) && ((ball->e.x[0] > (10 * SCALE)) && (ball->e.x[0] < (70 * SCALE))) && 
-
-        ((ball->e.y[1] >= (90*SCALE)) && ((ball->e.y[0] < (90*SCALE)) && (ball->vy < 0))) || 
-         ((ball->e.y[1] <= (90*SCALE)) && ((ball->e.y[0] > (90*SCALE)) && (ball->vy > 0)))){
-        
+    if ((z < 20) && ((posx > 10) && (posx < 70 )) &&
+            ((py >= 90) && (y < 90) && (ball->vy < 0)) ||
+            ((py <= 90) && (y > 90) && (ball->vy > 0)))
+    {
         ball->vx = ball->vx * FRICTION;
         ball->vy = -ball->vy * FRICTION;
         ball->vz = ball->vz * FRICTION;
@@ -93,41 +88,49 @@ void updateBall(TBall *ball) {
     }
 
     // Check bounce
-    if (height > 210) {
+    if (z > 210)
+    {
         ball->vx = ball->vx * FRICTION;
         ball->vy = ball->vy * FRICTION;
         ball->vz = -ball->vz * FRICTION;
         ball->e.z[0] = 0;
         calcBounce(ball);
-        //ball->e.draw = 2;
     }
 
     // Check boundaries
-    if (ball->e.x[0] > (210 * SCALE)) {
+    if (x > 210)
+    {
         ball->e.x[0] = 0;
         ball->vx = -ball->vx;
         calcBounce(ball);
         ball->e.draw = 2;
-    } else if ((ball->e.x[0] + (BALL_WIDTH * SCALE)) > (80 * SCALE)) {
+    }
+    else if ((x + BALL_WIDTH) > 80)
+    {
         ball->e.x[0] = (80 * SCALE) - (BALL_WIDTH * SCALE);
         ball->vx = -ball->vx;
         calcBounce(ball);
     }
-    if (ball->e.y[0] > (210 * SCALE)) {
+    if (y > 210)
+    {
         ball->e.y[0] = 0;
         ball->vy = -ball->vy;
         calcBounce(ball);
-    } else if ((ball->e.y[0] + (BALL_HEIGHT * SCALE)) > (200 * SCALE)) {
+    }
+    else if ((y + BALL_HEIGHT) > 200)
+    {
         ball->e.y[0] = (200 * SCALE) - (BALL_HEIGHT * SCALE);
         ball->vy = -ball->vy;
         calcBounce(ball);
     }
 
     //Deactivate ball
-    //if ((ball->vx < (0.1 * SCALE)) && (ball->vy < (0.1 * SCALE)) && (ball->vz < (0.1 * SCALE))){
-    //    ball->active = 0;
-    //}
-
+    if ((ball->vx < 16) && (ball->vy < 16) && (ball->vz < 16))
+    {
+        eraseBall(ball);
+        ball->active = 0;
+        ball->e.draw = 0;
+    }
 }
 
 void initBall(TBall *ball)
@@ -147,5 +150,5 @@ void newBall(i32 x, i32 y, TBall *ball)
     ball->sprite = (u8 *) sp_ball_0;
     ball->active = 1;
     calcBounce(ball);
-    
+
 }

@@ -7,7 +7,7 @@
 
 #define SCALE 256
 #define FRICTION 0.8
-#define GRAVITY (-0.2 * SCALE)
+#define GRAVITY -48 // in an interval of -256 to 0
 
 // Pointers to the hardware backbuffer, placed in bank 1
 // of the memory (0x8000-0xBFFF)
@@ -49,23 +49,25 @@ typedef enum { M_right, M_left, M_up, M_down } ELook;
 typedef enum { ST_stopped, ST_walking, ST_hitting, ST_preparing, ST_serving, ST_AIstopped, ST_AImovingToTarget, ST_AIhitting } EStates;
 
 // Game phases
-typedef enum{ GM_serve, GM_rest, GM_play } EGamePhases;
+typedef enum { GM_serve, GM_rest, GM_play } EGamePhases;
 //Sides
-typedef enum{ SD_up, SD_down } ESides;
+typedef enum { SD_up, SD_down } ESides;
 
-typedef struct {
+typedef struct
+{
     u8 look;
-    u8* sprite;
+    u8 *sprite;
 } TFrame;
 
-typedef struct{
-	u16 x[2], y[2], z[2];
-	u8 w, h;
-	i16 hstep, vstep;
-	TFrame* frame;
+typedef struct
+{
+    u16 x[2], y[2], z[2];
+    u8 w, h;
+    i16 hstep, vstep;
+    TFrame *frame;
     u8 nframe;
     ELook look;
-	u8 draw;
+    u8 draw;
 } TEntity;
 
 #endif
