@@ -26,5 +26,6 @@ u8 checkKeys(const cpct_keyID *k, u8 numk);
 u8 hasReachedTarget(TEntity *e, u8 x, u8 y, i16 stepX, i16 stepY);
 u16 distance (u16 x1, u16 y1, u16 x2, u16 y2);
 i16 sign(i16 x);
+u32 wait4UserKeypress();
 
 #endif

@@ -38,6 +38,7 @@ TBall ball;
 TPlayer player1;
 TPlayer player2;
 EGamePhases phase;
+u8 pauseGame;
 
 void myInterruptHandler()
 {
@@ -71,6 +72,8 @@ void initGame()
     initBall(&ball);
 
     cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[0], court);
+
+    pauseGame = 0;
 }
 
 
@@ -80,11 +83,23 @@ void game()
     u8 *pvmem;
     //u32 c;
 
+    drawText("PRESS ANY KEY", 0, 90, 1);
+
+    cpct_srand8(wait4UserKeypress())
+
     initGame();
 
     // Loop forever
     while (1)
     {
+        if (cpct_isKeyPressed(keys.pause)){
+                pauseGame = 1;
+            }
+        while (pauseGame){
+            if (cpct_isKeyPressed(keys.pause)){
+                pauseGame = 0;
+            }
+        }
         delay(20);
         // Player1 block
         executeState(&player1, &player2, &ball, &keys);
@@ -138,7 +153,7 @@ void game()
 const u8 sp_palette[16] = { 0x54, 0x44, 0x4e, 0x53, 0x4c, 0x55, 0x4d, 0x56, 0x5e, 0x5f, 0x5d, 0x52, 0x5c, 0x4a, 0x57, 0x4b };
 
 const TKeys tempKeys = {    Key_CursorUp, Key_CursorDown, Key_CursorLeft, Key_CursorRight,
-                            Key_Space, Key_Return, Key_Del, Key_Esc, Key_M
+                            Key_Space, Key_Return, Key_Esc, Key_H, Key_M
                        };
 
 void initMain()

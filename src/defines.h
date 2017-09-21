@@ -20,8 +20,8 @@
 #define YES 1
 #define NO 0
 
-#define WIDTH  80
-#define HEIGHT  200
+#define WIDTH  79
+#define HEIGHT  199
 
 #define MAP_WIDTH  40
 #define MAP_HEIGHT  50

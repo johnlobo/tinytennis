@@ -56,6 +56,16 @@ void calcBounce(TBall *ball)
     u8 t;
     t = - (2 * ball->vz) / GRAVITY;
     ball->bouncex = (ball->e.x[0] + (ball->vx * t)) / SCALE;
+    if (ball->bouncex > 200){  //Negative number -> Left side 
+        ball->bouncex = 0;
+    }else if (ball->bouncex> 79){
+        ball->bouncex = 79;      //Right side
+    }
+    if (ball->bouncey > 220){  //Negative number -> Upper side 
+        ball->bouncey = 0;
+    }else if (ball->bouncex> 199){
+        ball->bouncex = 199;      //Down side
+    }
     ball->bouncey = (ball->e.y[0] + (ball->vy * t)) / SCALE;
 }
 
@@ -145,8 +155,8 @@ void newBall(i32 x, i32 y, TBall *ball)
     ball->e.z[0] = ball->e.z[1] = ((cpct_rand8() % 3) + 3) * SCALE;
     ball->e.draw = 1;
     ball->vx = trajetoriesX[cpct_rand8() % 10];
-    ball->vy = (((cpct_rand8() % 4) * -1.1) - 1) * SCALE;
-    ball->vz = (((cpct_rand8() % 4) * 1) + 5)  * SCALE;
+    ball->vy = (((cpct_rand8() % 4) * -1) - 1) * SCALE;
+    ball->vz = (((cpct_rand8() % 4) * 1) + 3)  * SCALE;
     ball->sprite = (u8 *) sp_ball_0;
     ball->active = 1;
     calcBounce(ball);
