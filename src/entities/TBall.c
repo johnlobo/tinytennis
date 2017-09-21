@@ -62,7 +62,7 @@ void calcBounce(TBall *ball)
 
 void updateBall(TBall *ball)
 {
-    u8 posx, posy posz;
+    u8 x, y, z, py;
 
     ball->vz += GRAVITY;
     ball->e.x[0] += ball->vx;
@@ -77,7 +77,7 @@ void updateBall(TBall *ball)
 
 
     // Check net
-    if ((z < 20) && ((posx > 10) && (posx < 70 )) &&
+    if ((z < 20) && ((x > 10) && (x < 70 )) &&
             ((py >= 90) && (y < 90) && (ball->vy < 0)) ||
             ((py <= 90) && (y > 90) && (ball->vy > 0)))
     {
