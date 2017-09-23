@@ -3,6 +3,7 @@
 #include "TPlayer.h"
 #include "../util/util.h"
 #include "../sprites/player1.h"
+#include "../sprites/player2.h"
 #include "TBall.h"
 #include "../util/video.h"
 #include "../levels/court01.h"
@@ -16,7 +17,7 @@ const TPlayer tempPlayer1 =
         , 	{ 0, 0 }
         ,	PLAYER_WIDTH, PLAYER_HEIGHT
         ,   256, 512
-        ,	&g_frames[0]
+        ,	&g_frames[0][0]
         ,	0
         ,	M_right
         ,	2
@@ -33,7 +34,7 @@ const TPlayer tempPlayer1 =
     , 0, 0
 };
 
-const TFrame g_frames[PLAYER_FRAMES] =
+const TFrame g_frames[2][PLAYER_FRAMES] ={
 {
     { M_right, sp_player1_00 },  { M_right, sp_player1_01 }
     ,  { M_right, sp_player1_02 },  { M_right, sp_player1_03 }
@@ -43,15 +44,29 @@ const TFrame g_frames[PLAYER_FRAMES] =
     ,  { M_right, sp_player1_10 },  { M_right, sp_player1_11 }
     ,  { M_right, sp_player1_12 },  { M_right, sp_player1_13 }
     ,  { M_right, sp_player1_14 },
-};
+},
+{
+    { M_right, sp_player2_00 },  { M_right, sp_player2_01 }
+    ,  { M_right, sp_player2_02 },  { M_right, sp_player2_03 }
+    ,  { M_right, sp_player2_04 },  { M_right, sp_player2_05 }
+    ,  { M_right, sp_player2_06 },  { M_right, sp_player2_07 }
+    ,  { M_right, sp_player2_08 },  { M_right, sp_player2_09 }
+    ,  { M_right, sp_player2_10 },  { M_right, sp_player2_11 }
+    ,  { M_right, sp_player2_12 },  { M_right, sp_player2_13 }
+    ,  { M_right, sp_player2_14 },
+}};
 
 // Global Variables
-TFrame *const anim_walking[WALKING_FRAMES] = {&g_frames[1], &g_frames[2], &g_frames[3], &g_frames[1] };
-TFrame *const anim_up[UP_FRAMES] = {&g_frames[10], &g_frames[0], &g_frames[11], &g_frames[0] };
-TFrame *const anim_down[DOWN_FRAMES] = {&g_frames[12], &g_frames[13], &g_frames[14], &g_frames[13] };
-TFrame *const anim_hittingUp[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8],	&g_frames[7]};
-TFrame *const anim_hittingDown[HITTING_FRAMES] = {&g_frames[7], &g_frames[8], &g_frames[9], &g_frames[8],	&g_frames[7]};
-
+TFrame *const anim_walking[2][WALKING_FRAMES] = {{&g_frames[0][1], &g_frames[0][2], &g_frames[0][3], &g_frames[0][1]},
+                    {&g_frames[1][1], &g_frames[1][2], &g_frames[1][3], &g_frames[1][1] }};
+TFrame *const anim_up[2][UP_FRAMES] = {{&g_frames[0][10], &g_frames[0][0], &g_frames[0][11], &g_frames[0][0]},
+                    {&g_frames[1][10], &g_frames[1][0], &g_frames[1][11], &g_frames[1][0] }};
+TFrame *const anim_down[2][DOWN_FRAMES] = {{&g_frames[0][12], &g_frames[0][13], &g_frames[0][14], &g_frames[0][13]},
+                    {&g_frames[1][12], &g_frames[1][13], &g_frames[1][14], &g_frames[1][13] }};
+TFrame *const anim_hittingUp[2][HITTING_FRAMES] = {{&g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][8],	&g_frames[0][7]},
+                    {&g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][8], &g_frames[1][7]}};
+TFrame *const anim_hittingDown[2][HITTING_FRAMES] = {{&g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][8], &g_frames[0][7]},
+                    {&g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][8],   &g_frames[1][7]}};
 
 void initPlayer1(TPlayer *player)
 {
@@ -72,7 +87,7 @@ void turnFrame(TPlayer *player)
         f->look = player->e.look;
     }
 }
-void selectSpritePlayer(TPlayer *player)
+void selectSpritePlayer(TPlayer *player, u8 ai)
 {
     switch (player->state)
     {
@@ -81,11 +96,11 @@ void selectSpritePlayer(TPlayer *player)
     {
         if (player->side == SD_down)
         {
-            player->e.frame = &g_frames[0];
+            player->e.frame = &g_frames[ai][0];
         }
         else
         {
-            player->e.frame = &g_frames[12];
+            player->e.frame = &g_frames[ai][12];
         }
         break;
     }
@@ -94,27 +109,27 @@ void selectSpritePlayer(TPlayer *player)
     {
         if (player->e.look == M_up)
         {
-            assignFrame(anim_up, player, ANIM_PAUSE);
+            assignFrame(anim_up[ai], player, ANIM_PAUSE);
         }
         else if (player->e.look == M_down)
         {
-            assignFrame(anim_down, player, ANIM_PAUSE);
+            assignFrame(anim_down[ai], player, ANIM_PAUSE);
         }
         else
         {
-            assignFrame(anim_walking, player, ANIM_PAUSE);
+            assignFrame(anim_walking[ai], player, ANIM_PAUSE);
             turnFrame(player);
         }
         break;
     }
     case ST_hitting:
     {
-        assignFrame(anim_hittingUp, player, ANIM_HIT_PAUSE);
+        assignFrame(anim_hittingUp[ai], player, ANIM_HIT_PAUSE);
         break;
     }
     case ST_AIhitting:
     {
-        assignFrame(anim_hittingDown, player, ANIM_HIT_PAUSE);
+        assignFrame(anim_hittingDown[ai], player, ANIM_HIT_PAUSE);
         break;
     }
     }

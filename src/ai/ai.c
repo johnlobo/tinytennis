@@ -11,7 +11,7 @@ const TPlayer tempAIPlayer =
 		, 	{ 0, 0 }
 		,	PLAYER_WIDTH, PLAYER_HEIGHT
 		,   256, 512
-		,	&g_frames[12]
+		,	&g_frames[1][12]
 		,	0
 		,	M_right
 		,	2
@@ -82,7 +82,7 @@ void AImovingToTarget(TPlayer *player, TBall *ball)
 		}
 		else if (posX > player->targetX)
 		{
-			moveLeft(player, player->stepX);
+			moveLeft(player, player->stepX * -1);
 			walking_animate(M_left, player);
 		}
 		if (posY > player->targetY)
@@ -116,6 +116,7 @@ void setAITarget(u8 x, u8 y, TPlayer *player)
 	} else if (y > 90) {
 		y = 90; //Right bound
 	}
+	
 	player->targetX = x; 
 	player->targetY = y;
 

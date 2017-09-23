@@ -104,8 +104,8 @@ void game()
         // Player1 block
         executeState(&player1, &player2, &ball, &keys);
         executeStateAI(&player2, &ball);
-        selectSpritePlayer(&player1);
-        selectSpritePlayer(&player2);
+        selectSpritePlayer(&player1, 0);
+        selectSpritePlayer(&player2, 1);
         if (ball.active)
         {
             updateBall(&ball);

@@ -37,15 +37,15 @@ typedef struct
 #define DOWN_FRAMES     4
 #define HITTING_FRAMES  5
 
-extern const TFrame g_frames[PLAYER_FRAMES];
-extern TFrame *const anim_walking[WALKING_FRAMES];
-extern TFrame *const anim_hitting[HITTING_FRAMES];
+extern const TFrame g_frames[2][PLAYER_FRAMES];
+extern TFrame *const anim_walking[2][WALKING_FRAMES];
+extern TFrame *const anim_hitting[2][HITTING_FRAMES];
 
 extern TPlayer player;
 
 void initPlayer1(TPlayer *player);
 void initPlayer2(TPlayer *player);
-void selectSpritePlayer(TPlayer *player);
+void selectSpritePlayer(TPlayer *player, u8 ai);
 void drawPlayer(TPlayer *player);
 void erasePlayer(TPlayer *player);
 void moveUp(TPlayer *player, i16 step);
