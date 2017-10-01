@@ -6,7 +6,7 @@
 #include "../util/util.h"
 #include "../levels/court01.h"
 
-const i16 trajetoriesX[10] = {0, -64, 64, 0, -128, 128, -172, 172, -240, 240};
+const i16 trajetoriesX[10] = {-128, -96, -64, -32, 0 , 0, 32, 64, 96, 128};
 
 void eraseBall(TBall *ball)
 {
@@ -69,6 +69,60 @@ void calcBounce(TBall *ball)
     ball->bouncey = (ball->e.y[0] + (ball->vy * t)) / SCALE;
 }
 
+//
+//  checkBoundaries
+//
+
+u8 checkBoundaries(u8 x, u8 y, TBall *ball){
+    u8 result = 0;
+
+    if (x > 210){
+        ball->e.x[0] = 0;
+        ball->vx = -ball->vx;
+        calcBounce(ball);
+        result = 1;
+    } else if ((x + BALL_WIDTH) > 80) {
+        ball->e.x[0] = (80 * SCALE) - (BALL_WIDTH * SCALE);
+        ball->vx = -ball->vx;
+        calcBounce(ball);
+        result = 1;
+    }
+
+    if (y > 210){
+        ball->e.y[0] = 0;
+        ball->vy = -ball->vy;
+        calcBounce(ball);
+    } else if ((y + BALL_HEIGHT) > 200) {
+        ball->e.y[0] = (200 * SCALE) - (BALL_HEIGHT * SCALE);
+        ball->vy = -ball->vy;
+        calcBounce(ball);
+        result = 1;
+    } 
+
+    return result;
+}
+
+//
+//  checkNet
+//
+
+u8 checkNet(u8 x, u8 y, u8 z, u8 py, TBall *ball){
+    u8 result = 0;
+
+    if (((z < 20) && ((x > 10) && (x < 70 ))) &&
+            (((py >= 90) && (y < 90) && (ball->vy < 0)) ||
+            ((py <= 90) && (y > 90) && (ball->vy > 0))))
+    {
+        ball->vx = ball->vx * FRICTION;
+        ball->vy = -ball->vy * FRICTION;
+        ball->vz = ball->vz * FRICTION;
+        calcBounce(ball);
+        result = 1;
+    }
+
+    return result;
+}
+
 
 void updateBall(TBall *ball)
 {
@@ -78,61 +132,12 @@ void updateBall(TBall *ball)
     ball->e.x[0] += ball->vx;
     ball->e.y[0] += ball->vy;
     ball->e.z[0] += ball->vz;
-    ball->e.draw = 2;
+    ball->e.draw = 1;
 
     x = ball->e.x[0] / SCALE;
     y = ball->e.y[0] / SCALE;
     z = ball->e.z[0] / SCALE;
     py = ball->e.y[1] / SCALE;
-
-
-    // Check net
-    if ((z < 20) && ((x > 10) && (x < 70 )) &&
-            ((py >= 90) && (y < 90) && (ball->vy < 0)) ||
-            ((py <= 90) && (y > 90) && (ball->vy > 0)))
-    {
-        ball->vx = ball->vx * FRICTION;
-        ball->vy = -ball->vy * FRICTION;
-        ball->vz = ball->vz * FRICTION;
-        calcBounce(ball);
-    }
-
-    // Check bounce
-    if (z > 210)
-    {
-        ball->vx = ball->vx * FRICTION;
-        ball->vy = ball->vy * FRICTION;
-        ball->vz = -ball->vz * FRICTION;
-        ball->e.z[0] = 0;
-        calcBounce(ball);
-    }
-
-    // Check boundaries
-    if (x > 210)
-    {
-        ball->e.x[0] = 0;
-        ball->vx = -ball->vx;
-        calcBounce(ball);
-        ball->e.draw = 2;
-    }
-    else if ((x + BALL_WIDTH) > 80)
-    {
-        ball->e.x[0] = (80 * SCALE) - (BALL_WIDTH * SCALE);
-        ball->vx = -ball->vx;
-        calcBounce(ball);
-    }
-    if (y > 210)
-    {
-        ball->e.y[0] = 0;
-        ball->vy = -ball->vy;
-        calcBounce(ball);
-    }
-    else if ((y + BALL_HEIGHT) > 200)
-    {
-        ball->e.y[0] = (200 * SCALE) - (BALL_HEIGHT * SCALE);
-        ball->vy = -ball->vy;
-        calcBounce(ball);
-    }
 
     //Deactivate ball
     if ((ball->vx < 16) && (ball->vy < 16) && (ball->vz < 16))
@@ -141,6 +146,23 @@ void updateBall(TBall *ball)
         ball->active = 0;
         ball->e.draw = 0;
     }
+
+    // If ball is in the limits of the court, check collision with the net
+    if ((ball->active) && (!checkBoundaries(x,y,ball))) {
+        
+        checkNet(x,y,z,py,ball);
+
+        // Check bounce
+        if (z > 210)
+        {
+            ball->vx = ball->vx * FRICTION;
+            ball->vy = ball->vy * FRICTION;
+            ball->vz = -ball->vz * FRICTION;
+            ball->e.z[0] = 0;
+            calcBounce(ball);
+        }
+    }
+
 }
 
 void initBall(TBall *ball)
@@ -155,8 +177,8 @@ void newBall(i32 x, i32 y, TBall *ball)
     ball->e.z[0] = ball->e.z[1] = ((cpct_rand8() % 3) + 3) * SCALE;
     ball->e.draw = 1;
     ball->vx = trajetoriesX[cpct_rand8() % 10];
-    ball->vy = (((cpct_rand8() % 4) * -1) - 1) * SCALE;
-    ball->vz = (((cpct_rand8() % 4) * 1) + 3)  * SCALE;
+    ball->vy = (3 + (cpct_rand8() % 3)) * SCALE;
+    ball->vz = (3 + (cpct_rand8() % 4)) * SCALE;
     ball->sprite = (u8 *) sp_ball_0;
     ball->active = 1;
     calcBounce(ball);

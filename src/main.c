@@ -55,6 +55,45 @@ void myInterruptHandler()
     }
 }
 
+
+//
+// Body touch
+//
+void bodyTouch(TBall *ball){
+
+}
+
+//
+// Player Shot
+//
+void shot(TBall *ball, TPlayer *player){
+
+}
+
+//
+//  checkPlayerCollision
+//
+
+void checkPlayerCollision(TBall *ball, TPlayer *player){
+    u8 bx, by, px, py;
+    u8 hit;
+
+    px = player->e.x[0] / SCALE;
+    py = player->e.y[0] / SCALE;
+    bx = ball->e.x[0] / SCALE;
+    by = ball->e.y[0] / SCALE;
+
+    hit = fast_collision(px, py, player->e.w, player->e.h, bx, by, ball->e.w, ball->e.w);
+
+    if (hit){
+        if (player->hit){
+            shot(ball, player);
+        } else {
+            bodyTouch(ball);
+        }
+    }
+}
+
 void entityDrawUpdate(TEntity *e)
 {
     e->x[1] = e->x[0];
@@ -81,9 +120,11 @@ void initGame()
 void game()
 {
     u8 *pvmem;
+    TPlayer *playerAux;
     //u32 c;
 
-    drawText("PRESS ANY KEY", 0, 90, 1);
+    drawText("TINY TENNIS IS READY", 0, 82, 1);
+    drawText("PRESS ANY KEY", 0, 97, 1);
 
     cpct_srand8(wait4UserKeypress())
 
@@ -100,17 +141,28 @@ void game()
                 pauseGame = 0;
             }
         }
-        delay(20);
         // Player1 block
         executeState(&player1, &player2, &ball, &keys);
-        executeStateAI(&player2, &ball);
+        //executeStateAI(&player2, &ball);
         selectSpritePlayer(&player1, 0);
-        selectSpritePlayer(&player2, 1);
-        if (ball.active)
-        {
-            updateBall(&ball);
+        //selectSpritePlayer(&player2, 1);
+
+        updateBall(&ball);
+
+        // Check collision with players 
+        if (ball.active){
+            if ((ball.vy>0) && (player1.side == SD_down)){
+                playerAux = &player1;
+            } else{
+                playerAux = &player2;
+            }
+            checkPlayerCollision(&ball, playerAux);
         }
+
+        // Draw actors
+        
         cpct_waitVSYNC();
+        
         if (player1.e.draw)
         {
             erasePlayer(&player1);
@@ -118,34 +170,34 @@ void game()
             entityDrawUpdate(&player1.e);
         }
         // Player2 block
-        if (player2.e.draw)
-        {
-            erasePlayer(&player2);
-            drawPlayer(&player2);
-            entityDrawUpdate(&player2.e);
-
-            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], 67, 0);
-            cpct_drawSolidBox(pvmem, #0, 12, 60);
-            drawNumber((u32) (player2.e.x[0] / SCALE), 4, 67, 0);
-            drawNumber((u32) (player2.e.y[0] / SCALE), 4, 67, 12);
-            drawNumber((u8) (player2.targetX), 4, 67, 24);
-            drawNumber((u8) (player2.targetY), 4, 67, 36);
-            drawNumber((i16) (player2.stepX), 4, 67, 48);
-            drawNumber((i16) (player2.stepY), 4, 67, 60);
-
-        }
+        //if (player2.e.draw)
+        //{
+        //    erasePlayer(&player2);
+        //    drawPlayer(&player2);
+        //    entityDrawUpdate(&player2.e);
+//
+        //    pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], 67, 0);
+        //    cpct_drawSolidBox(pvmem, #0, 12, 60);
+        //    drawNumber((u32) (player2.e.x[0] / SCALE), 4, 67, 0);
+        //    drawNumber((u32) (player2.e.y[0] / SCALE), 4, 67, 12);
+        //    drawNumber((u8) (player2.targetX), 4, 67, 24);
+        //    drawNumber((u8) (player2.targetY), 4, 67, 36);
+        //    drawNumber((i16) (player2.stepX), 4, 67, 48);
+        //    drawNumber((i16) (player2.stepY), 4, 67, 60);
+//
+        //}
         //Ball block
         if (ball.e.draw)
         {
             eraseBall(&ball);
             drawBall(&ball);
             entityDrawUpdate(&ball.e);
-            /*pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[1], 67, 0);
-            cpct_drawSolidBox(pvmem, #0, 12, 60);
-            drawNumber((i16) (ball.e.x[0] / SCALE), 4, 67, 0);
-            drawNumber((i16) (ball.e.y[0] / SCALE), 4, 67, 12);
-            drawNumber((i16) (ball.e.z[0] / SCALE), 4, 67, 24);
-            drawNumber((i16) (ball.vy / SCALE), 4, 67, 36);*/
+           //pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[1], 67, 0);
+           //cpct_drawSolidBox(pvmem, #0, 12, 60);
+           //drawNumber((i16) (ball.e.x[0] / SCALE), 4, 67, 0);
+           //drawNumber((i16) (ball.e.y[0] / SCALE), 4, 67, 12);
+           //drawNumber((i16) (ball.e.z[0] / SCALE), 4, 67, 24);
+           //drawNumber((i16) (ball.vy / SCALE), 4, 67, 36);
         }
     }
 }

@@ -147,7 +147,7 @@ void moveRight(TPlayer *player, i16 step)
 
 void moveLeft(TPlayer *player, i16 step)
 {
-    if (player->e.x[0] - step > (160 * SCALE))
+    if ((player->e.x[0] - step) > (160 * SCALE))
     {
         player->e.x[0] = 0;
     }
@@ -162,7 +162,7 @@ void moveLeft(TPlayer *player, i16 step)
 
 void moveUp(TPlayer *player, i16 step)
 {
-    if (player->e.y[0] - step > (200 * SCALE))
+    if ((player->e.y[0] - step) > (200 * SCALE))
     {
         player->e.y[0] = 0;
     }
@@ -255,7 +255,6 @@ void hitting(TPlayer *player)
     if (player->hit > 1)
     {
         player->hit--;
-        delay(5);  //  ??????????????????????????????????????????????????????????????????????????????
         hitting_animate(player);
     }
     else
@@ -286,7 +285,6 @@ void serving(TPlayer *player)
     if (player->hit > 1)
     {
         player->hit--;
-        delay(5);
         serving_animate(player);
     }
     else
@@ -338,7 +336,8 @@ void stopped(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     }
     else if (cpct_isKeyPressed(keys->fire2))
     {
-        newBall(player->e.x[0], player->e.y[0], ball);
+        //newBall(player->e.x[0], player->e.y[0], ball);
+        newBall(40 * SCALE, 0 , ball);
         setAITarget(ball->bouncex, ball->bouncey, playerAI);
     }
 }
@@ -427,7 +426,8 @@ void walking(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     }
     if (cpct_isKeyPressed(keys->fire2))
     {
-        newBall(player->e.x[0], player->e.y[0], ball);
+        //newBall(player->e.x[0], player->e.y[0], ball);
+        newBall(40 * SCALE, 0 , ball);
         setAITarget(ball->bouncex, ball->bouncey, playerAI);
         moved = 1;
     }

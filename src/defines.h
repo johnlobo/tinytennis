@@ -5,7 +5,7 @@
 
 #define DEBUG 0
 
-#define SCALE 256
+#define SCALE 256L
 #define FRICTION 0.8
 #define GRAVITY -48 // in an interval of -256 to 0
 
