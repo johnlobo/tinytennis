@@ -113,9 +113,9 @@ u8 checkNet(u8 x, u8 y, u8 z, u8 py, TBall *ball){
             (((py >= 90) && (y < 90) && (ball->vy < 0)) ||
             ((py <= 90) && (y > 90) && (ball->vy > 0))))
     {
-        ball->vx = ball->vx * FRICTION;
-        ball->vy = -ball->vy * FRICTION;
-        ball->vz = ball->vz * FRICTION;
+        ball->vx = ball->vx * (FRICTION / 4);
+        ball->vy = -ball->vy * (FRICTION / 4);
+        ball->vz = ball->vz * (FRICTION / 4);
         calcBounce(ball);
         result = 1;
     }
@@ -140,9 +140,9 @@ void updateBall(TBall *ball)
     py = ball->e.y[1] / SCALE;
 
     //Deactivate ball
-    if ((ball->vx < 16) && (ball->vy < 16) && (ball->vz < 16))
+    if ((ball->vx < 8) && (ball->vy < 8) && (ball->vz < 8))
     {
-        eraseBall(ball);
+        //eraseBall(ball);
         ball->active = 0;
         ball->e.draw = 0;
     }
@@ -177,8 +177,8 @@ void newBall(i32 x, i32 y, TBall *ball)
     ball->e.z[0] = ball->e.z[1] = ((cpct_rand8() % 3) + 3) * SCALE;
     ball->e.draw = 1;
     ball->vx = trajetoriesX[cpct_rand8() % 10];
-    ball->vy = (3 + (cpct_rand8() % 3)) * SCALE;
-    ball->vz = (3 + (cpct_rand8() % 4)) * SCALE;
+    ball->vy = (3 + (cpct_rand8() % 2)) * SCALE;
+    ball->vz = (3 + (cpct_rand8() % 5)) * SCALE;
     ball->sprite = (u8 *) sp_ball_0;
     ball->active = 1;
     calcBounce(ball);

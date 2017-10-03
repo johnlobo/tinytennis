@@ -60,7 +60,10 @@ void myInterruptHandler()
 // Body touch
 //
 void bodyTouch(TBall *ball){
-
+    ball->vx = ball->vx * (FRICTION / 4);
+    ball->vy = -ball->vy * (FRICTION / 4);
+    ball->vz = ball->vz * (FRICTION / 4);
+    calcBounce(ball);
 }
 
 //
@@ -150,7 +153,7 @@ void game()
         updateBall(&ball);
 
         // Check collision with players 
-        if (ball.active){
+        if ((ball.active) && (ball.e.z[0] < (22 * SCALE))){
             if ((ball.vy>0) && (player1.side == SD_down)){
                 playerAux = &player1;
             } else{

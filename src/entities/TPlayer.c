@@ -124,7 +124,14 @@ void selectSpritePlayer(TPlayer *player, u8 ai)
     }
     case ST_hitting:
     {
-        assignFrame(anim_hittingUp[ai], player, ANIM_HIT_PAUSE);
+        if (player->e.look == M_up)
+        {
+            assignFrame(anim_hittingUp[ai], player, ANIM_HIT_PAUSE);
+        }
+        else
+        {
+            assignFrame(anim_hittingDown[ai], player, ANIM_HIT_PAUSE);
+        }
         break;
     }
     case ST_AIhitting:
