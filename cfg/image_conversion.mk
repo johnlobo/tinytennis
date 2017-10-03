@@ -69,6 +69,7 @@ PAL={ 0 1 15 20 6 2 8 9 12 14 5 18 3 24 11 26 }
 
 #$(eval $(call IMG2SPRITES,img/example.png,0,pre,24,12,$(PALETTE),mask,src/,hwpalette))
 $(eval $(call IMG2SPRITES,assets/ball.png,0,sp,4,4,$(PAL),,src/sprites,))
+$(eval $(call IMG2SPRITES,assets/dust.png,0,sp,4,4,$(PAL),,src/sprites,))
 $(eval $(call IMG2SPRITES,assets/player1.png,0,sp,12,24,$(PAL),,src/sprites,))
 $(eval $(call IMG2SPRITES,assets/player2.png,0,sp,12,24,$(PAL),,src/sprites,))
 $(eval $(call IMG2SPRITES,assets/fonts-big.png,0,g,6,11,$(PAL),,src/sprites,))

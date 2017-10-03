@@ -1,7 +1,4 @@
 //-----------------------------LICENSE NOTICE------------------------------------
-//  This file is part of CPCtelera: An Amstrad CPC Game Engine
-//  Copyright (C) 2015 ronaldo / Fremos / Cheesetea / ByteRealms (@FranGallegoBR)
-//
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU Lesser General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
@@ -29,6 +26,7 @@
 #include "levels/court01.h"
 #include "util/video.h"
 #include "ai/ai.h"
+#include "entities/TDust.h"
 
 // Máscara de transparencia
 cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
@@ -39,6 +37,7 @@ TPlayer player1;
 TPlayer player2;
 EGamePhases phase;
 u8 pauseGame;
+
 
 void myInterruptHandler()
 {
