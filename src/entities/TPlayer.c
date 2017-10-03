@@ -57,15 +57,31 @@ const TFrame g_frames[2][PLAYER_FRAMES] ={
 }};
 
 // Global Variables
-TFrame *const anim_walking[2][WALKING_FRAMES] = {{&g_frames[0][1], &g_frames[0][2], &g_frames[0][3], &g_frames[0][1]},
+TFrame *const anim_walking[2][WALKING_FRAMES] = {
+                    {&g_frames[0][1], &g_frames[0][2], &g_frames[0][3], &g_frames[0][1]},
                     {&g_frames[1][1], &g_frames[1][2], &g_frames[1][3], &g_frames[1][1] }};
+
 TFrame *const anim_up[2][UP_FRAMES] = {{&g_frames[0][10], &g_frames[0][0], &g_frames[0][11], &g_frames[0][0]},
                     {&g_frames[1][10], &g_frames[1][0], &g_frames[1][11], &g_frames[1][0] }};
-TFrame *const anim_down[2][DOWN_FRAMES] = {{&g_frames[0][12], &g_frames[0][13], &g_frames[0][14], &g_frames[0][13]},
+
+TFrame *const anim_down[2][DOWN_FRAMES] = {
+                    {&g_frames[0][12], &g_frames[0][13], &g_frames[0][14], &g_frames[0][13]},
                     {&g_frames[1][12], &g_frames[1][13], &g_frames[1][14], &g_frames[1][13] }};
-TFrame *const anim_hittingUp[2][HITTING_FRAMES] = {{&g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][8],	&g_frames[0][7]},
+
+TFrame *const anim_hittingUp[2][HITTING_FRAMES] = {
+                    {&g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][8],	&g_frames[0][7]},
                     {&g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][8], &g_frames[1][7]}};
-TFrame *const anim_hittingDown[2][HITTING_FRAMES] = {{&g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][8], &g_frames[0][7]},
+
+TFrame *const anim_hittingDown[2][HITTING_FRAMES] = {
+                    {&g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][8], &g_frames[0][7]},
+                    {&g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][8],   &g_frames[1][7]}};
+
+TFrame *const anim_hittinBackUp[2][HITTING_FRAMES] = {
+                    {&g_frames[0][9], &g_frames[0][8], &g_frames[0][7], &g_frames[0][8], &g_frames[0][9]},
+                    {&g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][8], &g_frames[1][7]}};
+
+TFrame *const anim_hittingBackDown[2][HITTING_FRAMES] = {
+                    {&g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][8], &g_frames[0][7]},
                     {&g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][8],   &g_frames[1][7]}};
 
 void initPlayer1(TPlayer *player)
