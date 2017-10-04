@@ -100,12 +100,14 @@ void checkPlayerCollision(TBall *ball, TPlayer *player){
 
     hit = fast_collision(px, py, player->e.w, player->e.h, bx, by, ball->e.w, ball->e.h);
 
-    if (hit){
+    if ((hit) && (ball->e.z[0] < (11 * SCALE))){
         if (player->hit > 0){
             shot(ball, player);
         } else {
             bodyTouch(ball);
         }
+    } else if (hit){
+        player->e.draw = 1;
     }
 }
 
@@ -197,7 +199,7 @@ void game()
         updateBall(&ball);
 
         // Check collision with players 
-        if ((ball.active) && (ball.e.z[0] < (11 * SCALE))){
+        if (ball.active){
             if ((ball.vy>0) && (player1.side == SD_down)){
                 playerAux = &player1;
             } else{
