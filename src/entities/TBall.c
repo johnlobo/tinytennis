@@ -110,7 +110,7 @@ u8 checkBoundaries(u8 x, u8 y, TBall *ball){
 u8 checkNet(u8 x, u8 y, u8 z, u8 py, TBall *ball){
     u8 result = 0;
 
-    if (((z < 20) && ((x > 10) && (x < 70 ))) &&
+    if (((z < 8) && ((x > 10) && (x < 70 ))) &&
             (((py >= 90) && (y < 90) && (ball->vy < 0)) ||
             ((py <= 90) && (y > 90) && (ball->vy > 0))))
     {

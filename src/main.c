@@ -197,7 +197,7 @@ void game()
         updateBall(&ball);
 
         // Check collision with players 
-        if ((ball.active) && (ball.e.z[0] < (22 * SCALE))){
+        if ((ball.active) && (ball.e.z[0] < (11 * SCALE))){
             if ((ball.vy>0) && (player1.side == SD_down)){
                 playerAux = &player1;
             } else{
