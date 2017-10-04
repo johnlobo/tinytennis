@@ -1,7 +1,7 @@
 #include "court01.h"
 // Data created with Img2CPC - (c) Retroworks - 2007-2015
-u8* const tile_tileset[80] = { 
-	tile_court01_00, tile_court01_01, tile_court01_02, tile_court01_03, tile_court01_04, tile_court01_05, tile_court01_06, tile_court01_07, tile_court01_08, tile_court01_09, tile_court01_10, tile_court01_11, tile_court01_12, tile_court01_13, tile_court01_14, tile_court01_15, tile_court01_16, tile_court01_17, tile_court01_18, tile_court01_19, tile_court01_20, tile_court01_21, tile_court01_22, tile_court01_23, tile_court01_24, tile_court01_25, tile_court01_26, tile_court01_27, tile_court01_28, tile_court01_29, tile_court01_30, tile_court01_31, tile_court01_32, tile_court01_33, tile_court01_34, tile_court01_35, tile_court01_36, tile_court01_37, tile_court01_38, tile_court01_39, tile_court01_40, tile_court01_41, tile_court01_42, tile_court01_43, tile_court01_44, tile_court01_45, tile_court01_46, tile_court01_47, tile_court01_48, tile_court01_49, tile_court01_50, tile_court01_51, tile_court01_52, tile_court01_53, tile_court01_54, tile_court01_55, tile_court01_56, tile_court01_57, tile_court01_58, tile_court01_59, tile_court01_60, tile_court01_61, tile_court01_62, tile_court01_63, tile_court01_64, tile_court01_65, tile_court01_66, tile_court01_67, tile_court01_68, tile_court01_69, tile_court01_70, tile_court01_71, tile_court01_72, tile_court01_73, tile_court01_74, tile_court01_75, tile_court01_76, tile_court01_77, tile_court01_78, tile_court01_79
+u8* const tile_tileset[78] = { 
+	tile_court01_00, tile_court01_01, tile_court01_02, tile_court01_03, tile_court01_04, tile_court01_05, tile_court01_06, tile_court01_07, tile_court01_08, tile_court01_09, tile_court01_10, tile_court01_11, tile_court01_12, tile_court01_13, tile_court01_14, tile_court01_15, tile_court01_16, tile_court01_17, tile_court01_18, tile_court01_19, tile_court01_20, tile_court01_21, tile_court01_22, tile_court01_23, tile_court01_24, tile_court01_25, tile_court01_26, tile_court01_27, tile_court01_28, tile_court01_29, tile_court01_30, tile_court01_31, tile_court01_32, tile_court01_33, tile_court01_34, tile_court01_35, tile_court01_36, tile_court01_37, tile_court01_38, tile_court01_39, tile_court01_40, tile_court01_41, tile_court01_42, tile_court01_43, tile_court01_44, tile_court01_45, tile_court01_46, tile_court01_47, tile_court01_48, tile_court01_49, tile_court01_50, tile_court01_51, tile_court01_52, tile_court01_53, tile_court01_54, tile_court01_55, tile_court01_56, tile_court01_57, tile_court01_58, tile_court01_59, tile_court01_60, tile_court01_61, tile_court01_62, tile_court01_63, tile_court01_64, tile_court01_65, tile_court01_66, tile_court01_67, tile_court01_68, tile_court01_69, tile_court01_70, tile_court01_71, tile_court01_72, tile_court01_73, tile_court01_74, tile_court01_75, tile_court01_76, tile_court01_77
 };
 // Tile tile_court01_00: 4x4 pixels, 2x4 bytes.
 const u8 tile_court01_00[2 * 4] = {
@@ -621,22 +621,6 @@ const u8 tile_court01_76[2 * 4] = {
 
 // Tile tile_court01_77: 4x4 pixels, 2x4 bytes.
 const u8 tile_court01_77[2 * 4] = {
-	0x00, 0x00,
-	0x00, 0x00,
-	0x00, 0x00,
-	0x00, 0x00
-};
-
-// Tile tile_court01_78: 4x4 pixels, 2x4 bytes.
-const u8 tile_court01_78[2 * 4] = {
-	0x00, 0x00,
-	0x00, 0x00,
-	0x00, 0x00,
-	0x00, 0x00
-};
-
-// Tile tile_court01_79: 4x4 pixels, 2x4 bytes.
-const u8 tile_court01_79[2 * 4] = {
 	0x00, 0x00,
 	0x00, 0x00,
 	0x00, 0x00,

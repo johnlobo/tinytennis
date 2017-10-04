@@ -57,11 +57,5 @@ extern const u8 sp_player2_16[6 * 24];
 #define SP_PLAYER2_17_W 6
 #define SP_PLAYER2_17_H 24
 extern const u8 sp_player2_17[6 * 24];
-#define SP_PLAYER2_18_W 6
-#define SP_PLAYER2_18_H 24
-extern const u8 sp_player2_18[6 * 24];
-#define SP_PLAYER2_19_W 6
-#define SP_PLAYER2_19_H 24
-extern const u8 sp_player2_19[6 * 24];
 
 #endif

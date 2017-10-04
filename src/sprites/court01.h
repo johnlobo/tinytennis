@@ -3,7 +3,7 @@
 #define _ASSETS_COURT01_H_
 
 #include <types.h>
-extern u8* const tile_tileset[80];
+extern u8* const tile_tileset[78];
 
 #define TILE_COURT01_00_W 2
 #define TILE_COURT01_00_H 4
@@ -239,11 +239,5 @@ extern const u8 tile_court01_76[2 * 4];
 #define TILE_COURT01_77_W 2
 #define TILE_COURT01_77_H 4
 extern const u8 tile_court01_77[2 * 4];
-#define TILE_COURT01_78_W 2
-#define TILE_COURT01_78_H 4
-extern const u8 tile_court01_78[2 * 4];
-#define TILE_COURT01_79_W 2
-#define TILE_COURT01_79_H 4
-extern const u8 tile_court01_79[2 * 4];
 
 #endif

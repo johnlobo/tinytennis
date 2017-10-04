@@ -20,7 +20,7 @@
 #include "../levels/court01.h"
 
 
-u8 *const *anim_dust[DUST_FRAMES] = {&sp_dust_0, &sp_dust_1, &sp_dust_2};
+u8 *const *anim_dust[DUST_FRAMES] = {&sp_dust_2, &sp_dust_1, &sp_dust_0};
 
 TDustList dusts;
 
@@ -33,6 +33,7 @@ void initDustList(){
         dusts.dustList[i].nFrame = 0;
         dusts.dustList[i].active = 0;
     }
+    dusts.nDusts = 0;
 }
 
 void eraseDust(u8 i)
@@ -49,20 +50,20 @@ void drawDust(u8 i)
 {
     u8 *pvmem;
     pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], dusts.dustList[i].x, dusts.dustList[i].y);
-    //cpct_drawSpriteMaskedAlignedTable(anim_dust[dusts.dustList[i].nFrame / DUST_PAUSE], pvmem, DUST_WIDTH, DUST_HEIGHT, g_tablatrans);
+    cpct_drawSpriteMaskedAlignedTable(anim_dust[dusts.dustList[i].nFrame / DUST_PAUSE], pvmem, DUST_WIDTH, DUST_HEIGHT, g_tablatrans);
 }
 
 void createDust(u8 x, u8 y){
     u8 i;
     if (dusts.nDusts<5){
         i = 0;
-        while ((i<5) && (dusts.dustList[i].active == 1)){
+        while ((i<5) && (dusts.dustList[i].active)){
             i++;
         }
         if (i<5){
             dusts.dustList[i].x = x;
             dusts.dustList[i].y = y;
-            dusts.dustList[i].nFrame = DUST_FRAMES * DUST_PAUSE;
+            dusts.dustList[i].nFrame = DUST_FRAMES * DUST_PAUSE - 1;
             dusts.dustList[i].active = 1;
             dusts.nDusts++;
             drawDust(i);
@@ -85,10 +86,10 @@ void updateDusts(){
                 if (dusts.dustList[i].nFrame > 1)
                 {
                     dusts.dustList[i].nFrame--;
-                    if (dusts.dustList[i].nFrame%DUST_PAUSE == 0){
+                    //if (dusts.dustList[i].nFrame%DUST_PAUSE == 0){
                         eraseDust(i);
                         drawDust(i);
-                    }
+                    //}
                 }
                 else
                 {

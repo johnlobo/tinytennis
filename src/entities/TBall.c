@@ -5,6 +5,7 @@
 #include "../util/video.h"
 #include "../util/util.h"
 #include "../levels/court01.h"
+#include "TDust.h"
 
 const i16 trajetoriesX[10] = {-128, -96, -64, -32, 0 , 0, 32, 64, 96, 128};
 
@@ -78,23 +79,23 @@ u8 checkBoundaries(u8 x, u8 y, TBall *ball){
 
     if (x > 210){
         ball->e.x[0] = 0;
-        ball->vx = -ball->vx;
+        ball->vx = -ball->vx * (FRICTION / 4);
         calcBounce(ball);
         result = 1;
     } else if ((x + BALL_WIDTH) > 80) {
         ball->e.x[0] = (80 * SCALE) - (BALL_WIDTH * SCALE);
-        ball->vx = -ball->vx;
+        ball->vx = -ball->vx * (FRICTION / 4);
         calcBounce(ball);
         result = 1;
     }
 
     if (y > 210){
         ball->e.y[0] = 0;
-        ball->vy = -ball->vy;
+        ball->vy = -ball->vy * (FRICTION / 4);
         calcBounce(ball);
     } else if ((y + BALL_HEIGHT) > 200) {
         ball->e.y[0] = (200 * SCALE) - (BALL_HEIGHT * SCALE);
-        ball->vy = -ball->vy;
+        ball->vy = -ball->vy * (FRICTION / 4);
         calcBounce(ball);
         result = 1;
     } 
@@ -140,12 +141,12 @@ void updateBall(TBall *ball)
     py = ball->e.y[1] / SCALE;
 
     //Deactivate ball
-    if ((ball->vx < 8) && (ball->vy < 8) && (ball->vz < 8))
-    {
-        //eraseBall(ball);
-        ball->active = 0;
-        ball->e.draw = 0;
-    }
+    //if ((ball->vx < 8) && (ball->vy < 8) && (ball->vz < 8))
+    //{
+    //    //eraseBall(ball);
+    //    ball->active = 0;
+    //    ball->e.draw = 0;
+    //}
 
     // If ball is in the limits of the court, check collision with the net
     if ((ball->active) && (!checkBoundaries(x,y,ball))) {
@@ -155,6 +156,7 @@ void updateBall(TBall *ball)
         // Check bounce
         if (z > 210)
         {
+            createDust(x,y);
             ball->vx = ball->vx * FRICTION;
             ball->vy = ball->vy * FRICTION;
             ball->vz = -ball->vz * FRICTION;
@@ -177,9 +179,11 @@ void newBall(i32 x, i32 y, TBall *ball)
     ball->e.z[0] = ball->e.z[1] = ((cpct_rand8() % 3) + 3) * SCALE;
     ball->e.draw = 1;
     ball->vx = trajetoriesX[cpct_rand8() % 10];
-    ball->vy = (3 + (cpct_rand8() % 2)) * SCALE;
-    ball->vz = (3 + (cpct_rand8() % 5)) * SCALE;
+    ball->vy = (2 + (cpct_rand8() % 2)) * SCALE;
+    ball->vz = (2 + (cpct_rand8() % 5)) * SCALE;
     ball->sprite = (u8 *) sp_ball_0;
+    ball->e.w = BALL_WIDTH;
+    ball->e.h = BALL_HEIGHT;
     ball->active = 1;
     calcBounce(ball);
 

@@ -21,7 +21,7 @@
 #define DUST_WIDTH 2
 #define DUST_HEIGHT 4
 #define DUST_FRAMES 3
-#define DUST_PAUSE 2
+#define DUST_PAUSE 9
 
 
 typedef struct {
@@ -34,8 +34,6 @@ typedef struct {
     u8 nDusts;
     TDust dustList[5];
 }TDustList;
-
-TDustList dusts;
 
 void initDustList();
 void createDust(u8 x, u8 y);
