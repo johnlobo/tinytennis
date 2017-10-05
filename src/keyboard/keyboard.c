@@ -17,6 +17,25 @@
 #include "keyboard.h"
 #include "../text/text.h"
 
+
+const TKeys tempKeys = {    Key_CursorUp, Key_CursorDown, Key_CursorLeft, Key_CursorRight,
+                            Key_Space, Key_Return, Key_Esc, Key_H, Key_M
+                       };
+TKeys keys;
+
+
+//////////////////////////////////////////////////////////////////
+// wait4UserKeypress
+//    Waits till the user presses a key, counting the number of
+// loop iterations passed.
+//
+// Returns:
+//    <u32> Number of iterations passed
+//
+void initKeys(){
+    cpct_memcpy((void *) &keys, &tempKeys, sizeof(TKeys));
+}
+
 //////////////////////////////////////////////////////////////////
 // wait4UserKeypress
 //    Waits till the user presses a key, counting the number of
@@ -37,8 +56,16 @@ u32 wait4UserKeypress() {
     return c;
 }
 
+//////////////////////////////////////////////////////////////////
+// Name
+//
+//    Descriptio
+//
+//
+// Returns:
+//    
 //Función proporcionada por ronaldo para redefinición de teclas
-cpct_keyID esperaUnaTecla() {
+cpct_keyID waitForAKey() {
     // Recorreremos el vector de teclas desde el final hacia el principio,
     // para poder hacer que el bucle acabe en 0 (así el compilador podrá optimizarlo)
     u8 i = 10, *keys = cpct_keyboardStatusBuffer + 9;
@@ -59,37 +86,91 @@ cpct_keyID esperaUnaTecla() {
     return (keypressed << 8) + (i - 1);
 }
 
+
+
+//////////////////////////////////////////////////////////////////
+// Name
+//
+//    Descriptio
+//
+//
+// Returns:
+//    
+
+u8 checkKeys(const cpct_keyID *k, u8 numk)
+{
+    u8 i;
+    //   cpct_scanKeyboard_if();
+    if (cpct_isAnyKeyPressed())
+    {
+        for (i = 1; i <= numk; i++, k++)
+        {
+            if (cpct_isKeyPressed(*k))
+                return i;
+        }
+    }
+    return 0;
+}
+//////////////////////////////////////////////////////////////////
+// Name
+//
+//    Descriptio
+//
+//
+// Returns:
+//    
 void waitKeyUp(cpct_keyID key){
 
     while (cpct_isKeyPressed(key)) {
         cpct_scanKeyboard_f();
     }
 }
+//////////////////////////////////////////////////////////////////
+// Name
+//
+//    Descriptio
+//
+//
+// Returns:
+//    
+u32 wait4Key(cpct_keyID key) {
 
-void wait4Key(cpct_keyID key){
-    do
-        cpct_scanKeyboard_f();
-    while ( ! cpct_isKeyPressed(key) );
-    do
-        cpct_scanKeyboard_f();
-    while ( cpct_isKeyPressed(key) );
+	u32 c = 0;
+
+	while(!cpct_isKeyPressed(key));
+    do{
+    	c++;
+    }
+    while(cpct_isKeyPressed(key));
+
+    return c;
 }
-
+//////////////////////////////////////////////////////////////////
+// Name
+//
+//    Descriptio
+//
+//
+// Returns:
+//    
 cpct_keyID redefineKey(u8 text[]){
     u8 x;
 
     cpct_keyID key;
 
-    u8* pvideo = cpct_getScreenPtr(CPCT_VMEM_START, 8, 154);
+    u8* pvideo = cpct_getScreenPtr(CPCT_VMEM_START, 8, 120);
     cpct_drawSolidBox(pvideo, cpct_px2byteM0(0,0), 64, FONT_H);
 
-    x = strlen(text);
+    x = strLength(text);
+	// Show redifine message
+    drawText(text, 8, 120,1);
 
-    drawText(text, 8, 154,1);
-
-    key = esperaUnaTecla();
+    key = waitForAKey();
     waitKeyUp(key);
+	// Erase redifine message
+	cpct_drawSolidBox(pvideo, cpct_px2byteM0(0,0), 64, FONT_H);
 
     return key;
 
 }
+

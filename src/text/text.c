@@ -19,14 +19,12 @@
 #include "../sprites/numbers-big.h"
 #include "../util/util.h"
 
-
-u8* const font[39] = { g_fonts_big_00, g_fonts_big_01, g_fonts_big_02, g_fonts_big_03, g_fonts_big_04,
+u8* const font[29] = { g_fonts_big_00, g_fonts_big_01, g_fonts_big_02, g_fonts_big_03, g_fonts_big_04,
                        g_fonts_big_05, g_fonts_big_06, g_fonts_big_07, g_fonts_big_08, g_fonts_big_09,
                        g_fonts_big_10, g_fonts_big_11, g_fonts_big_12, g_fonts_big_13, g_fonts_big_14,
                        g_fonts_big_15, g_fonts_big_16, g_fonts_big_17, g_fonts_big_18, g_fonts_big_19,
                        g_fonts_big_20, g_fonts_big_21, g_fonts_big_22, g_fonts_big_23, g_fonts_big_24,
-                       g_fonts_big_25, g_fonts_big_26, g_fonts_big_27, g_fonts_big_28, g_fonts_big_29,
-                       g_fonts_big_30, g_fonts_big_31, g_fonts_big_32
+                       g_fonts_big_25, g_fonts_big_26, g_fonts_big_27, g_fonts_big_28
                      };
 u8* const numbers[13] = { g_numbers_big_00, g_numbers_big_01, g_numbers_big_02, g_numbers_big_03, g_numbers_big_04,
                           g_numbers_big_05, g_numbers_big_06, g_numbers_big_07, g_numbers_big_08, g_numbers_big_09,
@@ -34,7 +32,7 @@ u8* const numbers[13] = { g_numbers_big_00, g_numbers_big_01, g_numbers_big_02, 
                         };
 
 //////////////////////////////////////////////////////////////////
-// initialization
+// strLength
 //
 //  initializes the whole program
 //
@@ -53,7 +51,7 @@ u8 strLength(u8 str[]) {
 }
 
 //////////////////////////////////////////////////////////////////
-// initialization
+// drawNumber
 //
 //  initializes the whole program
 //
@@ -86,7 +84,7 @@ void drawNumber(i32 aNumber, u8 length, u8 xPos, u8 yPos) {
 }
 
 //////////////////////////////////////////////////////////////////
-// initialization
+// drawText
 //
 //  initializes the whole program
 //
@@ -113,9 +111,9 @@ void drawText(u8 text[], u8 xPos, u8 yPos, u8 centered) {
         pvideo = cpct_getScreenPtr(CPCT_VMEM_START, (x * FONT_W) + xPos, yPos);
 
         //NUMEROS
-        if (character >= 48 && character <= 57) {
+        if (character >= 44 && character <= 57) {
 
-            cpct_drawSpriteMaskedAlignedTable(numbers[character - 48], pvideo, FONT_W, FONT_H, g_tablatrans);
+            cpct_drawSpriteMaskedAlignedTable(numbers[character - 44], pvideo, FONT_W, FONT_H, g_tablatrans);
         }
 
         else if (character != 32) { //32 = SPACE
