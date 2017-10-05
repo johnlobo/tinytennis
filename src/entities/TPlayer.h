@@ -20,6 +20,7 @@
 #include "../defines.h"
 #include "TBall.h"
 #include "../util/util.h"
+#include "../keyboard/keyboard.h"
 
 
 typedef struct

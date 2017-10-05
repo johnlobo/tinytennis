@@ -23,6 +23,7 @@
 #include "../util/video.h"
 #include "../levels/court01.h"
 #include "../ai/ai.h"
+#include "keyboard/keyboard.h"
 
 const TPlayer tempPlayer1 =
 {

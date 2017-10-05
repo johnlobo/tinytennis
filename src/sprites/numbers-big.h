@@ -42,5 +42,8 @@ extern const u8 g_numbers_big_11[3 * 11];
 #define G_NUMBERS_BIG_12_W 3
 #define G_NUMBERS_BIG_12_H 11
 extern const u8 g_numbers_big_12[3 * 11];
+#define G_NUMBERS_BIG_13_W 3
+#define G_NUMBERS_BIG_13_H 11
+extern const u8 g_numbers_big_13[3 * 11];
 
 #endif

@@ -59,29 +59,7 @@ void delay(u32 cycles)
         __endasm;
     }
 }
-//////////////////////////////////////////////////////////////////
-// Name
-//
-//    Descriptio
-//
-//
-// Returns:
-//    
 
-u8 checkKeys(const cpct_keyID *k, u8 numk)
-{
-    u8 i;
-    //   cpct_scanKeyboard_if();
-    if (cpct_isAnyKeyPressed())
-    {
-        for (i = 1; i <= numk; i++, k++)
-        {
-            if (cpct_isKeyPressed(*k))
-                return i;
-        }
-    }
-    return 0;
-}
 //////////////////////////////////////////////////////////////////
 // Name
 //
@@ -136,22 +114,3 @@ i16 sign(i16 x)
     return  (x > 0) - (x < 0);
 }
 
-//////////////////////////////////////////////////////////////////
-// wait4UserKeypress
-//    Waits till the user presses a key, counting the number of
-// loop iterations passed.
-//
-// Returns:
-//    <u32> Number of iterations passed
-//
-u32 wait4UserKeypress() {
-    u32 c = 0;     // Count the number of cycles passed till user k
-
-    // Wait 'till the user presses a key, counting loop iterations
-    do {
-        c++;                       // One more cycle
-        cpct_scanKeyboard_f();     // Scan the scan the keyboard
-    } while ( ! cpct_isAnyKeyPressed_f() );
-
-    return c;
-}
