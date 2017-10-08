@@ -20,18 +20,54 @@
 #include "../util/video.h"
 #include "../sprites/ball.h"
 
-
-void deleteIcon(u8 option) {
-  u8 *pvideo;
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 18, 35 + (option * 15));
-  cpct_drawSolidBox(pvideo, 0, 2, 4);
+void initIcon(TIcon *icon){
+	icon->selectedOption = 1;
+	icon->height = MAX_HEIGHT;
+	icon->vy = -1;
+	icon->sprite = sp_ball_0;
+	icon->shadowSprite = sp_ball_1;
 }
 
-void drawIcon(u8 option) {
+void deleteIcon(TIcon *icon){
   u8 *pvideo;
-  u8 counter = 0;
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 18, 35 + (option * 15));
-  cpct_drawSprite((u8*) sp_ball_0, pvideo, 2, 4);
+
+  //Shadow
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 24, 36 + (icon->selectedOption * 15));
+  cpct_drawSolidBox(pvideo, 0, ICON_W, ICON_H);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 53, 36 + (icon->selectedOption * 15));
+  cpct_drawSolidBox(pvideo, 0, ICON_W, ICON_H);
+
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 24, 36 + (icon->selectedOption * 15) - icon->height);
+  cpct_drawSolidBox(pvideo, 0, ICON_W, ICON_H);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 53, 36 + (icon->selectedOption * 15) - icon->height);
+  cpct_drawSolidBox(pvideo, 0,ICON_W, ICON_H);
+}
+
+void drawIcon(TIcon *icon) {
+  u8 *pvideo;
+  //Shadow
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 24, 36 + (icon->selectedOption * 15));
+  cpct_drawSprite((u8*) *icon->shadowSprite, pvideo, ICON_W, ICON_H);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 53, 36 + (icon->selectedOption * 15));
+  cpct_drawSprite((u8*) *icon->shadowSprite, pvideo, ICON_W, ICON_W);
+  //Ball
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 24, 36 + (icon->selectedOption * 15) - icon->height);
+  cpct_drawSprite((u8*) *icon->sprite, pvideo, ICON_W, ICON_H);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 53, 36 + (icon->selectedOption * 15) - icon->height);
+  cpct_drawSprite((u8*) *icon->sprite, pvideo, ICON_W, ICON_H);
+}
+
+void updateIcon(TIcon *icon){
+	deleteIcon(icon);
+	if ((icon->height == 0) && (icon->vy == -1)){
+		icon->vy = 1;
+	} else if ((icon->height == MAX_HEIGHT) && (icon->vy == 1)){
+		icon->vy = -1;
+	}
+
+	icon->height += icon->vy;
+
+	drawIcon(icon);
 }
 
 void drawMenu(){
@@ -49,7 +85,5 @@ void drawMenu(){
 	drawText("JOHN LOBO", 0,160,1);
 
 	drawText("@2017 GLASNOST CORP.", 0,175,1);
-
-    drawIcon(1);
 
 } 

@@ -17,10 +17,25 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
+#define MAX_HEIGHT 10
+#define ICON_W 2
+#define ICON_H 4
+
+
 #include <cpctelera.h>
 
-void deleteIcon(u8 option);
-void drawIcon(u8 option);
+typedef struct{
+	u8 selectedOption;
+	u8 height;
+	i8 vy;
+	u8 *sprite;
+	u8 *shadowSprite;
+} TIcon;
+
+void initIcon(TIcon *icon);
+void deleteIcon(TIcon *icon);
+void drawIcon(TIcon *icon);
 void drawMenu();
+void updateIcon(TIcon *icon);
 
 #endif 

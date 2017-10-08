@@ -32,8 +32,8 @@
 #define VERTICAL_STEP 2
 
 //Sprites Size
-#define FONT_H 11
-#define FONT_W 3
+#define FONT_H 5
+#define FONT_W 2
 
 #define min(X, Y) ((X) < (Y) ? (X) : (Y))
 #define max(X, Y) (X > Y ? X : Y)

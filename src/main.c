@@ -25,8 +25,9 @@
 // Máscara de transparencia
 cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
 
-const u8 sp_palette[16] = { 0x54, 0x44, 0x4e, 0x53, 0x4c, 0x55, 0x4d, 0x56, 0x5e, 0x5f, 0x5d, 0x52, 0x5c, 0x4a, 0x57, 0x4b };
+TIcon icon;
 
+const u8 sp_palette[16] = { 0x54, 0x44, 0x4e, 0x53, 0x4c, 0x55, 0x4d, 0x56, 0x5e, 0x5f, 0x5d, 0x52, 0x5c, 0x4a, 0x57, 0x4b };
 
 void myInterruptHandler()
 {
@@ -76,42 +77,41 @@ void redefineMenuOption(){
     keys.abort = redefineKey("END");
 }
 
-void checkKeyboardMenu() {
+void checkKeyboardMenu(TIcon *icon) {
     u8 *pvideo;
-    u8 selectedOption = 1;
     
     if(cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(Key_CursorUp)){
-         deleteIcon(selectedOption);
-         if (selectedOption > 0)
-            selectedOption--;
+        deleteIcon(icon);
+        if (icon->selectedOption > 1)
+            icon->selectedOption--;
         else
-            selectedOption = 3;
-        drawIcon(selectedOption);
-        delay(40);
+            icon->selectedOption = 3;
+        drawIcon(icon);
+        delay(30);
     }
     if(cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(Key_CursorDown)){
-         deleteIcon(selectedOption);
-         if (selectedOption < 3)
-            selectedOption++;
+        deleteIcon(icon);
+        if (icon->selectedOption < 3)
+            icon->selectedOption++;
         else
-            selectedOption = 0;
-        drawIcon(selectedOption);
-        delay(40);
+            icon->selectedOption = 1;
+        drawIcon(icon);
+        delay(30);
     }
     
     if (cpct_isKeyPressed(Joy0_Fire1) || cpct_isKeyPressed(Key_Space)) {
       
-        switch (selectedOption) {
+        switch (icon->selectedOption) {
             case 1:
-                selectedOption = 1;
+                icon->selectedOption = 1;
                 redefineMenuOption();
                 break;
             case 2:
-                selectedOption = 2;
+                icon->selectedOption = 2;
                 joystickMenuOption();
                 break;
             case 3:
-                selectedOption = 3;
+                icon->selectedOption = 3;
                 playGameMenuOption();
 		        drawMenu();
                 break;
@@ -120,20 +120,22 @@ void checkKeyboardMenu() {
 
     if(cpct_isKeyPressed(Key_1)){
 
-        selectedOption = 1;
+        icon->selectedOption = 1;
         waitKeyUp(Key_1);
         redefineMenuOption();
     }
     else if(cpct_isKeyPressed(Key_2)){
 
-        selectedOption = 2;
+        icon->selectedOption = 2;
         waitKeyUp(Key_2);
         joystickMenuOption();
 
 
     }
 	else if(cpct_isKeyPressed(Key_3)){
-            
+        
+        icon->selectedOption = 3;
+        waitKeyUp(Key_3);
         playGameMenuOption();
 		drawMenu();
 	}
@@ -142,13 +144,15 @@ void checkKeyboardMenu() {
 
 
 void tennis(){
-    
+
+    initIcon(&icon);    
     drawMenu();
+    drawIcon(&icon);
 
     while (1){
         
-        checkKeyboardMenu();
-
+        checkKeyboardMenu(&icon);
+        updateIcon(&icon);
     }
     
 }
