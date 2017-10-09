@@ -19,9 +19,8 @@
 
 
 const TKeys tempKeys = {    Key_CursorUp, Key_CursorDown, Key_CursorLeft, Key_CursorRight,
-                            Key_Space, Key_Return, Key_Esc, Key_H, Key_M
+                            Key_Space, Key_Return, Key_H, Key_Esc, Key_M
                        };
-TKeys keys;
 
 
 //////////////////////////////////////////////////////////////////
@@ -32,8 +31,8 @@ TKeys keys;
 // Returns:
 //    <u32> Number of iterations passed
 //
-void initKeys(){
-    cpct_memcpy((void *) &keys, &tempKeys, sizeof(TKeys));
+void initKeys(TKeys *keys){
+    cpct_memcpy(keys, &tempKeys, sizeof(TKeys));
 }
 
 //////////////////////////////////////////////////////////////////

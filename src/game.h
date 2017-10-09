@@ -17,7 +17,8 @@
 #define _GAME_H_
 
 #include "entities/TMatch.h"
+#include "keyboard/keyboard.h"
 
-void game(TMatch *match);
+void game(TMatch *match, TKeys *keys);
 
 #endif

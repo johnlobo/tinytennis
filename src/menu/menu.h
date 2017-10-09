@@ -17,7 +17,7 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
-#define MAX_HEIGHT 10
+#define MAX_VY 9
 #define ICON_W 2
 #define ICON_H 4
 
@@ -27,7 +27,7 @@
 typedef struct{
 	u8 selectedOption;
 	u8 height;
-	i8 vy;
+	u8 vy;
 	u8 *sprite;
 	u8 *shadowSprite;
 } TIcon;

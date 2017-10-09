@@ -26,8 +26,10 @@
 // Máscara de transparencia
 cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
 
+TKeys keys;
 TIcon icon;
 TMatch match;
+u32 seed;
 
 const u8 sp_palette[16] = { 0x54, 0x44, 0x4e, 0x53, 0x4c, 0x55, 0x4d, 0x56, 0x5e, 0x5f, 0x5d, 0x52, 0x5c, 0x4a, 0x57, 0x4b };
 
@@ -47,26 +49,16 @@ void myInterruptHandler()
 }
 
 void playGameMenuOption(){
-    static u32 seed;
-    
-    seed = wait4Key(Key_3);
+
 	if(!seed) 
         seed++;
 	cpct_srand(seed)
-	game(&match);
+	game(&match, &keys);
 	//decompress((u8*)EXO_outlaws, (u8*)EXOBUFFER_ADDRESS);
 	//loopMusic = TRUE
 	//cpct_akp_musicInit(G_outlaws);
 }
 
-void joystickMenuOption(){
-    keys.up    = Joy0_Up;
-    keys.down  = Joy0_Down;
-    keys.left  = Joy0_Left;
-    keys.right = Joy0_Right;
-    keys.fire1  = Joy0_Fire1;
-    keys.fire2  = Joy0_Fire2;  
-}
     
 void redefineMenuOption(){
     keys.up    = redefineKey("UP");
@@ -82,7 +74,7 @@ void redefineMenuOption(){
 void checkKeyboardMenu(TIcon *icon) {
     u8 *pvideo;
     
-    if(cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(Key_CursorUp)){
+    if(cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(keys.up)){
         deleteIcon(icon);
         if (icon->selectedOption > 1)
             icon->selectedOption--;
@@ -91,7 +83,7 @@ void checkKeyboardMenu(TIcon *icon) {
         drawIcon(icon);
         delay(30);
     }
-    if(cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(Key_CursorDown)){
+    if(cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(keys.down)){
         deleteIcon(icon);
         if (icon->selectedOption < 3)
             icon->selectedOption++;
@@ -101,7 +93,7 @@ void checkKeyboardMenu(TIcon *icon) {
         delay(30);
     }
     
-    if (cpct_isKeyPressed(Joy0_Fire1) || cpct_isKeyPressed(Key_Space)) {
+    if (cpct_isKeyPressed(Joy0_Fire1) || cpct_isKeyPressed(keys.fire1)) {
       
         switch (icon->selectedOption) {
             case 1:
@@ -110,7 +102,7 @@ void checkKeyboardMenu(TIcon *icon) {
                 break;
             case 2:
                 icon->selectedOption = 2;
-                joystickMenuOption();
+                
                 break;
             case 3:
                 icon->selectedOption = 3;
@@ -122,22 +114,21 @@ void checkKeyboardMenu(TIcon *icon) {
 
     if(cpct_isKeyPressed(Key_1)){
 
-        icon->selectedOption = 1;
         waitKeyUp(Key_1);
+        icon->selectedOption = 1;
         redefineMenuOption();
     }
     else if(cpct_isKeyPressed(Key_2)){
 
-        icon->selectedOption = 2;
         waitKeyUp(Key_2);
-        joystickMenuOption();
+        icon->selectedOption = 2;
 
 
     }
 	else if(cpct_isKeyPressed(Key_3)){
         
-        icon->selectedOption = 3;
         waitKeyUp(Key_3);
+		icon->selectedOption = 3;
         playGameMenuOption();
 		drawMenu();
 	}
@@ -152,8 +143,10 @@ void tennis(){
     drawIcon(&icon);
 
     while (1){
-        
+        seed++;
         checkKeyboardMenu(&icon);
+		delay(10);
+		cpct_waitVSYNC();
         updateIcon(&icon);
     }
     
@@ -169,7 +162,7 @@ void initMain()
     cpct_setBorder(HW_BLACK);
 
     // Initilize Keys
-    initKeys();
+    initKeys(&keys);
 	initMatch(&match);
 }
 

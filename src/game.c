@@ -143,7 +143,7 @@ void printBall(TBall *ball){
 }
 
 // Game Loop
-void game(TMatch *match)
+void game(TMatch *match, TKeys *keys)
 {
     TPlayer *playerAux;
     //u32 c;
@@ -153,20 +153,20 @@ void game(TMatch *match)
     // Loop forever
     while (1)
     {
-        if (cpct_isKeyPressed(keys.abort)){
+        if (cpct_isKeyPressed(keys->abort)){
                 break;
             }
         
-        if (cpct_isKeyPressed(keys.pause)){
+        if (cpct_isKeyPressed(keys->pause)){
                 pauseGame = 1;
             }
         while (pauseGame){
-            if (cpct_isKeyPressed(keys.pause)){
+            if (cpct_isKeyPressed(keys->pause)){
                 pauseGame = 0;
             }
         }
         // Player1 block
-        executeState(&player1, &player2, &ball, &keys);
+        executeState(&player1, &player2, &ball, keys);
         //executeStateAI(&player2, &ball);
         selectSpritePlayer(&player1, 0);
         //selectSpritePlayer(&player2, 1);

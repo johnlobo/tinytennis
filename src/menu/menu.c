@@ -20,52 +20,56 @@
 #include "../util/video.h"
 #include "../sprites/ball.h"
 
+const i8 jumpTable[10] = {4, 2, 1, 1, 0, 0, -1, -1, -2, -4};
+
 void initIcon(TIcon *icon){
 	icon->selectedOption = 1;
-	icon->height = MAX_HEIGHT;
+	icon->height = 0;
 	icon->vy = -1;
-	icon->sprite = sp_ball_0;
-	icon->shadowSprite = sp_ball_1;
+	icon->sprite = (u8*) sp_ball_0;
+	icon->shadowSprite = (u8*) sp_ball_1;
 }
 
 void deleteIcon(TIcon *icon){
   u8 *pvideo;
 
   //Shadow
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 24, 36 + (icon->selectedOption * 15));
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 20, 36 + (icon->selectedOption * 15));
   cpct_drawSolidBox(pvideo, 0, ICON_W, ICON_H);
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 53, 36 + (icon->selectedOption * 15));
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 59, 36 + (icon->selectedOption * 15));
   cpct_drawSolidBox(pvideo, 0, ICON_W, ICON_H);
 
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 24, 36 + (icon->selectedOption * 15) - icon->height);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 20, 36 + (icon->selectedOption * 15) - icon->height);
   cpct_drawSolidBox(pvideo, 0, ICON_W, ICON_H);
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 53, 36 + (icon->selectedOption * 15) - icon->height);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 59, 36 + (icon->selectedOption * 15) - icon->height);
   cpct_drawSolidBox(pvideo, 0,ICON_W, ICON_H);
 }
 
 void drawIcon(TIcon *icon) {
   u8 *pvideo;
   //Shadow
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 24, 36 + (icon->selectedOption * 15));
-  cpct_drawSprite((u8*) *icon->shadowSprite, pvideo, ICON_W, ICON_H);
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 53, 36 + (icon->selectedOption * 15));
-  cpct_drawSprite((u8*) *icon->shadowSprite, pvideo, ICON_W, ICON_W);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 20, 36 + (icon->selectedOption * 15));
+  cpct_drawSprite((u8*) icon->shadowSprite, pvideo, ICON_W, ICON_H);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 59, 36 + (icon->selectedOption * 15));
+  cpct_drawSprite((u8*) icon->shadowSprite, pvideo, ICON_W, ICON_W);
   //Ball
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 24, 36 + (icon->selectedOption * 15) - icon->height);
-  cpct_drawSprite((u8*) *icon->sprite, pvideo, ICON_W, ICON_H);
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 53, 36 + (icon->selectedOption * 15) - icon->height);
-  cpct_drawSprite((u8*) *icon->sprite, pvideo, ICON_W, ICON_H);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 20, 36 + (icon->selectedOption * 15) - icon->height);
+  cpct_drawSprite((u8*) icon->sprite, pvideo, ICON_W, ICON_H);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 59, 36 + (icon->selectedOption * 15) - icon->height);
+  cpct_drawSprite((u8*) icon->sprite, pvideo, ICON_W, ICON_H);
 }
 
 void updateIcon(TIcon *icon){
+	
 	deleteIcon(icon);
-	if ((icon->height == 0) && (icon->vy == -1)){
-		icon->vy = 1;
-	} else if ((icon->height == MAX_HEIGHT) && (icon->vy == 1)){
-		icon->vy = -1;
+	
+	if (icon->vy == 9){
+		icon->vy = 0;
+	} else {
+		icon->vy++;
 	}
 
-	icon->height += icon->vy;
+	icon->height += jumpTable[icon->vy];
 
 	drawIcon(icon);
 }
@@ -76,9 +80,9 @@ void drawMenu(){
 
 	drawText("TINY TENNIS", 0,0,1);
 
-	drawText("1 KEYBOARD", 0,50,1);
-	drawText("2 JOYSTICK", 0,65,1);
-	drawText("3 PLAY    ", 0,80,1);
+	drawText("1 REDEFINE KEYS", 0,50,1);
+	drawText("2 PRACTICE     ", 0,65,1);
+	drawText("3 PLAY         ", 0,80,1);
 
 
 	drawText("CODE GRAPHICS AND MUSIC", 0,145,1);

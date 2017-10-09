@@ -31,8 +31,6 @@ typedef struct
     cpct_keyID music;
 } TKeys;
 
-extern TKeys keys;
-
 
 u32 wait4UserKeypress();
 cpct_keyID waitForAKey();
@@ -40,7 +38,7 @@ void waitKeyUp(cpct_keyID key);
 u32 wait4Key(cpct_keyID key);
 cpct_keyID redefineKey(u8 *text);
 u8 checkKeys(const cpct_keyID *k, u8 numk);
-void initKeys();
+void initKeys(TKeys *keys);
 
 
 #endif
