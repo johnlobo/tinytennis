@@ -15,20 +15,34 @@
 #include <cpctelera.h>
 #include "../defines.h"
 #include "text.h"
-#include "../sprites/fonts-big.h"
-#include "../sprites/numbers-big.h"
+//#include "../sprites/fonts-big.h"
+//#include "../sprites/numbers-big.h"
+#include "../sprites/fonts-small.h"
+#include "../sprites/numbers-small.h"
 #include "../util/util.h"
 
-u8* const font[29] = { g_fonts_big_00, g_fonts_big_01, g_fonts_big_02, g_fonts_big_03, g_fonts_big_04,
-                       g_fonts_big_05, g_fonts_big_06, g_fonts_big_07, g_fonts_big_08, g_fonts_big_09,
-                       g_fonts_big_10, g_fonts_big_11, g_fonts_big_12, g_fonts_big_13, g_fonts_big_14,
-                       g_fonts_big_15, g_fonts_big_16, g_fonts_big_17, g_fonts_big_18, g_fonts_big_19,
-                       g_fonts_big_20, g_fonts_big_21, g_fonts_big_22, g_fonts_big_23, g_fonts_big_24,
-                       g_fonts_big_25, g_fonts_big_26, g_fonts_big_27, g_fonts_big_28
+//u8* const font[29] = { g_fonts_big_00, g_fonts_big_01, g_fonts_big_02, g_fonts_big_03, g_fonts_big_04,
+//                       g_fonts_big_05, g_fonts_big_06, g_fonts_big_07, g_fonts_big_08, g_fonts_big_09,
+//                       g_fonts_big_10, g_fonts_big_11, g_fonts_big_12, g_fonts_big_13, g_fonts_big_14,
+//                       g_fonts_big_15, g_fonts_big_16, g_fonts_big_17, g_fonts_big_18, g_fonts_big_19,
+//                       g_fonts_big_20, g_fonts_big_21, g_fonts_big_22, g_fonts_big_23, g_fonts_big_24,
+//                       g_fonts_big_25, g_fonts_big_26, g_fonts_big_27, g_fonts_big_28
+//                     };
+//u8* const numbers[13] = { g_numbers_big_00, g_numbers_big_01, g_numbers_big_02, g_numbers_big_03, g_numbers_big_04,
+//                          g_numbers_big_05, g_numbers_big_06, g_numbers_big_07, g_numbers_big_08, g_numbers_big_09,
+//                          g_numbers_big_10, g_numbers_big_11, g_numbers_big_12
+//                        };
+
+u8* const font[29] = { g_fonts_small_00, g_fonts_small_01, g_fonts_small_02, g_fonts_small_03, g_fonts_small_04,
+                       g_fonts_small_05, g_fonts_small_06, g_fonts_small_07, g_fonts_small_08, g_fonts_small_09,
+                       g_fonts_small_10, g_fonts_small_11, g_fonts_small_12, g_fonts_small_13, g_fonts_small_14,
+                       g_fonts_small_15, g_fonts_small_16, g_fonts_small_17, g_fonts_small_18, g_fonts_small_19,
+                       g_fonts_small_20, g_fonts_small_21, g_fonts_small_22, g_fonts_small_23, g_fonts_small_24,
+                       g_fonts_small_25, g_fonts_small_26, g_fonts_small_27, g_fonts_small_28
                      };
-u8* const numbers[13] = { g_numbers_big_00, g_numbers_big_01, g_numbers_big_02, g_numbers_big_03, g_numbers_big_04,
-                          g_numbers_big_05, g_numbers_big_06, g_numbers_big_07, g_numbers_big_08, g_numbers_big_09,
-                          g_numbers_big_10, g_numbers_big_11, g_numbers_big_12
+u8* const numbers[13] = { g_numbers_small_00, g_numbers_small_01, g_numbers_small_02, g_numbers_small_03, g_numbers_small_04,
+                          g_numbers_small_05, g_numbers_small_06, g_numbers_small_07, g_numbers_small_08, g_numbers_small_09,
+                          g_numbers_small_10, g_numbers_small_11, g_numbers_small_12
                         };
 
 //////////////////////////////////////////////////////////////////

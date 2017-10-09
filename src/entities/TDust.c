@@ -20,7 +20,7 @@
 #include "../levels/court01.h"
 
 
-u8 *const *anim_dust[DUST_FRAMES] = {&sp_dust_2, &sp_dust_1, &sp_dust_0};
+u8 *const *anim_dust[DUST_FRAMES] = {&sp_dust_0, &sp_dust_1, &sp_dust_2};
 
 TDustList dusts;
 
@@ -63,7 +63,8 @@ void createDust(u8 x, u8 y){
         if (i<5){
             dusts.dustList[i].x = x;
             dusts.dustList[i].y = y;
-            dusts.dustList[i].nFrame = DUST_FRAMES * DUST_PAUSE - 1;
+            //dusts.dustList[i].nFrame = DUST_FRAMES * DUST_PAUSE - 1;
+            dusts.dustList[i].nFrame = 18;
             dusts.dustList[i].active = 1;
             dusts.nDusts++;
             drawDust(i);
@@ -86,10 +87,11 @@ void updateDusts(){
                 if (dusts.dustList[i].nFrame > 1)
                 {
                     dusts.dustList[i].nFrame--;
-                    //if (dusts.dustList[i].nFrame%DUST_PAUSE == 0){
+                    //if ((dusts.dustList[i].nFrame<27) && (dusts.dustList[i].nFrame%DUST_PAUSE == 0)){
+                    if (dusts.dustList[i].nFrame<15){
                         eraseDust(i);
                         drawDust(i);
-                    //}
+                    }
                 }
                 else
                 {
