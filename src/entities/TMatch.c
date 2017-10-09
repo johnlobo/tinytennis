@@ -17,7 +17,6 @@
 #include "TMatch.h"
 #include "../text/text.h"
 
-TMatch match;
 
 //////////////////////////////////////////////////////////////////
 // initGame
@@ -27,10 +26,10 @@ TMatch match;
 // Returns:
 //    void
 //
-void initGame(){
-    match.game.points[0] = 0;
-    match.game.points[1] = 0;
-    match.game.finished = 0;
+void initMatchGame(TMatch *match){
+    match->game.points[0] = 0;
+    match->game.points[1] = 0;
+    match->game.finished = 0;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -41,23 +40,23 @@ void initGame(){
 // Returns:
 //    void
 //
-void initMatch(){
+void initMatch(TMatch *match){
     u8 i;
 
-    match.playersName[0][0] = '/0';
-    match.playersName[1][0] = '/0';
+    match->playersName[0][0] = '/0';
+    match->playersName[1][0] = '/0';
     
     for (i=0; i<5; i++){
-        match.sets[i].games[0] = 0;
-        match.sets[i].games[1] = 0;
-        match.sets[i].finished = 0; 
+        match->sets[i].games[0] = 0;
+        match->sets[i].games[1] = 0;
+        match->sets[i].finished = 0; 
     }
     
-    match.numberOfSets = 0;
-    match.currentSet = 0;
-    match.finished = 0;
+    match->numberOfSets = 0;
+    match->currentSet = 0;
+    match->finished = 0;
     
-    initGame();
+    initMatchGame(match);
     
 }
 
@@ -69,13 +68,13 @@ void initMatch(){
 // Returns:
 //    void
 //
-void createMatch(u8 nSets, u8 *player1Name, u8 *player2Name){
-    initMatch();
+void createMatch(u8 nSets, u8 *player1Name, u8 *player2Name, TMatch *match){
+    initMatch(match);
     
-    strCopy(player1Name, &match.playersName[0]);
-    strCopy(player2Name, &match.playersName[1]);
+    strCopy(player1Name, (u8*) match->playersName[0]);
+    strCopy(player2Name, (u8*) match->playersName[1]);
     
-    match.numberOfSets = nSets;
+    match->numberOfSets = nSets;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -84,16 +83,18 @@ void createMatch(u8 nSets, u8 *player1Name, u8 *player2Name){
 //  initializes the whole program
 //
 // Returns:
-//    void
+//    
 //
-u8 addPoint(u8 player){
-    if (match.game.finished){
-        initGame();
+u8 addPoint(u8 player1, TMatch *match){
+    u8 player2 = !player1;
+    
+    if (match->game.finished){
+        initMatchGame(match);
     }
-    match.game.points[player]++;
-    if ((match.game.points[player]>4) ||
-       ((match.game.points[player]>3) && (match.game.points[!(player)]<3)){
-           match.game.finished = 1;
+    match->game.points[player1]++;
+    if ((match->game.points[player1]>4) ||
+       ((match->game.points[player1]>3) && (match->game.points[player2]<3))){
+           match->game.finished = 1;
            return 1;
         }
     return 0;

@@ -16,6 +16,8 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-void game();
+#include "entities/TMatch.h"
+
+void game(TMatch *match);
 
 #endif

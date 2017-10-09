@@ -21,11 +21,13 @@
 #include "menu/menu.h"
 #include "game.h"
 #include "util/util.h"
+#include "entities/TMatch.h"
 
 // Máscara de transparencia
 cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
 
 TIcon icon;
+TMatch match;
 
 const u8 sp_palette[16] = { 0x54, 0x44, 0x4e, 0x53, 0x4c, 0x55, 0x4d, 0x56, 0x5e, 0x5f, 0x5d, 0x52, 0x5c, 0x4a, 0x57, 0x4b };
 
@@ -51,7 +53,7 @@ void playGameMenuOption(){
 	if(!seed) 
         seed++;
 	cpct_srand(seed)
-	game();
+	game(&match);
 	//decompress((u8*)EXO_outlaws, (u8*)EXOBUFFER_ADDRESS);
 	//loopMusic = TRUE
 	//cpct_akp_musicInit(G_outlaws);
@@ -168,6 +170,7 @@ void initMain()
 
     // Initilize Keys
     initKeys();
+	initMatch(&match);
 }
 
 void main(void)

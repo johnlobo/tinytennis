@@ -30,6 +30,7 @@
 #include "ai/ai.h"
 #include "entities/TDust.h"
 #include "menu/menu.h"
+#include "entities/TMatch.h"
 
 TBall ball;
 TPlayer player1;
@@ -142,7 +143,7 @@ void printBall(TBall *ball){
 }
 
 // Game Loop
-void game()
+void game(TMatch *match)
 {
     TPlayer *playerAux;
     //u32 c;
