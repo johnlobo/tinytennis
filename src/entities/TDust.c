@@ -20,7 +20,7 @@
 #include "../levels/court01.h"
 
 
-u8 *const *anim_dust[DUST_FRAMES] = {&sp_dust_0, &sp_dust_1, &sp_dust_2};
+u8 *const *anim_dust[DUST_FRAMES] = { sp_dust_0, sp_dust_1, sp_dust_2};
 
 TDustList dusts;
 
@@ -50,7 +50,7 @@ void drawDust(u8 i)
 {
     u8 *pvmem;
     pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], dusts.dustList[i].x, dusts.dustList[i].y);
-    cpct_drawSpriteMaskedAlignedTable(anim_dust[dusts.dustList[i].nFrame / DUST_PAUSE], pvmem, DUST_WIDTH, DUST_HEIGHT, g_tablatrans);
+    cpct_drawSpriteMaskedAlignedTable((u8*) anim_dust[dusts.dustList[i].nFrame / DUST_PAUSE], pvmem, DUST_WIDTH, DUST_HEIGHT, g_tablatrans);
 }
 
 void createDust(u8 x, u8 y){

@@ -40,9 +40,9 @@ u8* const font[29] = { g_fonts_small_00, g_fonts_small_01, g_fonts_small_02, g_f
                        g_fonts_small_20, g_fonts_small_21, g_fonts_small_22, g_fonts_small_23, g_fonts_small_24,
                        g_fonts_small_25, g_fonts_small_26, g_fonts_small_27, g_fonts_small_28
                      };
-u8* const numbers[13] = { g_numbers_small_00, g_numbers_small_01, g_numbers_small_02, g_numbers_small_03, g_numbers_small_04,
+u8* const numbers[14] = { g_numbers_small_00, g_numbers_small_01, g_numbers_small_02, g_numbers_small_03, g_numbers_small_04,
                           g_numbers_small_05, g_numbers_small_06, g_numbers_small_07, g_numbers_small_08, g_numbers_small_09,
-                          g_numbers_small_10, g_numbers_small_11, g_numbers_small_12
+                          g_numbers_small_10, g_numbers_small_11, g_numbers_small_12, g_numbers_small_13
                         };
 
 //////////////////////////////////////////////////////////////////
@@ -109,7 +109,7 @@ void drawNumber(i32 aNumber, u8 length, u8 xPos, u8 yPos) {
     while (number != '\0') {
 
         pvideo = cpct_getScreenPtr(CPCT_VMEM_START, (zeros + x) * FONT_W + xPos, yPos);
-        cpct_drawSprite(numbers[number - 45], pvideo, FONT_W, FONT_H);
+        cpct_drawSprite(numbers[number - 44], pvideo, FONT_W, FONT_H);
         number = str[++x];
     }
 

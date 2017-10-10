@@ -138,7 +138,7 @@ void checkKeyboardMenu(TIcon *icon) {
 
 void tennis(){
 
-    initIcon(&icon);    
+    initIcon(&icon);
     drawMenu();
     drawIcon(&icon);
 

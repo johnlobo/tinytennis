@@ -67,7 +67,7 @@ void shot(TBall *ball, TPlayer *player){
 //  checkPlayerCollision
 //
 
-void checkPlayerCollision(TBall *ball, TPlayer *player){
+void checkPlayerCollision(TBall *ball, TPlayer *player, TKeys *keys){
     u8 bx, by, px, py;
     u8 hit;
 
@@ -76,15 +76,29 @@ void checkPlayerCollision(TBall *ball, TPlayer *player){
     bx = ball->e.x[0] / SCALE;
     by = ball->e.y[0] / SCALE;
 
-    hit = fast_collision(px, py, player->e.w, player->e.h, bx, by, ball->e.w, ball->e.h);
+    //hit = fast_collision(px, py, player->e.w, player->e.h, bx, by, ball->e.w, ball->e.h);
+    hit = collision(px, py, player->e.w, player->e.h, bx, by, ball->e.w, ball->e.h);
 
     if (hit){
+        
+        
+        while (1){
+            if (cpct_isKeyPressed(keys->pause)){
+                waitKeyUp(keys->pause);
+                break;
+            }
+        }
+        
+        
+        drawText("HIT", 0,0,0);
         player->e.draw = 1;
         if (player->hit > 0){
             shot(ball, player);
         } else {
             bodyTouch(ball);
         }
+    }else{
+        cpct_drawSolidBox(SCR_VMEM, #0, 12, 5);
     }
 }
 
@@ -111,34 +125,39 @@ void initGame()
 }
 
 void printPlayer(TPlayer *player){
+    u8 *pvmem;
     if (player->e.draw)
         {
             erasePlayer(player);
             drawPlayer(player);
             entityDrawUpdate(&(player->e));
-            //    pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], 67, 0);
-            //    cpct_drawSolidBox(pvmem, #0, 12, 60);
-            //    drawNumber((u32) (player2.e.x[0] / SCALE), 4, 67, 0);
-            //    drawNumber((u32) (player2.e.y[0] / SCALE), 4, 67, 12);
-            //    drawNumber((u8) (player2.targetX), 4, 67, 24);
-            //    drawNumber((u8) (player2.targetY), 4, 67, 36);
-            //    drawNumber((i16) (player2.stepX), 4, 67, 48);
-            //    drawNumber((i16) (player2.stepY), 4, 67, 60);
+            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], 40, 0);
+            cpct_drawSolidBox(pvmem, #0, 23, 48);
+            drawNumber((i16) (player->e.x[0] / SCALE), 6, 40, 0);
+            drawNumber((i16) (player->e.y[0] / SCALE), 6, 40, 8);
+            drawNumber((i16) (player->e.z[0] / SCALE), 6, 40, 16);
+            //drawNumber((i16) player->vx, 6, 40, 24);
+            //drawNumber((i16) player->vy, 6, 40, 32);
+            //drawNumber((i16) player->vz, 6, 40, 40);
         }   
 }
 
 void printBall(TBall *ball){
+    u8 *pvmem;
     if (ball->e.draw)
         {
             eraseBall(ball);
             drawBall(ball);
             entityDrawUpdate(&(ball->e));
-           //pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[1], 67, 0);
-           //cpct_drawSolidBox(pvmem, #0, 12, 60);
-           //drawNumber((i16) (ball.e.x[0] / SCALE), 4, 67, 0);
-           //drawNumber((i16) (ball.e.y[0] / SCALE), 4, 67, 12);
-           //drawNumber((i16) (ball.e.z[0] / SCALE), 4, 67, 24);
-           //drawNumber((i16) (ball.vy / SCALE), 4, 67, 36);
+            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], 60, 0);
+            cpct_drawSolidBox(pvmem, #0, 23, 48);
+            drawNumber((i16) (ball->e.x[0] / SCALE), 6, 60, 0);
+            drawNumber((i16) (ball->e.y[0] / SCALE), 6, 60, 8);
+            drawNumber((i16) (ball->e.z[0] / SCALE), 6, 60, 16);
+            drawNumber((i16) ball->vx, 6, 60, 24);
+            drawNumber((i16) ball->vy, 6, 60, 32);
+            drawNumber((i16) ball->vz, 6, 60, 40);
+        
         }   
 }
 
@@ -159,10 +178,12 @@ void game(TMatch *match, TKeys *keys)
         
         if (cpct_isKeyPressed(keys->pause)){
                 pauseGame = 1;
+                waitKeyUp(keys->pause);
             }
         while (pauseGame){
             if (cpct_isKeyPressed(keys->pause)){
                 pauseGame = 0;
+                waitKeyUp(keys->pause);
             }
         }
         // Player1 block
@@ -171,16 +192,20 @@ void game(TMatch *match, TKeys *keys)
         selectSpritePlayer(&player1, 0);
         //selectSpritePlayer(&player2, 1);
 
-        updateBall(&ball);
+        
+        if (ball.active){
+         
+            updateBall(&ball);
 
-        // Check collision with players 
-        if ((ball.active) && (ball.e.z[0] < (11 * SCALE))){
-            if ((ball.vy>0) && (player1.side == SD_down)){
-                playerAux = &player1;
-            } else{
-                playerAux = &player2;
+            // Check collision with players 
+            if (ball.e.z[0] < (24 * SCALE)){
+                if ((ball.vy>0) && (player1.side == SD_down)){
+                    playerAux = &player1;
+                } else{
+                    playerAux = &player2;
+                }
+                checkPlayerCollision(&ball, playerAux, keys);
             }
-            checkPlayerCollision(&ball, playerAux);
         }
 
         // Draw actors

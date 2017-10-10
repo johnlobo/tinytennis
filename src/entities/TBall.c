@@ -141,12 +141,12 @@ void updateBall(TBall *ball)
     py = ball->e.y[1] / SCALE;
 
     //Deactivate ball
-    //if ((ball->vx < 8) && (ball->vy < 8) && (ball->vz < 8))
-    //{
-    //    //eraseBall(ball);
-    //    ball->active = 0;
-    //    ball->e.draw = 0;
-    //}
+    if ((ball->vx < 25) && (ball->vy < 25) && (ball->vz < 25))
+    {
+        //eraseBall(ball);
+        ball->active = 0;
+        ball->e.draw = 0;
+    }
 
     // If ball is in the limits of the court, check collision with the net
     if ((ball->active) && (!checkBoundaries(x,y,ball))) {
