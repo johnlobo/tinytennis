@@ -174,6 +174,7 @@ void initBall(TBall *ball)
 
 void newBall(i32 x, i32 y, TBall *ball)
 {
+    ball->e.id = 3;
     ball->e.x[0] = ball->e.x[1] = x;
     ball->e.y[0] = ball->e.y[1] = y;
     ball->e.z[0] = ball->e.z[1] = ((cpct_rand8() % 3) + 3) * SCALE;
