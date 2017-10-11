@@ -141,7 +141,7 @@ void updateBall(TBall *ball)
     py = ball->e.y[1] / SCALE;
 
     //Deactivate ball
-    if ((ball->vx < 25) && (ball->vy < 25) && (ball->vz < 25))
+    if ((fast_abs(ball->vx) < 25) && (fast_abs(ball->vy) < 25) && (fast_abs(ball->vz) < 25))
     {
         //eraseBall(ball);
         ball->active = 0;
