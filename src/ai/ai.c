@@ -6,7 +6,8 @@
 
 const TPlayer tempAIPlayer =
 {
-	{	{ 40 * SCALE, 40 * SCALE }
+	{	2
+		, { 40 * SCALE, 40 * SCALE }
 		, 	{ 10 * SCALE, 10 * SCALE }
 		, 	{ 0, 0 }
 		,	PLAYER_WIDTH, PLAYER_HEIGHT

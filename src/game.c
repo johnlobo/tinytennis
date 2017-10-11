@@ -172,10 +172,11 @@ void game(TMatch *match, TKeys *keys)
     // Loop forever
     while (1)
     {
+        //Abort Game
         if (cpct_isKeyPressed(keys->abort)){
                 break;
             }
-        
+        // Pause Game
         if (cpct_isKeyPressed(keys->pause)){
                 pauseGame = 1;
                 waitKeyUp(keys->pause);
@@ -186,13 +187,14 @@ void game(TMatch *match, TKeys *keys)
                 waitKeyUp(keys->pause);
             }
         }
-        // Player1 block
+        
+        // Players block
         executeState(&player1, &player2, &ball, keys);
         //executeStateAI(&player2, &ball);
         selectSpritePlayer(&player1, 0);
         //selectSpritePlayer(&player2, 1);
 
-        
+        // Ball block
         if (ball.active){
          
             updateBall(&ball);
@@ -215,7 +217,7 @@ void game(TMatch *match, TKeys *keys)
         // Updates dusts if any
         updateDusts();
         
-        if (ball.e.z[0] > (11 * SCALE)){
+        if (ball.e.z[0] > (24 * SCALE)){
             printBall(&ball);
             printPlayer(&player1);
         } else {
