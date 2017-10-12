@@ -6,8 +6,11 @@
 #include "../util/util.h"
 #include "../levels/court01.h"
 #include "TDust.h"
+#include "../spriteList/spriteList.h"
 
 const i16 trajetoriesX[10] = {-128, -96, -64, -32, 0 , 0, 32, 64, 96, 128};
+
+const TFrame b_frame ={ M_up, sp_ball_0 };
 
 void eraseBall(TBall *ball)
 {
@@ -178,6 +181,7 @@ void newBall(i32 x, i32 y, TBall *ball)
     ball->e.x[0] = ball->e.x[1] = x;
     ball->e.y[0] = ball->e.y[1] = y;
     ball->e.z[0] = ball->e.z[1] = ((cpct_rand8() % 3) + 3) * SCALE;
+    ball->e.frame = &b_frame;
     ball->e.draw = 1;
     ball->vx = trajetoriesX[cpct_rand8() % 10];
     ball->vy = (2 + (cpct_rand8() % 2)) * SCALE;
@@ -187,5 +191,6 @@ void newBall(i32 x, i32 y, TBall *ball)
     ball->e.h = BALL_HEIGHT;
     ball->active = 1;
     calcBounce(ball);
+    addSprite(&ball->e);
 
 }

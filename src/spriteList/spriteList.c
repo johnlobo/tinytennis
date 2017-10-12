@@ -30,7 +30,7 @@ void addSprite(TEntity *e){
     
     if (spriteList.count<MAX_SPRITE_LIST){
         i = 0;
-        while ((i<MAX_SPRITE_LIST) && (spriteList.list[i]->id !=0 )){
+        while ((i<MAX_SPRITE_LIST) && (spriteList.list[i] !=0x0000 )){
             i++;
         }
         if (i<MAX_SPRITE_LIST){
@@ -105,10 +105,10 @@ void printSprites(){
     u8 i;
     
     for (i=0;i<MAX_SPRITE_LIST;i++){
-        if (spriteList.list[i]->draw){
-            eraseEntity((TEntity*) &spriteList.list[i]);
-            drawEntity((TEntity*) &spriteList.list[i]);
-            entityUpdate((TEntity*) &spriteList.list[i]);
+        if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
+            eraseEntity((TEntity*) &(*spriteList.list[i]));
+            drawEntity((TEntity*) &(*spriteList.list[i]));
+            entityUpdate((TEntity*) &(*spriteList.list[i]));
         }
     }
     

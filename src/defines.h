@@ -70,7 +70,7 @@ typedef enum { SD_up, SD_down } ESides;
 
 typedef struct
 {
-    u8 look;
+    ELook look;
     u8 *sprite;
 } TFrame;
 
@@ -79,10 +79,7 @@ typedef struct
     u8 id;
     u16 x[2], y[2], z[2];
     u8 w, h;
-    i16 hstep, vstep;
     TFrame *frame;
-    u8 nframe;
-    ELook look;
     u8 draw;
 } TEntity;
 

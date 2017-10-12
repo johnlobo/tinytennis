@@ -31,6 +31,7 @@
 #include "entities/TDust.h"
 #include "menu/menu.h"
 #include "entities/TMatch.h"
+#include "spriteList/spriteList.h"
 
 TBall ball;
 TPlayer player1;
@@ -55,7 +56,7 @@ void bodyTouch(TBall *ball){
 void shot(TBall *ball, TPlayer *player){
     ball->vx = 0;
     ball->vz = 3 * SCALE;
-    if (player->e.look == M_up){
+    if (player->look == M_up){
         ball->vy = -3 * SCALE;
     } else {
         ball->vy = 3 * SCALE;
@@ -118,29 +119,31 @@ void initGame()
     initAIPlayer(&player2);
     initBall(&ball);
     initDustList();
+    initSpriteList();
+    addSprite(&player1.e);
 
     cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[0], court);
 
     pauseGame = 0;
 }
 
-void printPlayer(TPlayer *player){
-    u8 *pvmem;
-    if (player->e.draw)
-        {
-            erasePlayer(player);
-            drawPlayer(player);
-            entityDrawUpdate(&(player->e));
-            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], 40, 0);
-            cpct_drawSolidBox(pvmem, #0, 23, 48);
-            drawNumber((i16) (player->e.x[0] / SCALE), 6, 40, 0);
-            drawNumber((i16) (player->e.y[0] / SCALE), 6, 40, 8);
-            drawNumber((i16) (player->e.z[0] / SCALE), 6, 40, 16);
-            //drawNumber((i16) player->vx, 6, 40, 24);
-            //drawNumber((i16) player->vy, 6, 40, 32);
-            //drawNumber((i16) player->vz, 6, 40, 40);
-        }   
-}
+//void printPlayer(TPlayer *player){
+//    u8 *pvmem;
+//    if (player->e.draw)
+//        {
+//            erasePlayer(player);
+//            drawPlayer(player);
+//            entityDrawUpdate(&(player->e));
+//            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], 40, 0);
+//            cpct_drawSolidBox(pvmem, #0, 23, 48);
+//            drawNumber((i16) (player->e.x[0] / SCALE), 6, 40, 0);
+//            drawNumber((i16) (player->e.y[0] / SCALE), 6, 40, 8);
+//            drawNumber((i16) (player->e.z[0] / SCALE), 6, 40, 16);
+//            //drawNumber((i16) player->vx, 6, 40, 24);
+//            //drawNumber((i16) player->vy, 6, 40, 32);
+//            //drawNumber((i16) player->vz, 6, 40, 40);
+//        }   
+//}
 
 void printBall(TBall *ball){
     u8 *pvmem;
@@ -217,13 +220,17 @@ void game(TMatch *match, TKeys *keys)
         // Updates dusts if any
         updateDusts();
         
-        if (ball.e.z[0] > (24 * SCALE)){
-            printBall(&ball);
-            printPlayer(&player1);
-        } else {
-            printPlayer(&player1);
-            printBall(&ball);
-        }
+        printSprites();
 
+        //printBall();
+
+        //if (ball.e.z[0] > (24 * SCALE)){
+        //    printBall(&ball);
+        //    printPlayer(&player1);
+        //} else {
+        //    printPlayer(&player1);
+        //    printBall(&ball);
+        //}
+//
     }
 }

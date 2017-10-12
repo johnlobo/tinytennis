@@ -33,12 +33,12 @@ const TPlayer tempPlayer1 =
         , 	{ 160 * SCALE, 160 * SCALE }
         , 	{ 0, 0 }
         ,	PLAYER_WIDTH, PLAYER_HEIGHT
-        ,   256, 512
-        ,	&g_frames[0][0]
-        ,	0
-        ,	M_right
-        ,	2
+        ,	&g_frames[0][0]    
+        ,	1
     }
+    ,   256, 512
+    ,   0
+    ,   M_up
     ,	GM_play
     ,	ST_stopped
     ,	SD_down
@@ -108,16 +108,16 @@ void initPlayer1(TPlayer *player)
 
 void assignFrame(TFrame **animation, TPlayer *player, u8 pause)
 {
-    player->e.frame = animation[player->e.nframe / pause];
+    player->e.frame = animation[player->nframe / pause];
 }
 
 void turnFrame(TPlayer *player)
 {
     TFrame *f = player->e.frame;
-    if (f->look != player->e.look)
+    if (f->look != player->look)
     {
         cpct_hflipSpriteM0(player->e.w, player->e.h, f->sprite);
-        f->look = player->e.look;
+        f->look = player->look;
     }
 }
 void selectSpritePlayer(TPlayer *player, u8 ai)
@@ -140,11 +140,11 @@ void selectSpritePlayer(TPlayer *player, u8 ai)
     case ST_walking:
     case ST_AImovingToTarget:
     {
-        if (player->e.look == M_up)
+        if (player->look == M_up)
         {
             assignFrame(anim_up[ai], player, ANIM_PAUSE);
         }
-        else if (player->e.look == M_down)
+        else if (player->look == M_down)
         {
             assignFrame(anim_down[ai], player, ANIM_PAUSE);
         }
@@ -157,7 +157,7 @@ void selectSpritePlayer(TPlayer *player, u8 ai)
     }
     case ST_hitting:
     {
-        if (player->e.look == M_up)
+        if (player->look == M_up)
         {
             assignFrame(anim_hittingUp[ai], player, ANIM_HIT_PAUSE);
         }
@@ -180,7 +180,7 @@ void moveRight(TPlayer *player, i16 step)
     if ((player->e.x[0] + (player->e.w * SCALE) + step) < (WIDTH * SCALE))
     {
         player->e.x[0] += step;
-        player->e.look  = M_right;
+        player->look  = M_right;
         player->e.draw = 1;
     }
 }
@@ -195,7 +195,7 @@ void moveLeft(TPlayer *player, i16 step)
     {
         player->e.x[0] -= step;
     }
-    player->e.look  = M_left;
+    player->look  = M_left;
     player->e.draw = 1;
 
 }
@@ -211,7 +211,7 @@ void moveUp(TPlayer *player, i16 step)
         player->e.y[0] -= step;
     }
     //player->look  = M_right;
-    player->e.look = M_up;
+    player->look = M_up;
     player->e.draw = 1;
 
 }
@@ -222,7 +222,7 @@ void moveDown(TPlayer *player, i16 step)
     {
         player->e.y[0] += step;
         //player->look  = M_right;
-        player->e.look = M_down;
+        player->look = M_down;
         player->e.draw = 1;
     }
 }
@@ -261,7 +261,7 @@ void hitting_enter(TPlayer *player)
 {
     player->state = ST_hitting;
     player->hit  =  HITTING_FRAMES * ANIM_HIT_PAUSE;
-    player->e.nframe = 0;
+    player->nframe = 0;
     player->e.draw = 1;
 }
 
@@ -269,9 +269,9 @@ void hitting_enter(TPlayer *player)
 
 void walking_enter(u8 look, TPlayer *player)
 {
-    player->e.nframe = 0;
+    player->nframe = 0;
     player->state = ST_walking;
-    player->e.look   = look;
+    player->look   = look;
     player->e.draw = 1;
 }
 
@@ -283,9 +283,9 @@ void stopped_enter(TPlayer *player)
 
 void hitting_animate(TPlayer *player)
 {
-    if (++player->e.nframe == HITTING_FRAMES * ANIM_HIT_PAUSE)
+    if (++player->nframe == HITTING_FRAMES * ANIM_HIT_PAUSE)
     {
-        player->e.nframe = 0;
+        player->nframe = 0;
     }
     player->e.draw = 1;
 }
@@ -313,9 +313,9 @@ void serving_enter(TPlayer *player)
 
 void serving_animate(TPlayer *player)
 {
-    if (++player->e.nframe == HITTING_FRAMES * ANIM_PAUSE)
+    if (++player->nframe == HITTING_FRAMES * ANIM_PAUSE)
     {
-        player->e.nframe = 0;
+        player->nframe = 0;
     }
     player->e.draw = 1;
 }
@@ -353,11 +353,11 @@ void stopped(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     }
     else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->up)))
     {
-        walking_enter(player->e.look, player);
+        walking_enter(player->look, player);
     }
     else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->down)))
     {
-        walking_enter(player->e.look, player);
+        walking_enter(player->look, player);
     }
     else if (cpct_isKeyPressed(keys->right))
     {
@@ -385,23 +385,23 @@ void stopped(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
 
 void walking_animate(u8 look, TPlayer *player)
 {
-    player->e.look  = look;
-    if (++player->e.nframe == WALKING_FRAMES * ANIM_PAUSE)
-        player->e.nframe = 0;
+    player->look  = look;
+    if (++player->nframe == WALKING_FRAMES * ANIM_PAUSE)
+        player->nframe = 0;
     player->e.draw = 1;
 }
 
 void up_animate(TPlayer *player)
 {
-    if (++player->e.nframe == UP_FRAMES * ANIM_PAUSE)
-        player->e.nframe = 0;
+    if (++player->nframe == UP_FRAMES * ANIM_PAUSE)
+        player->nframe = 0;
     player->e.draw = 1;
 }
 
 void down_animate(TPlayer *player)
 {
-    if (++player->e.nframe == DOWN_FRAMES * ANIM_PAUSE)
-        player->e.nframe = 0;
+    if (++player->nframe == DOWN_FRAMES * ANIM_PAUSE)
+        player->nframe = 0;
     player->e.draw = 1;
 }
 
@@ -410,52 +410,52 @@ void walking(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     u8 moved = 0;
     if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->right)))
     {
-        moveUp(player, player->e.vstep);
-        moveRight(player, player->e.hstep);
+        moveUp(player, player->vstep);
+        moveRight(player, player->hstep);
         walking_animate(M_right, player);
         moved = 1;
     }
     else if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->left)))
     {
-        moveUp(player, player->e.vstep);
-        moveLeft(player, player->e.hstep);
+        moveUp(player, player->vstep);
+        moveLeft(player, player->hstep);
         walking_animate(M_left, player);
         moved = 1;
     }
     else if ((cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(keys->right)))
     {
-        moveDown(player, player->e.vstep);
-        moveRight(player, player->e.hstep);
+        moveDown(player, player->vstep);
+        moveRight(player, player->hstep);
         walking_animate(M_right, player);
         moved = 1;
     }
     else if ((cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(keys->left)))
     {
-        moveDown(player, player->e.vstep);
-        moveLeft(player, player->e.hstep);
+        moveDown(player, player->vstep);
+        moveLeft(player, player->hstep);
         moved = 1;
     }
     else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->up)))
     {
-        moveUp(player, player->e.vstep);
+        moveUp(player, player->vstep);
         up_animate(player);
         moved = 1;
     }
     else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->down)))
     {
-        moveDown(player, player->e.vstep);
+        moveDown(player, player->vstep);
         down_animate(player);
         moved = 1;
     }
     else if (cpct_isKeyPressed(keys->right))
     {
-        moveRight(player, player->e.hstep);
+        moveRight(player, player->hstep);
         walking_animate(M_right, player);
         moved = 1;
     }
     else if (cpct_isKeyPressed(keys->left))
     {
-        moveLeft(player, player->e.hstep);
+        moveLeft(player, player->hstep);
         walking_animate(M_left, player);
         moved = 1;
     }
@@ -482,12 +482,12 @@ void preparing(TPlayer *player, TKeys *keys)
 {
     if (cpct_isKeyPressed(keys->right))
     {
-        moveRight(player, player->e.hstep);
+        moveRight(player, player->hstep);
         walking_animate(M_right, player);
     }
     else if (cpct_isKeyPressed(keys->left))
     {
-        moveLeft(player, player->e.hstep);
+        moveLeft(player, player->hstep);
         walking_animate(M_left, player);
     }
     else if (cpct_isKeyPressed(keys->fire1))

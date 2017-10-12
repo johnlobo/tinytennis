@@ -6,27 +6,28 @@
 
 const TPlayer tempAIPlayer =
 {
-	{	2
-		, { 40 * SCALE, 40 * SCALE }
-		, 	{ 10 * SCALE, 10 * SCALE }
-		, 	{ 0, 0 }
-		,	PLAYER_WIDTH, PLAYER_HEIGHT
-		,   256, 512
-		,	&g_frames[1][12]
-		,	0
-		,	M_right
-		,	2
-	}
-	,	GM_play
-	,	ST_stopped
-	,	SD_up
-	,	0
-	, {
-		256, 512, 256, 256 // Character definition
 
-	}
-	, 0, 0  // targetX and targetY
-	, 0, 0	// stepX and stepY
+    {   2
+        ,   { 40 * SCALE, 40 * SCALE }
+        , 	{ 10 * SCALE, 10 * SCALE }
+        , 	{ 0, 0 }
+        ,	PLAYER_WIDTH, PLAYER_HEIGHT
+        ,	&g_frames[1][12]    
+        ,	1
+    }
+    ,   256, 512
+    ,   0
+    ,   M_up
+    ,	GM_play
+    ,	ST_stopped
+    ,	SD_up
+    ,	0
+    , {
+        255, 512, 255, 255 // Character definition
+
+    }
+    , 0, 0 // targetX and targetY
+    , 0, 0 // stepX and stepY
 };
 
 void initAIPlayer(TPlayer *player)
@@ -59,7 +60,7 @@ void AIhitting_enter(TPlayer *player)
 {
 	player->state = ST_AIhitting;
 	player->hit  =  HITTING_FRAMES * ANIM_HIT_PAUSE;
-	player->e.nframe = 0;
+	player->nframe = 0;
 	player->e.draw = 1;
 }
 
@@ -146,14 +147,14 @@ void setAITarget(u8 x, u8 y, TPlayer *player)
 		player->stepY = stY;
 	}
 	// Set AI state
-	player->e.nframe = 0;
+	player->nframe = 0;
 	if (player->stepX > 0)
 	{
-		player->e.look = M_right;
+		player->look = M_right;
 	}
 	else
 	{
-		player->e.look = M_left;
+		player->look = M_left;
 	}
 	player->e.draw = 1;
 	player->state = ST_AImovingToTarget;
