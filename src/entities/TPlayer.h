@@ -65,8 +65,6 @@ extern TPlayer player;
 void initPlayer1(TPlayer *player);
 void initPlayer2(TPlayer *player);
 void selectSpritePlayer(TPlayer *player, u8 ai);
-void drawPlayer(TPlayer *player);
-void erasePlayer(TPlayer *player);
 void moveUp(TPlayer *player, i16 step);
 void moveDown(TPlayer *player, i16 step);
 void moveRight(TPlayer *player, i16 step);

@@ -17,16 +17,17 @@
 #define _TDUST_H_
 
 #include <types.h>
+#include "../defines.h"
 
 #define DUST_WIDTH 2
 #define DUST_HEIGHT 4
 #define DUST_FRAMES 3
-#define DUST_PAUSE 5
+#define DUST_PAUSE 6
 
 
 typedef struct {
-    u8 x, y;
-    u8 nFrame; 
+    TEntity e;
+    u8 nFrame;
     u8 active;
 } TDust;
 

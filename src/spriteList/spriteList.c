@@ -41,19 +41,8 @@ void addSprite(TEntity *e){
     
 }
 
-void deleteSprite(u8 id){
-    u8 i = 0;
-    
-    while ((i<MAX_SPRITE_LIST) && (spriteList.list[i]->id != id )){
-        i++;
-    }
-    if (i<MAX_SPRITE_LIST){
-        spriteList.count--;
-        cpct_memset(&spriteList.list[i], 0, sizeof(TEntity));
-    }
-}
 
-void orderList(){
+void orderSpriteList(){
     u8 i = 1;  // Begin with one to avoid to overflow the array
     TEntity *aux;
     
@@ -73,10 +62,10 @@ void eraseEntity(TEntity *e)
 {
     //u8 *pvmem;
     u8 posx, posy;
+    
     posx = e->x[1] / SCALE;
     posy = e->y[1] / SCALE;
-    if (((posx + e->w) <= WIDTH) && ((posy + e->h) <= HEIGHT))
-    {
+    if (((posx + e->w) <= WIDTH) && ((posy + e->h) <= HEIGHT)){
         cpct_etm_drawTileBox2x4 (posx / 2, posy / 4, (e->w / 2) + 1, (e->h / 4) + 1, MAP_WIDTH, g_scrbuffers[0], court);
     }
 
@@ -86,10 +75,13 @@ void drawEntity(TEntity *e)
 {
     u8 *pvmem;
     u8 posx, posy;
+    
     posx = e->x[0] / SCALE;
     posy = e->y[0] / SCALE;
-    pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], posx, posy);
-    cpct_drawSpriteMaskedAlignedTable(e->frame->sprite, pvmem, e->w, e->h, g_tablatrans);
+     if (((posx + e->w) <= WIDTH) && ((posy + e->h) <= HEIGHT)){
+        pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], posx, posy);
+        cpct_drawSpriteMaskedAlignedTable(e->frame->sprite, pvmem, e->w, e->h, g_tablatrans);
+    }
 }
 
 
@@ -114,3 +106,19 @@ void printSprites(){
     
     
 }
+
+void deleteSprite(u8 id, u8 erase){
+    u8 i = 0;
+    
+    while ((i<MAX_SPRITE_LIST) && (spriteList.list[i]->id != id )){
+        i++;
+    }
+    if (i<MAX_SPRITE_LIST){
+        if (erase){
+           eraseEntity((TEntity*) &(*spriteList.list[i]));
+        }
+        spriteList.count--;
+        cpct_memset(&spriteList.list[i], 0, sizeof(TEntity));
+    }
+}
+

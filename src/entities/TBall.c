@@ -1,3 +1,18 @@
+//-----------------------------LICENSE NOTICE------------------------------------
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Lesser General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU Lesser General Public License for more details.
+//
+//  You should have received a copy of the GNU Lesser General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//------------------------------------------------------------------------------
+
 #include <cpctelera.h>
 #include "TBall.h"
 #include "../defines.h"
@@ -10,50 +25,9 @@
 
 const i16 trajetoriesX[10] = {-128, -96, -64, -32, 0 , 0, 32, 64, 96, 128};
 
-const TFrame b_frame ={ M_up, sp_ball_0 };
+const TFrame b1_frame ={ M_up, sp_ball_0 };
+const TFrame b2_frame ={ M_up, sp_ball_1 };
 
-void eraseBall(TBall *ball)
-{
-    i32 posx, posy;
-    //Shadow
-    posx = ball->e.x[1] / SCALE;
-    posy = ball->e.y[1] / SCALE;
-    if (((posx + SHADOW_BALL_WIDTH) < 80) && ((posy + SHADOW_BALL_HEIGHT) < 200))
-    {
-        cpct_etm_drawTileBox2x4 (posx / 2, posy / 4, (SHADOW_BALL_WIDTH / 2) + 1, (SHADOW_BALL_HEIGHT / 4) +
-                                 1, MAP_WIDTH, g_scrbuffers[0], court);
-    }
-    //Ball
-    posx = ball->e.x[1] / SCALE;
-    posy = ball->e.y[1] / SCALE - (ball->e.z[1] / SCALE / 2);
-    if (((posx + BALL_WIDTH) < 80) && ((posy >= 0) && ((posy + BALL_HEIGHT) < 200)))
-    {
-        cpct_etm_drawTileBox2x4 (posx / 2, posy / 4, (BALL_WIDTH / 2) + 1, (BALL_HEIGHT / 4) +
-                                 1, MAP_WIDTH, g_scrbuffers[0], court);
-    }
-}
-
-void drawBall(TBall *ball)
-{
-    i32 posx, posy;
-    u8 *pvmem;
-    //Shadow
-    posx = ball->e.x[0] / SCALE;
-    posy = ball->e.y[0] / SCALE;
-    if (((posx + SHADOW_BALL_WIDTH) < 80) && ((posy + SHADOW_BALL_HEIGHT) < 200))
-    {
-        pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], posx, posy);
-        cpct_drawSpriteMaskedAlignedTable(sp_ball_1, pvmem, SHADOW_BALL_WIDTH, SHADOW_BALL_HEIGHT, g_tablatrans);
-    }
-    //Ball
-    posx = ball->e.x[0] / SCALE;
-    posy = (ball->e.y[0] / SCALE) - (ball->e.z[0] / SCALE / 2);
-    if (((posx + BALL_WIDTH) < 80) && ((posy >= 0) && ((posy + BALL_HEIGHT) < 200)))
-    {
-        pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], posx, posy);
-        cpct_drawSpriteMaskedAlignedTable((u8 *) ball->sprite, pvmem, BALL_WIDTH, BALL_HEIGHT, g_tablatrans);
-    }
-}
 
 void calcBounce(TBall *ball)
 {
@@ -81,23 +55,39 @@ u8 checkBoundaries(u8 x, u8 y, TBall *ball){
     u8 result = 0;
 
     if (x > 210){
+        // Shadow entity
         ball->e.x[0] = 0;
+        // Ball entity
+        ball->e_ball.x[0] = 0;
+        // Common
         ball->vx = -ball->vx * (FRICTION / 4);
         calcBounce(ball);
         result = 1;
     } else if ((x + BALL_WIDTH) > 80) {
+        // Shadow entity
         ball->e.x[0] = (80 * SCALE) - (BALL_WIDTH * SCALE);
+        // Ball entity
+        ball->e_ball.x[0] = ball->e.x[0];
+        // Common
         ball->vx = -ball->vx * (FRICTION / 4);
         calcBounce(ball);
         result = 1;
     }
 
     if (y > 210){
+        // Shadow entity
         ball->e.y[0] = 0;
+        // Ball entity
+        ball->e_ball.y[0] = 0;
+        // Common
         ball->vy = -ball->vy * (FRICTION / 4);
         calcBounce(ball);
     } else if ((y + BALL_HEIGHT) > 200) {
+        // Shadow entity
         ball->e.y[0] = (200 * SCALE) - (BALL_HEIGHT * SCALE);
+        // Ball entity
+        ball->e_ball.y[0] =  ball->e.y[0] - (ball->e.z[0]  / 2);
+        // Common
         ball->vy = -ball->vy * (FRICTION / 4);
         calcBounce(ball);
         result = 1;
@@ -131,12 +121,16 @@ u8 checkNet(u8 x, u8 y, u8 z, u8 py, TBall *ball){
 void updateBall(TBall *ball)
 {
     u8 x, y, z, py;
-
+    // Shadow entity
     ball->vz += GRAVITY;
     ball->e.x[0] += ball->vx;
     ball->e.y[0] += ball->vy;
     ball->e.z[0] += ball->vz;
     ball->e.draw = 1;
+    // Ball entity
+    ball->e_ball.x[0] = ball->e.x[0];
+    ball->e_ball.y[0] = ball->e.y[0] - (ball->e.z[0]  / 2);
+    ball->e_ball.draw = 1;
 
     x = ball->e.x[0] / SCALE;
     y = ball->e.y[0] / SCALE;
@@ -147,9 +141,15 @@ void updateBall(TBall *ball)
     if ((fast_abs(ball->vx) < 25) && (fast_abs(ball->vy) < 25) && (fast_abs(ball->vz) < 25))
     {
         //eraseBall(ball);
-        ball->active = 0;
+        // Shadow Entity
         ball->e.draw = 0;
-    }
+        deleteSprite(ball->e.id, 1);
+        // Shadow Entity
+        ball->e_ball.draw = 0;
+        deleteSprite(ball->e_ball.id, 0);
+        // Common
+        ball->active = 0;
+   }
 
     // If ball is in the limits of the court, check collision with the net
     if ((ball->active) && (!checkBoundaries(x,y,ball))) {
@@ -177,20 +177,32 @@ void initBall(TBall *ball)
 
 void newBall(i32 x, i32 y, TBall *ball)
 {
+    // Shadow entity
     ball->e.id = 3;
     ball->e.x[0] = ball->e.x[1] = x;
     ball->e.y[0] = ball->e.y[1] = y;
     ball->e.z[0] = ball->e.z[1] = ((cpct_rand8() % 3) + 3) * SCALE;
-    ball->e.frame = &b_frame;
+    ball->e.frame = &b2_frame;
+    ball->e.w = BALL_WIDTH;
+    ball->e.h = BALL_HEIGHT;
     ball->e.draw = 1;
+    //Ball entity
+    ball->e.id = 4;
+    ball->e_ball.x[0] = ball->e.x[1] = x;
+    ball->e_ball.y[0] = ball->e.y[1] = y - (ball->e.z[0]  / 2);
+    ball->e_ball.z[0] = ball->e.z[1] = 0;
+    ball->e_ball.frame = &b1_frame;
+    ball->e_ball.w = BALL_WIDTH;
+    ball->e_ball.h = BALL_HEIGHT;
+    ball->e_ball.draw = 1;
+    //common
     ball->vx = trajetoriesX[cpct_rand8() % 10];
     ball->vy = (2 + (cpct_rand8() % 2)) * SCALE;
     ball->vz = (2 + (cpct_rand8() % 5)) * SCALE;
-    ball->sprite = (u8 *) sp_ball_0;
-    ball->e.w = BALL_WIDTH;
-    ball->e.h = BALL_HEIGHT;
     ball->active = 1;
+    
     calcBounce(ball);
+    
     addSprite(&ball->e);
-
+    addSprite(&ball->e_ball);
 }

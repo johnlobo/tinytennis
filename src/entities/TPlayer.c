@@ -78,7 +78,8 @@ TFrame *const anim_walking[2][WALKING_FRAMES] = {
                     {&g_frames[0][1], &g_frames[0][2], &g_frames[0][3], &g_frames[0][1]},
                     {&g_frames[1][1], &g_frames[1][2], &g_frames[1][3], &g_frames[1][1] }};
 
-TFrame *const anim_up[2][UP_FRAMES] = {{&g_frames[0][10], &g_frames[0][0], &g_frames[0][11], &g_frames[0][0]},
+TFrame *const anim_up[2][UP_FRAMES] = {
+                    {&g_frames[0][10], &g_frames[0][0], &g_frames[0][11], &g_frames[0][0]},
                     {&g_frames[1][10], &g_frames[1][0], &g_frames[1][11], &g_frames[1][0] }};
 
 TFrame *const anim_down[2][DOWN_FRAMES] = {
@@ -225,36 +226,6 @@ void moveDown(TPlayer *player, i16 step)
         player->look = M_down;
         player->e.draw = 1;
     }
-}
-
-void drawPlayer(TPlayer *player)
-{
-    u8 *pvmem;
-    u8 posx, posy;
-    posx = player->e.x[0] / SCALE;
-    posy = player->e.y[0] / SCALE;
-    //if (((posx + player->e.w) <= WIDTH) && ((posy + player->e.h) <= HEIGHT))
-    //{
-    pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], posx, posy);
-    cpct_drawSpriteMaskedAlignedTable(player->e.frame->sprite, pvmem, player->e.w, player->e.h, g_tablatrans);
-    //}
-}
-
-void erasePlayer(TPlayer *player)
-{
-    //u8 *pvmem;
-    u8 posx, posy;
-    posx = player->e.x[1] / SCALE;
-    posy = player->e.y[1] / SCALE;
-    /*if (((posx + player->e.w) <= WIDTH) && ((posy + player->e.h) <= HEIGHT)) {
-    	pvmem = cpct_getScreenPtr((u8*) g_scrbuffers[1], posx, posy);
-    	cpct_drawSolidBox(pvmem, #0,player->e.w, player->e.h);
-    }*/
-    if (((posx + player->e.w) <= WIDTH) && ((posy + player->e.h) <= HEIGHT))
-    {
-        cpct_etm_drawTileBox2x4 (posx / 2, posy / 4, (player->e.w / 2) + 1, (player->e.h / 4) + 1, MAP_WIDTH, g_scrbuffers[0], court);
-    }
-
 }
 
 void hitting_enter(TPlayer *player)

@@ -15,42 +15,21 @@
 
 #include "TDust.h"
 #include "../sprites/dust.h"
+#include "../spriteList/spriteList.h"
 #include "../defines.h"
 #include "../util/video.h"
 #include "../levels/court01.h"
 
-
-u8 *const *anim_dust[DUST_FRAMES] = { sp_dust_0, sp_dust_1, sp_dust_2};
+const TFrame d_frames[3] = {
+    { M_up, sp_dust_0 }  
+    ,   { M_up, sp_dust_1 }
+    ,   { M_up, sp_dust_2 }
+};
 
 TDustList dusts;
 
 void initDustList(){
-    u8 i;
-
-    for (i = 0; i < 5; i++) {
-        dusts.dustList[i].x = 0;
-        dusts.dustList[i].y = 0;
-        dusts.dustList[i].nFrame = 0;
-        dusts.dustList[i].active = 0;
-    }
-    dusts.nDusts = 0;
-}
-
-void eraseDust(u8 i)
-{
-    if (((dusts.dustList[i].x + DUST_WIDTH) <= WIDTH) && ((dusts.dustList[i].y + DUST_HEIGHT) <= HEIGHT))
-    {
-        cpct_etm_drawTileBox2x4 (dusts.dustList[i].x / 2, dusts.dustList[i].y / 4, (DUST_WIDTH / 2) + 1, 
-                                 (DUST_HEIGHT / 4) + 1, MAP_WIDTH, g_scrbuffers[0], court);
-    }
-
-}
-
-void drawDust(u8 i)
-{
-    u8 *pvmem;
-    pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], dusts.dustList[i].x, dusts.dustList[i].y);
-    cpct_drawSpriteMaskedAlignedTable((u8*) anim_dust[dusts.dustList[i].nFrame / DUST_PAUSE], pvmem, DUST_WIDTH, DUST_HEIGHT, g_tablatrans);
+    cpct_memset(&dusts, 0, sizeof(TDustList));
 }
 
 void createDust(u8 x, u8 y){
@@ -61,20 +40,25 @@ void createDust(u8 x, u8 y){
             i++;
         }
         if (i<5){
-            dusts.dustList[i].x = x;
-            dusts.dustList[i].y = y;
-            //dusts.dustList[i].nFrame = DUST_FRAMES * DUST_PAUSE - 1;
-            dusts.dustList[i].nFrame = 18;
+            dusts.dustList[i].e.id = i+20;
+            dusts.dustList[i].e.x[0] = dusts.dustList[i].e.x[1] = x;
+            dusts.dustList[i].e.y[0] = dusts.dustList[i].e.y[1] = y;
+            dusts.dustList[i].e.z[0] = dusts.dustList[i].e.z[1] = 0;
+            dusts.dustList[i].e.frame = &d_frames[2];
+            dusts.dustList[i].e.w = DUST_WIDTH;
+            dusts.dustList[i].e.h = DUST_HEIGHT;
+            dusts.dustList[i].e.draw = 1;
+            dusts.dustList[i].nFrame = DUST_FRAMES * DUST_PAUSE;
             dusts.dustList[i].active = 1;
             dusts.nDusts++;
-            drawDust(i);
+            addSprite(&dusts.dustList[i].e);
         }
     }
 }
 
 void removeDust(u8 i){
-    eraseDust(i);
     dusts.dustList[i].active = 0;
+    deleteSprite(dusts.dustList[i].e.id,1);
     dusts.nDusts--;
 }
 
@@ -87,10 +71,7 @@ void updateDusts(){
                 if (dusts.dustList[i].nFrame > 1)
                 {
                     dusts.dustList[i].nFrame--;
-                    //if ((dusts.dustList[i].nFrame<27) && (dusts.dustList[i].nFrame%DUST_PAUSE == 0)){
-                    if (dusts.dustList[i].nFrame<15){
-                        eraseDust(i);
-                        drawDust(i);
+                    dusts.dustList[i].e.frame = &d_frames[dusts.dustList[i].nFrame / DUST_PAUSE];
                     }
                 }
                 else
@@ -100,4 +81,3 @@ void updateDusts(){
             }
         }
     }
-}

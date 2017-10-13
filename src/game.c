@@ -39,15 +39,18 @@ TPlayer player2;
 EGamePhases phase;
 u8 pauseGame;
 
-
 //
 // Body touch
 //
 void bodyTouch(TBall *ball){
-    ball->vx = ball->vx * (FRICTION / 4);
-    ball->vy = -ball->vy * (FRICTION / 4);
-    ball->vz = ball->vz * (FRICTION / 4);
+    ball->vx = ball->vx * (FRICTION / 6);
+    ball->vy = -ball->vy * (FRICTION / 6);
+    ball->vz = ball->vz * (FRICTION / 6);
     calcBounce(ball);
+    
+    drawText("BODY TOUCH", 0,0,0);
+    delay(20);
+    cpct_etm_drawTileBox2x4 (0, 0, 5, 2, MAP_WIDTH, g_scrbuffers[0], court);
 }
 
 //
@@ -68,7 +71,7 @@ void shot(TBall *ball, TPlayer *player){
 //  checkPlayerCollision
 //
 
-void checkPlayerCollision(TBall *ball, TPlayer *player, TKeys *keys){
+void checkPlayerCollision(TBall *ball, TPlayer *player){
     u8 bx, by, px, py;
     u8 hit;
 
@@ -78,28 +81,15 @@ void checkPlayerCollision(TBall *ball, TPlayer *player, TKeys *keys){
     by = ball->e.y[0] / SCALE;
 
     //hit = fast_collision(px, py, player->e.w, player->e.h, bx, by, ball->e.w, ball->e.h);
-    hit = collision(px, py, player->e.w, player->e.h, bx, by, ball->e.w, ball->e.h);
+    hit = collision(px-1, py-1, player->e.w+1, player->e.h+1, bx, by, ball->e.w, ball->e.h);
 
     if (hit){
-        
-        
-        while (1){
-            if (cpct_isKeyPressed(keys->pause)){
-                waitKeyUp(keys->pause);
-                break;
-            }
-        }
-        
-        
-        drawText("HIT", 0,0,0);
         player->e.draw = 1;
         if (player->hit > 0){
             shot(ball, player);
         } else {
             bodyTouch(ball);
         }
-    }else{
-        cpct_drawSolidBox(SCR_VMEM, #0, 12, 5);
     }
 }
 
@@ -127,42 +117,6 @@ void initGame()
     pauseGame = 0;
 }
 
-//void printPlayer(TPlayer *player){
-//    u8 *pvmem;
-//    if (player->e.draw)
-//        {
-//            erasePlayer(player);
-//            drawPlayer(player);
-//            entityDrawUpdate(&(player->e));
-//            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], 40, 0);
-//            cpct_drawSolidBox(pvmem, #0, 23, 48);
-//            drawNumber((i16) (player->e.x[0] / SCALE), 6, 40, 0);
-//            drawNumber((i16) (player->e.y[0] / SCALE), 6, 40, 8);
-//            drawNumber((i16) (player->e.z[0] / SCALE), 6, 40, 16);
-//            //drawNumber((i16) player->vx, 6, 40, 24);
-//            //drawNumber((i16) player->vy, 6, 40, 32);
-//            //drawNumber((i16) player->vz, 6, 40, 40);
-//        }   
-//}
-
-void printBall(TBall *ball){
-    u8 *pvmem;
-    if (ball->e.draw)
-        {
-            eraseBall(ball);
-            drawBall(ball);
-            entityDrawUpdate(&(ball->e));
-            pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], 60, 0);
-            cpct_drawSolidBox(pvmem, #0, 23, 48);
-            drawNumber((i16) (ball->e.x[0] / SCALE), 6, 60, 0);
-            drawNumber((i16) (ball->e.y[0] / SCALE), 6, 60, 8);
-            drawNumber((i16) (ball->e.z[0] / SCALE), 6, 60, 16);
-            drawNumber((i16) ball->vx, 6, 60, 24);
-            drawNumber((i16) ball->vy, 6, 60, 32);
-            drawNumber((i16) ball->vz, 6, 60, 40);
-        
-        }   
-}
 
 // Game Loop
 void game(TMatch *match, TKeys *keys)
@@ -171,6 +125,8 @@ void game(TMatch *match, TKeys *keys)
     //u32 c;
 
     initGame();
+    
+    //fadeIn(&sp_palette[0]);
 
     // Loop forever
     while (1)
@@ -209,28 +165,16 @@ void game(TMatch *match, TKeys *keys)
                 } else{
                     playerAux = &player2;
                 }
-                checkPlayerCollision(&ball, playerAux, keys);
+                checkPlayerCollision(&ball, playerAux);
             }
         }
 
         // Draw actors
-        
         cpct_waitVSYNC();
 
-        // Updates dusts if any
-        updateDusts();
-        
+        orderSpriteList();        
         printSprites();
 
-        //printBall();
-
-        //if (ball.e.z[0] > (24 * SCALE)){
-        //    printBall(&ball);
-        //    printPlayer(&player1);
-        //} else {
-        //    printPlayer(&player1);
-        //    printBall(&ball);
-        //}
-//
+       
     }
 }

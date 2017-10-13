@@ -49,7 +49,7 @@ void myInterruptHandler()
 }
 
 void playGameMenuOption(){
-
+	//fadeOut(&sp_palette[0]);
 	if(!seed) 
         seed++;
 	cpct_srand(seed)
@@ -72,7 +72,6 @@ void redefineMenuOption(){
 }
 
 void checkKeyboardMenu(TIcon *icon) {
-    u8 *pvideo;
     
     if(cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(keys.up)){
         deleteIcon(icon);

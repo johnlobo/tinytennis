@@ -28,8 +28,8 @@ typedef struct {
 
 void initSpriteList();
 void addSprite(TEntity *e);
-void deleteSprite(u8 id);
-void orderList();
+void deleteSprite(u8 id, u8 erase);
+void orderSpriteList();
 void printSprites();
 
 #endif
