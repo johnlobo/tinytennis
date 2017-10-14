@@ -138,18 +138,18 @@ void updateBall(TBall *ball)
     py = ball->e.y[1] / SCALE;
 
     //Deactivate ball
-    if ((fast_abs(ball->vx) < 25) && (fast_abs(ball->vy) < 25) && (fast_abs(ball->vz) < 25))
-    {
-        //eraseBall(ball);
-        // Shadow Entity
-        ball->e.draw = 0;
-        deleteSprite(ball->e.id, 1);
-        // Shadow Entity
-        ball->e_ball.draw = 0;
-        deleteSprite(ball->e_ball.id, 0);
-        // Common
-        ball->active = 0;
-   }
+   //if ((fast_abs(ball->vx) < 25) && (fast_abs(ball->vy) < 25) && (fast_abs(ball->vz) < 25))
+   //{
+   //    //eraseBall(ball);
+   //    // Shadow Entity
+   //    ball->e.draw = 0;
+   //    deleteSprite(ball->e.id, 1);
+   //    // Shadow Entity
+   //    ball->e_ball.draw = 0;
+   //    deleteSprite(ball->e_ball.id, 0);
+   //    // Common
+   //    ball->active = 0;
+   //
 
     // If ball is in the limits of the court, check collision with the net
     if ((ball->active) && (!checkBoundaries(x,y,ball))) {
@@ -177,6 +177,14 @@ void initBall(TBall *ball)
 
 void newBall(i32 x, i32 y, TBall *ball)
 {
+    if (ball->active){
+        // Shadow Entity
+        ball->e.draw = 0;
+        deleteSprite(ball->e.id, 0);
+        // Shadow Entity
+        ball->e_ball.draw = 0;
+        deleteSprite(ball->e_ball.id, 0);
+    }
     // Shadow entity
     ball->e.id = 3;
     ball->e.x[0] = ball->e.x[1] = x;
@@ -187,7 +195,7 @@ void newBall(i32 x, i32 y, TBall *ball)
     ball->e.h = BALL_HEIGHT;
     ball->e.draw = 1;
     //Ball entity
-    ball->e.id = 4;
+    ball->e_ball.id = 4;
     ball->e_ball.x[0] = ball->e.x[1] = x;
     ball->e_ball.y[0] = ball->e.y[1] = y - (ball->e.z[0]  / 2);
     ball->e_ball.z[0] = ball->e.z[1] = 0;

@@ -34,8 +34,8 @@ void addSprite(TEntity *e){
             i++;
         }
         if (i<MAX_SPRITE_LIST){
-            spriteList.count++;
             spriteList.list[i] = e;
+            spriteList.count++;
         }
     }
     
@@ -118,7 +118,7 @@ void deleteSprite(u8 id, u8 erase){
            eraseEntity((TEntity*) &(*spriteList.list[i]));
         }
         spriteList.count--;
-        cpct_memset(&spriteList.list[i], 0, sizeof(TEntity));
+        cpct_memset(&spriteList.list[i], 0, 2);  // 2 is the size of a pointer
     }
 }
 

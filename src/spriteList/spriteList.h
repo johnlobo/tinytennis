@@ -21,8 +21,8 @@
 #include "../defines.h"
 
 typedef struct {
+	u8 count;
     TEntity *list[MAX_SPRITE_LIST];
-    u8 count;
 } TSpriteList;
     
 

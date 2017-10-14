@@ -41,12 +41,12 @@ void createDust(u8 x, u8 y){
         }
         if (i<5){
             dusts.dustList[i].e.id = i+20;
-            dusts.dustList[i].e.x[0] = dusts.dustList[i].e.x[1] = x;
-            dusts.dustList[i].e.y[0] = dusts.dustList[i].e.y[1] = y;
+            dusts.dustList[i].e.x[0] = dusts.dustList[i].e.x[1] = x * SCALE;
+            dusts.dustList[i].e.y[0] = dusts.dustList[i].e.y[1] = y * SCALE;
             dusts.dustList[i].e.z[0] = dusts.dustList[i].e.z[1] = 0;
-            dusts.dustList[i].e.frame = &d_frames[2];
             dusts.dustList[i].e.w = DUST_WIDTH;
             dusts.dustList[i].e.h = DUST_HEIGHT;
+            dusts.dustList[i].e.frame = &d_frames[2];
             dusts.dustList[i].e.draw = 1;
             dusts.dustList[i].nFrame = DUST_FRAMES * DUST_PAUSE;
             dusts.dustList[i].active = 1;
@@ -72,6 +72,7 @@ void updateDusts(){
                 {
                     dusts.dustList[i].nFrame--;
                     dusts.dustList[i].e.frame = &d_frames[dusts.dustList[i].nFrame / DUST_PAUSE];
+                    dusts.dustList[i].e.draw = 1;
                     }
                 }
                 else

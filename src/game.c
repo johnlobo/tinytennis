@@ -169,10 +169,12 @@ void game(TMatch *match, TKeys *keys)
             }
         }
 
+        //updateDusts();
+
         // Draw actors
         cpct_waitVSYNC();
 
-        orderSpriteList();        
+        //orderSpriteList();        
         printSprites();
 
        

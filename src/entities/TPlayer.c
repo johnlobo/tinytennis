@@ -44,8 +44,7 @@ const TPlayer tempPlayer1 =
     ,	SD_down
     ,	0
     , {
-        255, 512, 255, 255, 255, 255
-
+        255, 512, 255, 255
     }
     , 0, 0
     , 0, 0
@@ -347,9 +346,9 @@ void stopped(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     }
     else if (cpct_isKeyPressed(keys->fire2))
     {
-        //newBall(player->e.x[0], player->e.y[0], ball);
+        waitKeyUp(keys->fire2);
         newBall(40 * SCALE, 0 , ball);
-        setAITarget(ball->bouncex, ball->bouncey, playerAI);
+        //setAITarget(ball->bouncex, ball->bouncey, playerAI);
     }
 }
 
@@ -438,8 +437,9 @@ void walking(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     if (cpct_isKeyPressed(keys->fire2))
     {
         //newBall(player->e.x[0], player->e.y[0], ball);
+        waitKeyUp(keys->fire2);
         newBall(40 * SCALE, 0 , ball);
-        setAITarget(ball->bouncex, ball->bouncey, playerAI);
+        //setAITarget(ball->bouncex, ball->bouncey, playerAI);
         moved = 1;
     }
     if (!moved)
