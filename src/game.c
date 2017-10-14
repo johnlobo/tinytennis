@@ -169,7 +169,7 @@ void game(TMatch *match, TKeys *keys)
             }
         }
 
-        //updateDusts();
+        updateDusts();
 
         // Draw actors
         cpct_waitVSYNC();

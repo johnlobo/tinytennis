@@ -21,9 +21,9 @@
 #include "../levels/court01.h"
 
 const TFrame d_frames[3] = {
-    { M_up, sp_dust_0 }  
+    { M_up, sp_dust_2 }  
     ,   { M_up, sp_dust_1 }
-    ,   { M_up, sp_dust_2 }
+    ,   { M_up, sp_dust_0 }
 };
 
 TDustList dusts;
@@ -59,6 +59,7 @@ void createDust(u8 x, u8 y){
 void removeDust(u8 i){
     dusts.dustList[i].active = 0;
     deleteSprite(dusts.dustList[i].e.id,1);
+    cpct_memset(&dusts.dustList[i], 0, sizeof(TEntity));
     dusts.nDusts--;
 }
 
@@ -73,12 +74,11 @@ void updateDusts(){
                     dusts.dustList[i].nFrame--;
                     dusts.dustList[i].e.frame = &d_frames[dusts.dustList[i].nFrame / DUST_PAUSE];
                     dusts.dustList[i].e.draw = 1;
-                    }
-                }
-                else
-                {
+                }  else {
                     removeDust(i);
                 }
             }
         }
     }
+
+}

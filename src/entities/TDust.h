@@ -22,7 +22,7 @@
 #define DUST_WIDTH 2
 #define DUST_HEIGHT 4
 #define DUST_FRAMES 3
-#define DUST_PAUSE 6
+#define DUST_PAUSE 4
 
 
 typedef struct {
