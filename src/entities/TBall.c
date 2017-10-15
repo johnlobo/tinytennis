@@ -126,6 +126,9 @@ void updateBall(TBall *ball)
     ball->e.x[0] += ball->vx;
     ball->e.y[0] += ball->vy;
     ball->e.z[0] += ball->vz;
+    if (ball->e.z[0] > 240 * SCALE){
+        ball->e.z[0] = 0;
+    }
     ball->e.draw = 1;
     // Ball entity
     ball->e_ball.x[0] = ball->e.x[0];
@@ -138,18 +141,19 @@ void updateBall(TBall *ball)
     py = ball->e.y[1] / SCALE;
 
     //Deactivate ball
-   //if ((fast_abs(ball->vx) < 25) && (fast_abs(ball->vy) < 25) && (fast_abs(ball->vz) < 25))
-   //{
-   //    //eraseBall(ball);
-   //    // Shadow Entity
-   //    ball->e.draw = 0;
-   //    deleteSprite(ball->e.id, 1);
-   //    // Shadow Entity
-   //    ball->e_ball.draw = 0;
-   //    deleteSprite(ball->e_ball.id, 0);
-   //    // Common
-   //    ball->active = 0;
-   //
+   if ((fast_abs(ball->vx) < 25) && (fast_abs(ball->vy) < 25) && (fast_abs(ball->vz) < 25))
+   {
+       //eraseBall(ball);
+       // Shadow Entity
+       ball->e.draw = 0;
+       deleteSprite(ball->e.id, 1);
+       // Shadow Entity
+       ball->e_ball.draw = 0;
+       deleteSprite(ball->e_ball.id, 0);
+       // Common
+       ball->active = 0;
+   }
+   
 
     // If ball is in the limits of the court, check collision with the net
     if ((ball->active) && (!checkBoundaries(x,y,ball))) {
@@ -157,12 +161,12 @@ void updateBall(TBall *ball)
         checkNet(x,y,z,py,ball);
 
         // Check bounce
-        if (z > 210)
+        if ((z == 0) && (ball->vz < 0))
         {
             createDust(x,y);
             ball->vx = ball->vx * FRICTION;
             ball->vy = ball->vy * FRICTION;
-            ball->vz = -ball->vz * FRICTION;
+            ball->vz = -ball->vz * (3 * FRICTION / 4);
             ball->e.z[0] = 0;
             calcBounce(ball);
         }

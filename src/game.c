@@ -36,6 +36,7 @@
 TBall ball;
 TPlayer player1;
 TPlayer player2;
+TPlayer *playerAux;
 EGamePhases phase;
 u8 pauseGame;
 
@@ -48,9 +49,11 @@ void bodyTouch(TBall *ball){
     ball->vz = ball->vz * (FRICTION / 6);
     calcBounce(ball);
     
-    drawText("BODY TOUCH", 0,0,0);
-    delay(20);
-    cpct_etm_drawTileBox2x4 (0, 0, 5, 2, MAP_WIDTH, g_scrbuffers[0], court);
+    //pvideo = cpct_getScreenPtr(SCR_VMEM, 22, 76);
+    //cpct_drawSolidBox(pvideo, #0, 22, 10);
+    //drawText("   HIT   ", 24,80,0);
+    //delay(340);
+    //cpct_etm_drawTileBox2x4 (11, 19, 21, 3, MAP_WIDTH, g_scrbuffers[0], court);
 }
 
 //
@@ -74,6 +77,8 @@ void shot(TBall *ball, TPlayer *player){
 void checkPlayerCollision(TBall *ball, TPlayer *player){
     u8 bx, by, px, py;
     u8 hit;
+    u8 *pvideo; 
+
 
     px = player->e.x[0] / SCALE;
     py = player->e.y[0] / SCALE;
@@ -86,10 +91,18 @@ void checkPlayerCollision(TBall *ball, TPlayer *player){
     if (hit){
         player->e.draw = 1;
         if (player->hit > 0){
+            pvideo = cpct_getScreenPtr(SCR_VMEM, 22, 76);
+            cpct_drawSolidBox(pvideo, #0, 22, 10);
+            drawText("   SHOT   ", 24,80,0); 
             shot(ball, player);
         } else {
+            pvideo = cpct_getScreenPtr(SCR_VMEM, 22, 76);
+            cpct_drawSolidBox(pvideo, #0, 22, 10);
+            drawText("BODY TOUCH", 24,80,0); 
             bodyTouch(ball);
         }
+    } else {
+        cpct_etm_drawTileBox2x4 (11, 19, 21, 3, MAP_WIDTH, g_scrbuffers[0], court); 
     }
 }
 
@@ -121,25 +134,28 @@ void initGame()
 // Game Loop
 void game(TMatch *match, TKeys *keys)
 {
-    TPlayer *playerAux;
-    //u32 c;
+
+    u32 c;
 
     initGame();
     
     //fadeIn(&sp_palette[0]);
 
+    c = 0;
+
     // Loop forever
     while (1)
     {
+        c++;
         //Abort Game
         if (cpct_isKeyPressed(keys->abort)){
-                break;
-            }
+            break;
+        }
         // Pause Game
         if (cpct_isKeyPressed(keys->pause)){
-                pauseGame = 1;
-                waitKeyUp(keys->pause);
-            }
+            pauseGame = 1;
+            waitKeyUp(keys->pause);
+        }
         while (pauseGame){
             if (cpct_isKeyPressed(keys->pause)){
                 pauseGame = 0;
@@ -154,18 +170,39 @@ void game(TMatch *match, TKeys *keys)
         //selectSpritePlayer(&player2, 1);
 
         // Ball block
-        if (ball.active){
-         
+        if ((ball.active) && (c%2 == 0)){
+
             updateBall(&ball);
 
             // Check collision with players 
-            if (ball.e.z[0] < (24 * SCALE)){
-                if ((ball.vy>0) && (player1.side == SD_down)){
-                    playerAux = &player1;
-                } else{
-                    playerAux = &player2;
+            if (ball.e.z[0] < (24 * SCALE))
+            {
+                if (ball.e.y[0] > (100 * SCALE))
+                {
+                    if (player1.side == SD_down)
+                    {
+                        playerAux = &player1;
+                        //checkPlayerCollision(&ball, &player1);
+
+                    } else
+                    {
+                        //checkPlayerCollision(&ball, &player2);
+                        //playerAux = &player2;
+                    } 
+                }else 
+                {
+                    if (player1.side == SD_up)
+                    {
+                        //checkPlayerCollision(&ball, &player1);
+                        playerAux = &player1;
+                    } else
+                    {
+                        //checkPlayerCollision(&ball, &player2);
+                        //playerAux = &player2;
+                    }
                 }
                 checkPlayerCollision(&ball, playerAux);
+                //checkPlayerCollision(&ball, &player1);
             }
         }
 
@@ -174,9 +211,8 @@ void game(TMatch *match, TKeys *keys)
         // Draw actors
         cpct_waitVSYNC();
 
-        //orderSpriteList();        
+        orderSpriteList();        
         printSprites();
-
-       
+        
     }
 }

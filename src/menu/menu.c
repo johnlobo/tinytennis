@@ -34,28 +34,28 @@ void deleteIcon(TIcon *icon){
   u8 *pvideo;
 
   //Shadow
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 20, 36 + (icon->selectedOption * 15));
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 19, 37 + (icon->selectedOption * 15));
   cpct_drawSolidBox(pvideo, 0, ICON_W, ICON_H);
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 59, 36 + (icon->selectedOption * 15));
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 59, 37 + (icon->selectedOption * 15));
   cpct_drawSolidBox(pvideo, 0, ICON_W, ICON_H);
 
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 20, 36 + (icon->selectedOption * 15) - icon->height);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 19, 37 + (icon->selectedOption * 15) - icon->height);
   cpct_drawSolidBox(pvideo, 0, ICON_W, ICON_H);
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 59, 36 + (icon->selectedOption * 15) - icon->height);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 59, 37 + (icon->selectedOption * 15) - icon->height);
   cpct_drawSolidBox(pvideo, 0,ICON_W, ICON_H);
 }
 
 void drawIcon(TIcon *icon) {
   u8 *pvideo;
   //Shadow
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 20, 36 + (icon->selectedOption * 15));
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 19, 37 + (icon->selectedOption * 15));
   cpct_drawSprite((u8*) icon->shadowSprite, pvideo, ICON_W, ICON_H);
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 59, 36 + (icon->selectedOption * 15));
-  cpct_drawSprite((u8*) icon->shadowSprite, pvideo, ICON_W, ICON_W);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 59, 37 + (icon->selectedOption * 15));
+  cpct_drawSprite((u8*) icon->shadowSprite, pvideo, ICON_W, ICON_H);
   //Ball
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 20, 36 + (icon->selectedOption * 15) - icon->height);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 19, 37 + (icon->selectedOption * 15) - icon->height);
   cpct_drawSprite((u8*) icon->sprite, pvideo, ICON_W, ICON_H);
-  pvideo = cpct_getScreenPtr(SCR_VMEM, 59, 36 + (icon->selectedOption * 15) - icon->height);
+  pvideo = cpct_getScreenPtr(SCR_VMEM, 59, 37 + (icon->selectedOption * 15) - icon->height);
   cpct_drawSprite((u8*) icon->sprite, pvideo, ICON_W, ICON_H);
 }
 
