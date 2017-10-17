@@ -22,6 +22,8 @@
 #include "../util/util.h"
 #include "../keyboard/keyboard.h"
 
+#define MAX_DIR 10
+#define MIN_DIR -10
 
 typedef struct
 {
@@ -40,6 +42,7 @@ typedef struct
     EStates state;
     ESides side;
     u8 hit;
+    i8 hitDir;
     TCharacter car;
     u8 targetX, targetY;
     i16 stepX, stepY;
@@ -47,10 +50,10 @@ typedef struct
 
 
 // Sprites States
-#define PLAYER_FRAMES   15
+#define PLAYER_FRAMES   18
 // Animaciones
 #define ANIM_PAUSE      8
-#define ANIM_HIT_PAUSE  4
+#define ANIM_HIT_PAUSE  8
 #define WALKING_FRAMES  4
 #define UP_FRAMES       4
 #define DOWN_FRAMES     4

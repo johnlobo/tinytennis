@@ -42,6 +42,7 @@ const TPlayer tempPlayer1 =
     ,	GM_play
     ,	ST_stopped
     ,	SD_down
+    ,   0
     ,	0
     , {
         255, 512, 255, 255
@@ -59,7 +60,8 @@ const TFrame g_frames[2][PLAYER_FRAMES] ={
     ,  { M_right, sp_player1_08 },  { M_right, sp_player1_09 }
     ,  { M_right, sp_player1_10 },  { M_right, sp_player1_11 }
     ,  { M_right, sp_player1_12 },  { M_right, sp_player1_13 }
-    ,  { M_right, sp_player1_14 },
+    ,  { M_right, sp_player1_14 },  { M_right, sp_player1_15 }
+    ,  { M_right, sp_player1_16 },  { M_right, sp_player1_17 }
 },
 {
     { M_right, sp_player2_00 },  { M_right, sp_player2_01 }
@@ -69,7 +71,8 @@ const TFrame g_frames[2][PLAYER_FRAMES] ={
     ,  { M_right, sp_player2_08 },  { M_right, sp_player2_09 }
     ,  { M_right, sp_player2_10 },  { M_right, sp_player2_11 }
     ,  { M_right, sp_player2_12 },  { M_right, sp_player2_13 }
-    ,  { M_right, sp_player2_14 },
+    ,  { M_right, sp_player2_14 },  { M_right, sp_player2_15 }
+    ,  { M_right, sp_player2_16 },  { M_right, sp_player2_17 }
 }};
 
 // Global Variables
@@ -86,20 +89,20 @@ TFrame *const anim_down[2][DOWN_FRAMES] = {
                     {&g_frames[1][12], &g_frames[1][13], &g_frames[1][14], &g_frames[1][13] }};
 
 TFrame *const anim_hittingUp[2][HITTING_FRAMES] = {
-                    {&g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][8],	&g_frames[0][7]},
-                    {&g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][8], &g_frames[1][7]}};
+                    {&g_frames[0][2], &g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][0]},
+                    {&g_frames[1][2], &g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][0]}};
 
 TFrame *const anim_hittingDown[2][HITTING_FRAMES] = {
-                    {&g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][8], &g_frames[0][7]},
-                    {&g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][8],   &g_frames[1][7]}};
+                    {&g_frames[0][5], &g_frames[0][15], &g_frames[0][16], &g_frames[0][17], &g_frames[0][12]},
+                    {&g_frames[1][5], &g_frames[1][15], &g_frames[1][16], &g_frames[1][17], &g_frames[1][12]}};
 
-TFrame *const anim_hittinBackUp[2][HITTING_FRAMES] = {
-                    {&g_frames[0][9], &g_frames[0][8], &g_frames[0][7], &g_frames[0][8], &g_frames[0][9]},
-                    {&g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][8], &g_frames[1][7]}};
+TFrame *const anim_hittingBackUp[2][HITTING_FRAMES] = {
+                    {&g_frames[0][5], &g_frames[0][9], &g_frames[0][8], &g_frames[0][7], &g_frames[0][0]},
+                    {&g_frames[1][5], &g_frames[1][9], &g_frames[1][8], &g_frames[1][7], &g_frames[1][0]}};
 
 TFrame *const anim_hittingBackDown[2][HITTING_FRAMES] = {
-                    {&g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][8], &g_frames[0][7]},
-                    {&g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][8],   &g_frames[1][7]}};
+                    {&g_frames[0][2], &g_frames[0][17], &g_frames[0][16], &g_frames[0][15], &g_frames[0][12]},
+                    {&g_frames[1][2], &g_frames[1][17], &g_frames[1][16], &g_frames[1][15], &g_frames[1][12]}};
 
 void initPlayer1(TPlayer *player)
 {
@@ -167,6 +170,18 @@ void selectSpritePlayer(TPlayer *player, u8 ai)
         }
         break;
     }
+    case ST_hitting_back:
+    {
+        if (player->look == M_up)
+        {
+            assignFrame(anim_hittingBackUp[ai], player, ANIM_HIT_PAUSE);
+        }
+        else
+        {
+            assignFrame(anim_hittingBackDown[ai], player, ANIM_HIT_PAUSE);
+        }
+        break;
+    }
     case ST_AIhitting:
     {
         assignFrame(anim_hittingDown[ai], player, ANIM_HIT_PAUSE);
@@ -227,10 +242,15 @@ void moveDown(TPlayer *player, i16 step)
     }
 }
 
-void hitting_enter(TPlayer *player)
+void hitting_enter(TPlayer *player, TBall *ball)
 {
-    player->state = ST_hitting;
+    if (player->e.x[0] < ball->e.x[0]){
+        player->state = ST_hitting;
+    }else{
+        player->state = ST_hitting_back;
+    }
     player->hit  =  HITTING_FRAMES * ANIM_HIT_PAUSE;
+    player->hitDir = 0;
     player->nframe = 0;
     player->e.draw = 1;
 }
@@ -248,6 +268,11 @@ void walking_enter(u8 look, TPlayer *player)
 void stopped_enter(TPlayer *player)
 {
     player->state = ST_stopped;
+    if (player->side = SD_down){
+        player->look = M_up;
+    } else {
+        player->look = M_down; 
+    }
     player->e.draw = 1;
 }
 
@@ -260,9 +285,15 @@ void hitting_animate(TPlayer *player)
     player->e.draw = 1;
 }
 
-void hitting(TPlayer *player)
+void hitting(TPlayer *player, TKeys *keys)
 {
-    if (player->hit > 1)
+    if ((cpct_isKeyPressed(keys->right)) && (player->hitDir < MAX_DIR)){
+        player->hitDir++;
+    }
+    if ((cpct_isKeyPressed(keys->left)) && (player->hitDir > MIN_DIR)){
+        player->hitDir--;
+    }
+    if (player->hit > 0)
     {
         player->hit--;
         hitting_animate(player);
@@ -340,7 +371,7 @@ void stopped(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     else if (cpct_isKeyPressed(keys->fire1))
     {
         if (player->phase == GM_play)
-            hitting_enter(player);
+            hitting_enter(player, ball);
         else
             serving_enter(player);
     }
@@ -431,7 +462,12 @@ void walking(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     }
     if (cpct_isKeyPressed(keys->fire1))
     {
-        hitting_enter(player);
+        if (player->side = SD_down){
+            player->look = M_up;
+        } else {
+            player->look = M_down;
+        }
+        hitting_enter(player, ball);
         moved = 1;
     }
     if (cpct_isKeyPressed(keys->fire2))
@@ -483,7 +519,8 @@ void executeState(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
         walking(player, playerAI, ball, keys);
         break;
     case ST_hitting:
-        hitting(player);
+    case ST_hitting_back:
+        hitting(player, keys);
         break;
     case ST_preparing:
         preparing(player, keys);

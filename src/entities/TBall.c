@@ -23,8 +23,6 @@
 #include "TDust.h"
 #include "../spriteList/spriteList.h"
 
-const i16 trajetoriesX[10] = {-128, -96, -64, -32, 0 , 0, 32, 64, 96, 128};
-
 const TFrame b1_frame ={ M_up, sp_ball_0 };
 const TFrame b2_frame ={ M_up, sp_ball_1 };
 
@@ -117,6 +115,17 @@ u8 checkNet(u8 x, u8 y, u8 z, u8 py, TBall *ball){
     return result;
 }
 
+void deactivateBall(TBall *ball){
+    //eraseBall(ball);
+    // Shadow Entity
+    ball->e.draw = 0;
+    deleteSprite(ball->e.id, 1);
+    // Shadow Entity
+    ball->e_ball.draw = 0;
+    deleteSprite(ball->e_ball.id, 0);
+    // Common
+    ball->active = 0;
+}
 
 void updateBall(TBall *ball)
 {
@@ -141,17 +150,9 @@ void updateBall(TBall *ball)
     py = ball->e.y[1] / SCALE;
 
     //Deactivate ball
-   if ((fast_abs(ball->vx) < 25) && (fast_abs(ball->vy) < 25) && (fast_abs(ball->vz) < 25))
+   if ((fast_abs(ball->vx) < 35) && (fast_abs(ball->vy) < 35) && (fast_abs(ball->vz) < 35))
    {
-       //eraseBall(ball);
-       // Shadow Entity
-       ball->e.draw = 0;
-       deleteSprite(ball->e.id, 1);
-       // Shadow Entity
-       ball->e_ball.draw = 0;
-       deleteSprite(ball->e_ball.id, 0);
-       // Common
-       ball->active = 0;
+       deactivateBall(ball);
    }
    
 
@@ -193,7 +194,7 @@ void newBall(i32 x, i32 y, TBall *ball)
     ball->e.id = 3;
     ball->e.x[0] = ball->e.x[1] = x;
     ball->e.y[0] = ball->e.y[1] = y;
-    ball->e.z[0] = ball->e.z[1] = ((cpct_rand8() % 3) + 3) * SCALE;
+    ball->e.z[0] = ball->e.z[1] = ((cpct_rand8() % 2) + 4) * SCALE;
     ball->e.frame = &b2_frame;
     ball->e.w = BALL_WIDTH;
     ball->e.h = BALL_HEIGHT;

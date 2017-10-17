@@ -13,23 +13,18 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
 
-#ifndef _UTIL_H_
-#define _UTIL_H_
-
 #include <cpctelera.h>
 #include "../defines.h"
+#include "../text/text.h"
+#include "TMatch.h"
 
+void printScoreBoard(u8 x, u8 y, TMatch *match){
+	u8 *pvideo;
 
-extern u16 fast_abs(i16 value) __z88dk_fastcall;
-extern u8 fast_collision(u8 x1, u8 y1, u8 w1, u8 h1, u8 x2, u8 y2, u8 w2, u8 h2);
-extern void reset_cpc();
-
-char *itoa(int value, char *result, int base);
-void delay(u32 cycles);
-u8 hasReachedTarget(TEntity *e, u8 x, u8 y, i16 stepX, i16 stepY);
-u16 distance (u16 x1, u16 y1, u16 x2, u16 y2);
-i16 sign(i16 x);
-u8 collision(u8 x1, u8 y1, u8 w1, u8 h1, u8 x2, u8 y2, u8 w2, u8 h2);
-i16 abs(i16 value);
-
-#endif
+	pvideo = cpct_getScreenPtr(SCR_VMEM, x, y);
+	cpct_drawSolidBox(SCR_VMEM, cpct_px2byteM0(4,4), 38, 20);
+	pvideo = cpct_getScreenPtr(SCR_VMEM, x + 1, y + 2);
+    cpct_drawSolidBox(pvideo, #0, 36, 16);
+    drawText("PLAYER 1", x+2,y+3,0);
+    drawText("PLAYER 2", x+2,y+9,0);
+}

@@ -31,7 +31,10 @@
 #include "entities/TDust.h"
 #include "menu/menu.h"
 #include "entities/TMatch.h"
+#include "entities/TScoreboard.h"
 #include "spriteList/spriteList.h"
+
+//const i16 trajetoriesX[10] = {-128, -96, -64, -32, 0 , 0, 32, 64, 96, 128};
 
 TBall ball;
 TPlayer player1;
@@ -39,6 +42,7 @@ TPlayer player2;
 TPlayer *playerAux;
 EGamePhases phase;
 u8 pauseGame;
+
 
 //
 // Body touch
@@ -60,7 +64,7 @@ void bodyTouch(TBall *ball){
 // Player Shot
 //
 void shot(TBall *ball, TPlayer *player){
-    ball->vx = 0;
+    ball->vx = trajetoriesX[(player->hitDir/2) + 5];
     ball->vz = 3 * SCALE;
     if (player->look == M_up){
         ball->vy = -3 * SCALE;
@@ -213,6 +217,7 @@ void game(TMatch *match, TKeys *keys)
 
         orderSpriteList();        
         printSprites();
+        //printScoreBoard(0,0, match);
         
     }
 }

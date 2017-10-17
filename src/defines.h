@@ -30,7 +30,7 @@
 #define SCR_BUFF  (u8*)0x8000
 
 // Program Stack locations
-#define NEW_STACK_LOCATION (void*)0x8000
+#define NEW_STACK_LOCATION (void*)0xC000
 
 #define YES 1
 #define NO 0
@@ -61,7 +61,7 @@ cpctm_declareMaskTable(g_tablatrans);
 // Looking to
 typedef enum { M_right, M_left, M_up, M_down } ELook;
 // Player States
-typedef enum { ST_stopped, ST_walking, ST_hitting, ST_preparing, ST_serving, ST_AIstopped, ST_AImovingToTarget, ST_AIhitting } EStates;
+typedef enum { ST_stopped, ST_walking, ST_hitting, ST_hitting_back, ST_preparing, ST_serving, ST_AIstopped, ST_AImovingToTarget, ST_AIhitting } EStates;
 
 // Game phases
 typedef enum { GM_serve, GM_rest, GM_play } EGamePhases;
@@ -82,5 +82,7 @@ typedef struct
     TFrame *frame;
     u8 draw;
 } TEntity;
+
+extern const i16 trajetoriesX[11];
 
 #endif
