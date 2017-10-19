@@ -22,10 +22,14 @@
 #include "game.h"
 #include "util/util.h"
 #include "entities/TMatch.h"
+#include "music/song02-2.h"
+#include "music/song00.h"
+
 
 // Máscara de transparencia
-cpctm_createTransparentMaskTable(g_tablatrans, 0x100, M0, 0);
+cpctm_createTransparentMaskTable(g_tablatrans, 0x500, M0, 0);
 
+u8 playing;
 TKeys keys;
 TIcon icon;
 TMatch match;
@@ -35,7 +39,76 @@ const u8 sp_palette[16] = { 0x54, 0x44, 0x4e, 0x53, 0x4c, 0x55, 0x4d, 0x56, 0x5e
 
 const i16 trajetoriesX[11] = {-128, -96, -64, -32, 0, 0, 0, 32, 64, 96, 128};
 
+//////////////////////////////////////////////////////////////////
+// playmusic
+//
+//  Function to play music saving the registers
+//
+// Returns: void.
+//
+//
 
+void playMusic() {
+    __asm
+    exx
+    .db #0x08
+    push af
+    push bc
+    push de
+    push hl
+    call _cpct_akp_musicPlay
+    pop hl
+    pop de
+    pop bc
+    pop af
+    .db #0x08
+    exx
+    __endasm;
+}
+
+//////////////////////////////////////////////////////////////////
+// activateMusic
+//
+//  Activate music
+//
+// Returns:
+//  void
+//
+
+void activateMusic() {
+    playing = 1;
+    cpct_akp_stop();
+    cpct_akp_musicInit(song02);
+    cpct_akp_SFXInit(song02);
+    cpct_akp_musicPlay();
+}
+
+//////////////////////////////////////////////////////////////////
+// deActivateMusic
+//
+//  deActivate music
+//
+// Returns:
+//  void
+//
+
+void deActivateMusic() {
+    playing = 0;
+    cpct_akp_stop();
+    cpct_akp_musicInit(song00);
+    cpct_akp_SFXInit(song00);
+    cpct_akp_musicPlay();
+
+}
+
+//////////////////////////////////////////////////////////////////
+// myInterruptHandler
+//
+//  Interruphandler that subsitutes the default one. Includes calls for reading the keyboard and playing music, if activated
+//
+// Returns:
+//  void
+//
 void myInterruptHandler()
 {
     static u8 i; // Static variable to be preserved from call to call
@@ -44,9 +117,12 @@ void myInterruptHandler()
     switch (i)
     {
     case 4:
+    case 8:
         cpct_scanKeyboard_if();
         break;
-    case 6:
+    case 10:
+        playMusic();
+    case 12:
         i = 0;
     }
 }
@@ -56,10 +132,12 @@ void playGameMenuOption(){
 	if(!seed) 
         seed++;
 	cpct_srand(seed)
+    deActivateMusic();
 	game(&match, &keys);
 	//decompress((u8*)EXO_outlaws, (u8*)EXOBUFFER_ADDRESS);
 	//loopMusic = TRUE
 	//cpct_akp_musicInit(G_outlaws);
+    activateMusic();
 }
 
     
@@ -162,6 +240,9 @@ void initMain()
     cpct_memset(g_scrbuffers[0], 0x00, 0x4000);
     cpct_setPalette(sp_palette, 16);
     cpct_setBorder(HW_BLACK);
+
+    // Music on
+    activateMusic();
 
     // Initilize Keys
     initKeys(&keys);
