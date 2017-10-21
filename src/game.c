@@ -64,7 +64,7 @@ void bodyTouch(TBall *ball){
 // Player Shot
 //
 void shot(TBall *ball, TPlayer *player){
-    ball->vx = trajetoriesX[(player->hitDir/2) + 5];
+    ball->vx = trajetoriesX[(player->hitDirH/2) + 5];
     ball->vz = 3 * SCALE;
     if (player->look == M_up){
         ball->vy = -3 * SCALE;

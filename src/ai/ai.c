@@ -22,7 +22,7 @@ const TPlayer tempAIPlayer =
     ,	ST_stopped
     ,	SD_up
     ,	0
-    ,	0
+    ,	0, 0
     , {
         255, 512, 255, 255 // Character definition
 
