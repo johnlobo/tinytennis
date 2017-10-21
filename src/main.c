@@ -117,12 +117,11 @@ void myInterruptHandler()
     switch (i)
     {
     case 4:
-    case 8:
         cpct_scanKeyboard_if();
         break;
-    case 10:
+    case 5:
         playMusic();
-    case 12:
+    case 6:
         i = 0;
     }
 }
@@ -132,12 +131,12 @@ void playGameMenuOption(){
 	if(!seed) 
         seed++;
 	cpct_srand(seed)
-    deActivateMusic();
+    //deActivateMusic();
 	game(&match, &keys);
 	//decompress((u8*)EXO_outlaws, (u8*)EXOBUFFER_ADDRESS);
 	//loopMusic = TRUE
 	//cpct_akp_musicInit(G_outlaws);
-    activateMusic();
+    //activateMusic();
 }
 
     
@@ -242,7 +241,7 @@ void initMain()
     cpct_setBorder(HW_BLACK);
 
     // Music on
-    activateMusic();
+    //activateMusic();
 
     // Initilize Keys
     initKeys(&keys);

@@ -1,6 +1,7 @@
 #include <cpctelera.h>
 #include "../defines.h"
 #include "util.h"
+#include "../sprites/border.h"
 
 /**
  * C++ version 0.4 char* style "itoa":
@@ -142,5 +143,85 @@ i16 abs(i16 j)
     return (j < 0) ? -j : j;
 }
 
+//////////////////////////////////////////////////////////////////
+// clearScreen
+//
+//
+//
+// Returns:
+//    void
+//
+
+void clearScreen() {
+    // Clear Screen
+    cpct_memset(CPCT_VMEM_START, cpct_px2byteM0(0,0), 0x4000);
+}
+
+//////////////////////////////////////////////////////////////////
+// clearWindow
+//
+//
+//
+// Returns:
+//    void
+//
+
+void clearWindow(u8 xPos, u8 yPos, u8 width, u8 height) {
+
+    u8* pvideo = cpct_getScreenPtr(CPCT_VMEM_START, xPos, yPos);
+    cpct_drawSolidBox(pvideo, cpct_px2byteM0(0,0), width, height);
+
+}
+
+/////////////////////////////////////////////////////////////////
+// drawFrame
+//
+//
+//
+// Returns:
+//    void
+//
+
+void drawFrame(u8 x1, u8 y1, u8 x2, u8 y2) {
+    u8 *pvideo;
+    u8 x, frame_w, frame_h;
+
+    frame_w = x2 - x1;
+    frame_h = y2 - y1;
+
+    clearWindow(x1, y1, x2 - x1, y2 - y1);
+
+    //UPLEFTCORNER
+    pvideo = cpct_getScreenPtr(CPCT_VMEM_START, x1, y1);
+    cpct_drawSprite(g_border_0,  pvideo, 2, 4);
+
+    //UPPER BAR
+    for (x = x1 + 2; x < (x2 - 2); x = x + 2) {
+        cpct_drawSprite(g_border_4,  pvideo + (x - x1), 2, 4);
+    }
+
+    //UPRIGHTCORNER
+    cpct_drawSprite(g_border_1,  pvideo + (frame_w - 2), 2, 4);
+
+    //LEFT & RIGHT BARS
+    for (x = y1 + 4; x < (y2 - 4); x = x + 4) {
+        pvideo = cpct_getScreenPtr(CPCT_VMEM_START, x1, x);
+        cpct_drawSprite(g_border_5,  pvideo, 2, 4);
+        cpct_drawSprite(g_border_6,  pvideo + (frame_w - 2), 2, 4);
+    }
+
+    pvideo = cpct_getScreenPtr(CPCT_VMEM_START, x1, y2 - 4);
+
+    //DOWNLEFTCORNER
+    cpct_drawSprite(g_border_2,  pvideo, 2, 4);
+
+    //LOWER BAR
+    for (x = x1 + 2; x < (x2 - 2); x = x + 2) {
+        cpct_drawSprite(g_border_7,  pvideo + (x - x1), 2, 4);
+    }
+
+    //DOWNRIGHTCORNER
+    cpct_drawSprite(g_border_3,  pvideo + (frame_w - 2), 2, 4);
+}
 
 

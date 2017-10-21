@@ -128,6 +128,7 @@ void initGame()
     initDustList();
     initSpriteList();
     addSprite(&player1.e);
+    addSprite(&player2.e);
 
     cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[0], court);
 
@@ -169,9 +170,9 @@ void game(TMatch *match, TKeys *keys)
         
         // Players block
         executeState(&player1, &player2, &ball, keys);
-        //executeStateAI(&player2, &ball);
+        executeStateAI(&player2, &ball);
         selectSpritePlayer(&player1, 0);
-        //selectSpritePlayer(&player2, 1);
+        selectSpritePlayer(&player2, 1);
 
         // Ball block
         if ((ball.active) && (c%2 == 0)){

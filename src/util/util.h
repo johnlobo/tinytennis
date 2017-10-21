@@ -32,4 +32,6 @@ i16 sign(i16 x);
 u8 collision(u8 x1, u8 y1, u8 w1, u8 h1, u8 x2, u8 y2, u8 w2, u8 h2);
 i16 abs(i16 value);
 
+void drawFrame(u8 x1, u8 y1, u8 x2, u8 y2);
+
 #endif
