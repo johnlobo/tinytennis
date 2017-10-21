@@ -22,8 +22,8 @@
 #include "../util/util.h"
 #include "../keyboard/keyboard.h"
 
-#define MAX_DIR 10
-#define MIN_DIR -10
+#define MAX_DIR_H 10
+#define MIN_DIR_H -10
 
 typedef struct
 {
@@ -42,7 +42,8 @@ typedef struct
     EStates state;
     ESides side;
     u8 hit;
-    i8 hitDir;
+    i8 hitDirH;
+    i8 hitDirV;
     TCharacter car;
     u8 targetX, targetY;
     i16 stepX, stepY;

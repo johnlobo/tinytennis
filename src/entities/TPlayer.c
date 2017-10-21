@@ -43,7 +43,7 @@ const TPlayer tempPlayer1 =
     ,	ST_stopped
     ,	SD_down
     ,   0
-    ,	0
+    ,	0, 0
     , {
         255, 512, 255, 255
     }
@@ -250,7 +250,8 @@ void hitting_enter(TPlayer *player, TBall *ball)
         player->state = ST_hitting_back;
     }
     player->hit  =  HITTING_FRAMES * ANIM_HIT_PAUSE;
-    player->hitDir = 0;
+    player->hitDirH = 0;
+    player->hitDirV = 0;
     player->nframe = 0;
     player->e.draw = 1;
 }
@@ -287,11 +288,11 @@ void hitting_animate(TPlayer *player)
 
 void hitting(TPlayer *player, TKeys *keys)
 {
-    if ((cpct_isKeyPressed(keys->right)) && (player->hitDir < MAX_DIR)){
-        player->hitDir++;
+    if ((cpct_isKeyPressed(keys->right)) && (player->hitDirH < MAX_DIR_H)){
+        player->hitDirH++;
     }
-    if ((cpct_isKeyPressed(keys->left)) && (player->hitDir > MIN_DIR)){
-        player->hitDir--;
+    if ((cpct_isKeyPressed(keys->left)) && (player->hitDirH > MIN_DIR_H)){
+        player->hitDirH--;
     }
     if (player->hit > 0)
     {
