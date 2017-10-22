@@ -23,8 +23,8 @@
 #include "TDust.h"
 #include "../spriteList/spriteList.h"
 
-const TFrame b1_frame ={ M_up, sp_ball_0 };
-const TFrame b2_frame ={ M_up, sp_ball_1 };
+const TFrame b1_frame = { M_up, sp_ball_0 };
+const TFrame b2_frame = { M_up, sp_ball_1 };
 
 
 void calcBounce(TBall *ball)
@@ -32,14 +32,14 @@ void calcBounce(TBall *ball)
     u8 t;
     t = - (2 * ball->vz) / GRAVITY;
     ball->bouncex = (ball->e.x[0] + (ball->vx * t)) / SCALE;
-    if (ball->bouncex > 200){  //Negative number -> Left side 
+    if (ball->bouncex > 200) { //Negative number -> Left side
         ball->bouncex = 0;
-    }else if (ball->bouncex> 79){
+    } else if (ball->bouncex > 79) {
         ball->bouncex = 79;      //Right side
     }
-    if (ball->bouncey > 220){  //Negative number -> Upper side 
+    if (ball->bouncey > 220) { //Negative number -> Upper side
         ball->bouncey = 0;
-    }else if (ball->bouncex> 199){
+    } else if (ball->bouncex > 199) {
         ball->bouncex = 199;      //Down side
     }
     ball->bouncey = (ball->e.y[0] + (ball->vy * t)) / SCALE;
@@ -49,10 +49,9 @@ void calcBounce(TBall *ball)
 //  checkBoundaries
 //
 
-u8 checkBoundaries(u8 x, u8 y, TBall *ball){
+u8 checkBoundaries(u8 x, u8 y, TBall *ball) {
     u8 result = 0;
-
-    if (x > 210){
+    if (x > 210) {
         // Shadow entity
         ball->e.x[0] = 0;
         // Ball entity
@@ -71,8 +70,7 @@ u8 checkBoundaries(u8 x, u8 y, TBall *ball){
         calcBounce(ball);
         result = 1;
     }
-
-    if (y > 210){
+    if (y > 210) {
         // Shadow entity
         ball->e.y[0] = 0;
         // Ball entity
@@ -89,8 +87,7 @@ u8 checkBoundaries(u8 x, u8 y, TBall *ball){
         ball->vy = -ball->vy * (FRICTION / 4);
         calcBounce(ball);
         result = 1;
-    } 
-
+    }
     return result;
 }
 
@@ -98,12 +95,11 @@ u8 checkBoundaries(u8 x, u8 y, TBall *ball){
 //  checkNet
 //
 
-u8 checkNet(u8 x, u8 y, u8 z, u8 py, TBall *ball){
+u8 checkNet(u8 x, u8 y, u8 z, u8 py, TBall *ball) {
     u8 result = 0;
-
     if (((z < 8) && ((x > 10) && (x < 70 ))) &&
             (((py >= 90) && (y < 90) && (ball->vy < 0)) ||
-            ((py <= 90) && (y > 90) && (ball->vy > 0))))
+             ((py <= 90) && (y > 90) && (ball->vy > 0))))
     {
         ball->vx = ball->vx * (FRICTION / 4);
         ball->vy = -ball->vy * (FRICTION / 4);
@@ -111,11 +107,10 @@ u8 checkNet(u8 x, u8 y, u8 z, u8 py, TBall *ball){
         calcBounce(ball);
         result = 1;
     }
-
     return result;
 }
 
-void deactivateBall(TBall *ball){
+void deactivateBall(TBall *ball) {
     //eraseBall(ball);
     // Shadow Entity
     ball->e.draw = 0;
@@ -135,7 +130,7 @@ void updateBall(TBall *ball)
     ball->e.x[0] += ball->vx;
     ball->e.y[0] += ball->vy;
     ball->e.z[0] += ball->vz;
-    if (ball->e.z[0] > 240 * SCALE){
+    if (ball->e.z[0] > 240 * SCALE) {
         ball->e.z[0] = 0;
     }
     ball->e.draw = 1;
@@ -143,28 +138,22 @@ void updateBall(TBall *ball)
     ball->e_ball.x[0] = ball->e.x[0];
     ball->e_ball.y[0] = ball->e.y[0] - (ball->e.z[0]  / 2);
     ball->e_ball.draw = 1;
-
     x = ball->e.x[0] / SCALE;
     y = ball->e.y[0] / SCALE;
     z = ball->e.z[0] / SCALE;
     py = ball->e.y[1] / SCALE;
-
     //Deactivate ball
-   if ((fast_abs(ball->vx) < 35) && (fast_abs(ball->vy) < 35) && (fast_abs(ball->vz) < 35))
-   {
-       deactivateBall(ball);
-   }
-   
-
+    if ((fast_abs(ball->vx) < 35) && (fast_abs(ball->vy) < 35) && (fast_abs(ball->vz) < 35))
+    {
+        deactivateBall(ball);
+    }
     // If ball is in the limits of the court, check collision with the net
-    if ((ball->active) && (!checkBoundaries(x,y,ball))) {
-        
-        checkNet(x,y,z,py,ball);
-
+    if ((ball->active) && (!checkBoundaries(x, y, ball))) {
+        checkNet(x, y, z, py, ball);
         // Check bounce
         if ((z == 0) && (ball->vz < 0))
         {
-            createDust(x,y);
+            createDust(x, y);
             ball->vx = ball->vx * FRICTION;
             ball->vy = ball->vy * FRICTION;
             ball->vz = -ball->vz * (3 * FRICTION / 4);
@@ -172,7 +161,6 @@ void updateBall(TBall *ball)
             calcBounce(ball);
         }
     }
-
 }
 
 void initBall(TBall *ball)
@@ -182,7 +170,7 @@ void initBall(TBall *ball)
 
 void newBall(i32 x, i32 y, TBall *ball)
 {
-    if (ball->active){
+    if (ball->active) {
         // Shadow Entity
         ball->e.draw = 0;
         deleteSprite(ball->e.id, 0);
@@ -212,10 +200,9 @@ void newBall(i32 x, i32 y, TBall *ball)
     ball->vx = trajetoriesX[cpct_rand8() % 10];
     ball->vy = (2 + (cpct_rand8() % 2)) * SCALE;
     ball->vz = (2 + (cpct_rand8() % 5)) * SCALE;
+    ball->turn = 1;
     ball->active = 1;
-    
     calcBounce(ball);
-    
     addSprite(&ball->e);
     addSprite(&ball->e_ball);
 }

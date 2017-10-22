@@ -37,7 +37,7 @@ u32 seed;
 
 const u8 sp_palette[16] = { 0x54, 0x44, 0x4e, 0x53, 0x4c, 0x55, 0x4d, 0x56, 0x5e, 0x5f, 0x5d, 0x52, 0x5c, 0x4a, 0x57, 0x4b };
 
-const i16 trajetoriesX[11] = {-128, -96, -64, -32, 0, 0, 0, 32, 64, 96, 128};
+const i16 trajetoriesX[11] = { -128, -96, -64, -32, 0, 0, 0, 32, 64, 96, 128};
 
 //////////////////////////////////////////////////////////////////
 // playmusic
@@ -126,21 +126,21 @@ void myInterruptHandler()
     }
 }
 
-void playGameMenuOption(){
-	//fadeOut(&sp_palette[0]);
-	if(!seed) 
+void playGameMenuOption() {
+    //fadeOut(&sp_palette[0]);
+    if (!seed)
         seed++;
-	cpct_srand(seed)
+    cpct_srand(seed)
     //deActivateMusic();
-	game(&match, &keys);
-	//decompress((u8*)EXO_outlaws, (u8*)EXOBUFFER_ADDRESS);
-	//loopMusic = TRUE
-	//cpct_akp_musicInit(G_outlaws);
+    game(&match, &keys);
+    //decompress((u8*)EXO_outlaws, (u8*)EXOBUFFER_ADDRESS);
+    //loopMusic = TRUE
+    //cpct_akp_musicInit(G_outlaws);
     //activateMusic();
 }
 
-    
-void redefineMenuOption(){
+
+void redefineMenuOption() {
     keys.up    = redefineKey("UP");
     keys.down  = redefineKey("DOWN");
     keys.left  = redefineKey("LEFT");
@@ -152,8 +152,8 @@ void redefineMenuOption(){
 }
 
 void checkKeyboardMenu(TIcon *icon) {
-    
-    if(cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(keys.up)){
+
+    if (cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(keys.up)) {
         deleteIcon(icon);
         if (icon->selectedOption > 1)
             icon->selectedOption--;
@@ -162,7 +162,7 @@ void checkKeyboardMenu(TIcon *icon) {
         drawIcon(icon);
         delay(30);
     }
-    if(cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(keys.down)){
+    if (cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(keys.down)) {
         deleteIcon(icon);
         if (icon->selectedOption < 3)
             icon->selectedOption++;
@@ -171,64 +171,64 @@ void checkKeyboardMenu(TIcon *icon) {
         drawIcon(icon);
         delay(30);
     }
-    
+
     if (cpct_isKeyPressed(Joy0_Fire1) || cpct_isKeyPressed(keys.fire1)) {
-      
+
         switch (icon->selectedOption) {
-            case 1:
-                icon->selectedOption = 1;
-                redefineMenuOption();
-                break;
-            case 2:
-                icon->selectedOption = 2;
-                
-                break;
-            case 3:
-                icon->selectedOption = 3;
-                playGameMenuOption();
-		        drawMenu();
-                break;
+        case 1:
+            icon->selectedOption = 1;
+            redefineMenuOption();
+            break;
+        case 2:
+            icon->selectedOption = 2;
+
+            break;
+        case 3:
+            icon->selectedOption = 3;
+            playGameMenuOption();
+            drawMenu();
+            break;
         }
     }
 
-    if(cpct_isKeyPressed(Key_1)){
+    if (cpct_isKeyPressed(Key_1)) {
 
         waitKeyUp(Key_1);
         icon->selectedOption = 1;
         redefineMenuOption();
     }
-    else if(cpct_isKeyPressed(Key_2)){
+    else if (cpct_isKeyPressed(Key_2)) {
 
         waitKeyUp(Key_2);
         icon->selectedOption = 2;
 
 
     }
-	else if(cpct_isKeyPressed(Key_3)){
-        
+    else if (cpct_isKeyPressed(Key_3)) {
+
         waitKeyUp(Key_3);
-		icon->selectedOption = 3;
+        icon->selectedOption = 3;
         playGameMenuOption();
-		drawMenu();
-	}
+        drawMenu();
+    }
 
 }
 
 
-void tennis(){
+void tennis() {
 
     initIcon(&icon);
     drawMenu();
     drawIcon(&icon);
 
-    while (1){
+    while (1) {
         seed++;
         checkKeyboardMenu(&icon);
-		delay(10);
-		cpct_waitVSYNC();
+        delay(10);
+        cpct_waitVSYNC();
         updateIcon(&icon);
     }
-    
+
 }
 
 
@@ -245,7 +245,7 @@ void initMain()
 
     // Initilize Keys
     initKeys(&keys);
-	initMatch(&match);
+    initMatch(&match);
 }
 
 void main(void)
@@ -255,6 +255,6 @@ void main(void)
     cpct_setInterruptHandler( myInterruptHandler );
     initMain();
 
-    tennis(); 
-    
+    tennis();
+
 }

@@ -77,11 +77,13 @@ u8 hasReachedTarget(TEntity *e, u8 x, u8 y, i16 stepX, i16 stepY)
 
     posX0 = e->x[0] / SCALE;
     posY0 = e->y[0] / SCALE;
-    posX1 = (e->x[0] + stepX) / SCALE;
-    posY1 = (e->y[0] + stepY) / SCALE;
+    posX1 = stepX / SCALE;
+    posY1 = stepY / SCALE;
 
-    return ((((posX0 <= x) && (x <= posX1)) || ((posX0 >= x) && (x >= posX1))) &&
-            (((posY0 <= y) && (y <= posY1)) || ((posY0 >= y) && (y >= posY1))));
+    //return ((((posX0 <= x) && (x <= posX1)) || ((posX0 >= x) && (x >= posX1))) &&
+    //        (((posY0 <= y) && (y <= posY1)) || ((posY0 >= y) && (y >= posY1))));
+    //return distance(posX0,posY0,posX1, posY1)<2;
+    return (fast_abs(posX0 - x) <= fast_abs(posX1)) && (fast_abs(posY0 - y) <= fast_abs(posY1));
 }
 //////////////////////////////////////////////////////////////////
 // Name

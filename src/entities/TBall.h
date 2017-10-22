@@ -29,6 +29,7 @@ typedef struct
 {
     TEntity e;
     TEntity e_ball;
+    u8 turn;
     i16 vx, vy, vz;
     u8 bouncex, bouncey;
     u8 active;

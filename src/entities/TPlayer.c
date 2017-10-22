@@ -30,79 +30,88 @@ const TPlayer tempPlayer1 =
 
     {   1
         ,   { 40 * SCALE, 40 * SCALE }
-        , 	{ 160 * SCALE, 160 * SCALE }
-        , 	{ 0, 0 }
-        ,	PLAYER_WIDTH, PLAYER_HEIGHT
-        ,	&g_frames[0][0]    
-        ,	1
+        ,   { 160 * SCALE, 160 * SCALE }
+        ,   { 0, 0 }
+        ,   PLAYER_WIDTH, PLAYER_HEIGHT
+        ,   &g_frames[0][0]
+        ,   1
     }
     ,   256, 512
     ,   0
     ,   M_up
-    ,	GM_play
-    ,	ST_stopped
-    ,	SD_down
+    ,   GM_play
+    ,   ST_stopped
+    ,   SD_down
     ,   0
-    ,	0, 0
+    ,   0, 0
     , {
         255, 512, 255, 255
     }
+    , 0
     , 0, 0
     , 0, 0
 };
 
-const TFrame g_frames[2][PLAYER_FRAMES] ={
-{
-    { M_right, sp_player1_00 },  { M_right, sp_player1_01 }
-    ,  { M_right, sp_player1_02 },  { M_right, sp_player1_03 }
-    ,  { M_right, sp_player1_04 },  { M_right, sp_player1_05 }
-    ,  { M_right, sp_player1_06 },  { M_right, sp_player1_07 }
-    ,  { M_right, sp_player1_08 },  { M_right, sp_player1_09 }
-    ,  { M_right, sp_player1_10 },  { M_right, sp_player1_11 }
-    ,  { M_right, sp_player1_12 },  { M_right, sp_player1_13 }
-    ,  { M_right, sp_player1_14 },  { M_right, sp_player1_15 }
-    ,  { M_right, sp_player1_16 },  { M_right, sp_player1_17 }
-},
-{
-    { M_right, sp_player2_00 },  { M_right, sp_player2_01 }
-    ,  { M_right, sp_player2_02 },  { M_right, sp_player2_03 }
-    ,  { M_right, sp_player2_04 },  { M_right, sp_player2_05 }
-    ,  { M_right, sp_player2_06 },  { M_right, sp_player2_07 }
-    ,  { M_right, sp_player2_08 },  { M_right, sp_player2_09 }
-    ,  { M_right, sp_player2_10 },  { M_right, sp_player2_11 }
-    ,  { M_right, sp_player2_12 },  { M_right, sp_player2_13 }
-    ,  { M_right, sp_player2_14 },  { M_right, sp_player2_15 }
-    ,  { M_right, sp_player2_16 },  { M_right, sp_player2_17 }
-}};
+const TFrame g_frames[2][PLAYER_FRAMES] = {
+    {
+        { M_right, sp_player1_00 },  { M_right, sp_player1_01 }
+        ,  { M_right, sp_player1_02 },  { M_right, sp_player1_03 }
+        ,  { M_right, sp_player1_04 },  { M_right, sp_player1_05 }
+        ,  { M_right, sp_player1_06 },  { M_right, sp_player1_07 }
+        ,  { M_right, sp_player1_08 },  { M_right, sp_player1_09 }
+        ,  { M_right, sp_player1_10 },  { M_right, sp_player1_11 }
+        ,  { M_right, sp_player1_12 },  { M_right, sp_player1_13 }
+        ,  { M_right, sp_player1_14 },  { M_right, sp_player1_15 }
+        ,  { M_right, sp_player1_16 },  { M_right, sp_player1_17 }
+    },
+    {
+        { M_right, sp_player2_00 },  { M_right, sp_player2_01 }
+        ,  { M_right, sp_player2_02 },  { M_right, sp_player2_03 }
+        ,  { M_right, sp_player2_04 },  { M_right, sp_player2_05 }
+        ,  { M_right, sp_player2_06 },  { M_right, sp_player2_07 }
+        ,  { M_right, sp_player2_08 },  { M_right, sp_player2_09 }
+        ,  { M_right, sp_player2_10 },  { M_right, sp_player2_11 }
+        ,  { M_right, sp_player2_12 },  { M_right, sp_player2_13 }
+        ,  { M_right, sp_player2_14 },  { M_right, sp_player2_15 }
+        ,  { M_right, sp_player2_16 },  { M_right, sp_player2_17 }
+    }
+};
 
 // Global Variables
 TFrame *const anim_walking[2][WALKING_FRAMES] = {
-                    {&g_frames[0][1], &g_frames[0][2], &g_frames[0][3], &g_frames[0][1]},
-                    {&g_frames[1][1], &g_frames[1][2], &g_frames[1][3], &g_frames[1][1] }};
+    {&g_frames[0][1], &g_frames[0][2], &g_frames[0][3], &g_frames[0][1]},
+    {&g_frames[1][1], &g_frames[1][2], &g_frames[1][3], &g_frames[1][1] }
+};
 
 TFrame *const anim_up[2][UP_FRAMES] = {
-                    {&g_frames[0][10], &g_frames[0][0], &g_frames[0][11], &g_frames[0][0]},
-                    {&g_frames[1][10], &g_frames[1][0], &g_frames[1][11], &g_frames[1][0] }};
+    {&g_frames[0][10], &g_frames[0][0], &g_frames[0][11], &g_frames[0][0]},
+    {&g_frames[1][10], &g_frames[1][0], &g_frames[1][11], &g_frames[1][0] }
+};
 
 TFrame *const anim_down[2][DOWN_FRAMES] = {
-                    {&g_frames[0][12], &g_frames[0][13], &g_frames[0][14], &g_frames[0][13]},
-                    {&g_frames[1][12], &g_frames[1][13], &g_frames[1][14], &g_frames[1][13] }};
+    {&g_frames[0][12], &g_frames[0][13], &g_frames[0][14], &g_frames[0][13]},
+    {&g_frames[1][12], &g_frames[1][13], &g_frames[1][14], &g_frames[1][13] }
+};
 
 TFrame *const anim_hittingUp[2][HITTING_FRAMES] = {
-                    {&g_frames[0][2], &g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][0]},
-                    {&g_frames[1][2], &g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][0]}};
+    {&g_frames[0][2], &g_frames[0][7], &g_frames[0][8], &g_frames[0][9], &g_frames[0][0]},
+    {&g_frames[1][2], &g_frames[1][7], &g_frames[1][8], &g_frames[1][9], &g_frames[1][0]}
+};
 
 TFrame *const anim_hittingDown[2][HITTING_FRAMES] = {
-                    {&g_frames[0][5], &g_frames[0][15], &g_frames[0][16], &g_frames[0][17], &g_frames[0][12]},
-                    {&g_frames[1][5], &g_frames[1][15], &g_frames[1][16], &g_frames[1][17], &g_frames[1][12]}};
+    {&g_frames[0][5], &g_frames[0][15], &g_frames[0][16], &g_frames[0][17], &g_frames[0][12]},
+    {&g_frames[1][5], &g_frames[1][15], &g_frames[1][16], &g_frames[1][17], &g_frames[1][12]}
+};
 
 TFrame *const anim_hittingBackUp[2][HITTING_FRAMES] = {
-                    {&g_frames[0][5], &g_frames[0][9], &g_frames[0][8], &g_frames[0][7], &g_frames[0][0]},
-                    {&g_frames[1][5], &g_frames[1][9], &g_frames[1][8], &g_frames[1][7], &g_frames[1][0]}};
+    {&g_frames[0][5], &g_frames[0][9], &g_frames[0][8], &g_frames[0][7], &g_frames[0][0]},
+    {&g_frames[1][5], &g_frames[1][9], &g_frames[1][8], &g_frames[1][7], &g_frames[1][0]}
+};
 
 TFrame *const anim_hittingBackDown[2][HITTING_FRAMES] = {
-                    {&g_frames[0][2], &g_frames[0][17], &g_frames[0][16], &g_frames[0][15], &g_frames[0][12]},
-                    {&g_frames[1][2], &g_frames[1][17], &g_frames[1][16], &g_frames[1][15], &g_frames[1][12]}};
+    {&g_frames[0][2], &g_frames[0][17], &g_frames[0][16], &g_frames[0][15], &g_frames[0][12]},
+    {&g_frames[1][2], &g_frames[1][17], &g_frames[1][16], &g_frames[1][15], &g_frames[1][12]}
+};
 
 void initPlayer1(TPlayer *player)
 {
@@ -212,7 +221,6 @@ void moveLeft(TPlayer *player, i16 step)
     }
     player->look  = M_left;
     player->e.draw = 1;
-
 }
 
 void moveUp(TPlayer *player, i16 step)
@@ -228,7 +236,6 @@ void moveUp(TPlayer *player, i16 step)
     //player->look  = M_right;
     player->look = M_up;
     player->e.draw = 1;
-
 }
 
 void moveDown(TPlayer *player, i16 step)
@@ -244,9 +251,9 @@ void moveDown(TPlayer *player, i16 step)
 
 void hitting_enter(TPlayer *player, TBall *ball)
 {
-    if (player->e.x[0] < ball->e.x[0]){
+    if (player->e.x[0] < ball->e.x[0]) {
         player->state = ST_hitting;
-    }else{
+    } else {
         player->state = ST_hitting_back;
     }
     player->hit  =  HITTING_FRAMES * ANIM_HIT_PAUSE;
@@ -269,10 +276,10 @@ void walking_enter(u8 look, TPlayer *player)
 void stopped_enter(TPlayer *player)
 {
     player->state = ST_stopped;
-    if (player->side = SD_down){
+    if (player->side = SD_down) {
         player->look = M_up;
     } else {
-        player->look = M_down; 
+        player->look = M_down;
     }
     player->e.draw = 1;
 }
@@ -288,10 +295,10 @@ void hitting_animate(TPlayer *player)
 
 void hitting(TPlayer *player, TKeys *keys)
 {
-    if ((cpct_isKeyPressed(keys->right)) && (player->hitDirH < MAX_DIR_H)){
+    if ((cpct_isKeyPressed(keys->right)) && (player->hitDirH < MAX_DIR_H)) {
         player->hitDirH++;
     }
-    if ((cpct_isKeyPressed(keys->left)) && (player->hitDirH > MIN_DIR_H)){
+    if ((cpct_isKeyPressed(keys->left)) && (player->hitDirH > MIN_DIR_H)) {
         player->hitDirH--;
     }
     if (player->hit > 0)
@@ -379,7 +386,7 @@ void stopped(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     else if (cpct_isKeyPressed(keys->fire2))
     {
         waitKeyUp(keys->fire2);
-        newBall(40 * SCALE, 0 , ball);
+        newBall(40 * SCALE, 40 , ball);
         //setAITarget(ball->bouncex, ball->bouncey, playerAI);
     }
 }
@@ -463,7 +470,7 @@ void walking(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     }
     if (cpct_isKeyPressed(keys->fire1))
     {
-        if (player->side = SD_down){
+        if (player->side = SD_down) {
             player->look = M_up;
         } else {
             player->look = M_down;
@@ -475,7 +482,7 @@ void walking(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     {
         //newBall(player->e.x[0], player->e.y[0], ball);
         waitKeyUp(keys->fire2);
-        newBall(40 * SCALE, 0 , ball);
+        newBall(40 * SCALE, 40 , ball);
         //setAITarget(ball->bouncex, ball->bouncey, playerAI);
         moved = 1;
     }

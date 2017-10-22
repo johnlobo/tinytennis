@@ -45,6 +45,7 @@ typedef struct
     i8 hitDirH;
     i8 hitDirV;
     TCharacter car;
+    u8 onTarget;
     u8 targetX, targetY;
     i16 stepX, stepY;
 } TPlayer;

@@ -99,7 +99,15 @@ void printSprites(){
     for (i=0;i<MAX_SPRITE_LIST;i++){
         if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
             eraseEntity((TEntity*) &(*spriteList.list[i]));
+        }
+    }
+    for (i=0;i<MAX_SPRITE_LIST;i++){
+        if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
             drawEntity((TEntity*) &(*spriteList.list[i]));
+        }
+    }
+    for (i=0;i<MAX_SPRITE_LIST;i++){
+        if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
             entityUpdate((TEntity*) &(*spriteList.list[i]));
         }
     }
