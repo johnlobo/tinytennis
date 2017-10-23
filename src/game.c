@@ -75,6 +75,7 @@ void shot(TBall *ball, TPlayer *player) {
     if (player->e.id == 1){
         setAITarget(ball->bouncex - (player->e.w / 2), ball->bouncey - player->e.h, &player2);
     }
+    ball->nBounces = 0;
 }
 
 //

@@ -16,12 +16,14 @@
 #ifndef _AI_H_
 #define _AI_H_
 
+#include "../defines.h"
 #include "../entities/TPlayer.h"
 #include "../entities/TBall.h"
 
 #define TARGET_CENTER_X 40
 #define TARGET_CENTER_Y 0
 
+#define HIT_RANGE PLAYER_HEIGHT * 2 * SCALE
 
 void initAIPlayer(TPlayer *player);
 void setAITarget(u8 x, u8 y, TPlayer *player);
