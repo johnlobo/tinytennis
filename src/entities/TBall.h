@@ -32,6 +32,7 @@ typedef struct
     u8 turn;
     i16 vx, vy, vz;
     u8 bouncex, bouncey;
+    u8 nBounces;
     u8 active;
 } TBall;
 

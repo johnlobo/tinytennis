@@ -142,23 +142,24 @@ void updateBall(TBall *ball)
     y = ball->e.y[0] / SCALE;
     z = ball->e.z[0] / SCALE;
     py = ball->e.y[1] / SCALE;
-    //Deactivate ball
-    if ((fast_abs(ball->vx) < 35) && (fast_abs(ball->vy) < 35) && (fast_abs(ball->vz) < 35))
-    {
-        deactivateBall(ball);
-    }
     // If ball is in the limits of the court, check collision with the net
     if ((ball->active) && (!checkBoundaries(x, y, ball))) {
         checkNet(x, y, z, py, ball);
         // Check bounce
         if ((z == 0) && (ball->vz < 0))
         {
-            createDust(x, y);
-            ball->vx = ball->vx * FRICTION;
-            ball->vy = ball->vy * FRICTION;
-            ball->vz = -ball->vz * (3 * FRICTION / 4);
-            ball->e.z[0] = 0;
-            calcBounce(ball);
+            if (ball->nBounces<4){
+                ball->nBounces++;
+                createDust(x, y);
+                ball->vx = ball->vx * FRICTION;
+                ball->vy = ball->vy * FRICTION;
+                ball->vz = -ball->vz * (3 * FRICTION / 4);
+                ball->e.z[0] = 0;
+                calcBounce(ball);
+            } else {
+                //Deactivate ball
+                deactivateBall(ball);
+            }
         }
     }
 }
@@ -208,6 +209,7 @@ void newBall(i32 x, i32 y, TBall *ball)
     ball->vz = (2 + (cpct_rand8() % 5)) * SCALE;
     ball->turn = 1;
     ball->active = 1;
+    ball->nBounces = 0;
     calcBounce(ball);
     addSprite(&ball->e);
     addSprite(&ball->e_ball);

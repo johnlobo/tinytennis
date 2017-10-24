@@ -25,6 +25,9 @@
 #define MAX_DIR_H 10
 #define MIN_DIR_H -10
 
+#define PLAYER_WIDTH   SP_PLAYER1_00_W
+#define PLAYER_HEIGHT   SP_PLAYER1_00_H
+
 typedef struct
 {
     i16 speedX, speedY;

@@ -41,9 +41,6 @@
 #define MAP_WIDTH  40
 #define MAP_HEIGHT  50
 
-#define PLAYER_WIDTH   SP_PLAYER1_00_W
-#define PLAYER_HEIGHT   SP_PLAYER1_00_H
-
 #define VERTICAL_STEP 2
 
 //Sprites Size
@@ -53,7 +50,6 @@
 #define min(X, Y) ((X) < (Y) ? (X) : (Y))
 #define max(X, Y) (X > Y ? X : Y)
 
-#define HIT_RANGE 512
 
 // Declare am_tablatrans, which is defined in game.c, and used in more places
 cpctm_declareMaskTable(g_tablatrans);
