@@ -23,7 +23,7 @@
 #define TARGET_CENTER_X 40
 #define TARGET_CENTER_Y 0
 
-#define HIT_RANGE PLAYER_HEIGHT * 2 * SCALE
+#define HIT_RANGE PLAYER_HEIGHT * 2
 
 void initAIPlayer(TPlayer *player);
 void setAITarget(u8 x, u8 y, TPlayer *player);

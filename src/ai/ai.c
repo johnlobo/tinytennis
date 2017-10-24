@@ -26,6 +26,7 @@ const TPlayer tempAIPlayer =
 		,   { 40 * SCALE, 40 * SCALE }
 		, 	{ 0, 0 }
 		, 	{ 0, 0 }
+	 	,   0, 0, 0
 		,	PLAYER_WIDTH, PLAYER_HEIGHT
 		,	&g_frames[1][12]
 		,	1
@@ -82,9 +83,6 @@ void AIhitting_enter(TPlayer *player)
 
 void AImovingToTarget(TPlayer *player, TBall *ball)
 {
-	u8 posX, posY;
-	posX = player->e.x[0] / SCALE;
-	posY = player->e.y[0] / SCALE;
 	if (hasReachedTarget(&player->e, player->targetX, player->targetY, player->stepX, player->stepY))
 	{
 		player->onTarget = 1;
@@ -92,17 +90,17 @@ void AImovingToTarget(TPlayer *player, TBall *ball)
 	}
 	else
 	{
-		if (posX < player->targetX)
+		if (player->e.x[0] < player->targetX)
 		{
 			moveRight(player, player->stepX);
 			walking_animate(M_right, player);
 		}
-		else if (posX > player->targetX)
+		else if (player->e.x[0] > player->targetX)
 		{
 			moveLeft(player, player->stepX * -1);
 			walking_animate(M_left, player);
 		}
-		if (posY < player->targetY)
+		if (player->e.y[0] < player->targetY)
 		{
 			moveDown(player, player->stepY);
 			down_animate(player);
@@ -131,12 +129,12 @@ void setAITarget(u8 x, u8 y, TPlayer *player)
 	} else if (y > 90) {
 		y = 90; //Right bound
 	}
-	if (((player->e.x[0] / SCALE) != x) && ((player->e.y[0] / SCALE) != y)) {
+	if ((player->e.x[0] != x) && (player->e.y[0] != y)) {
 		player->targetX = x;
 		player->targetY = y;
 		// Calculate the steps to target
-		distX = (x * SCALE) - player->e.x[0];  	//distance X
-		distY = (y * SCALE) - player->e.y[0];  	//distance Y
+		distX = x - player->e.x[0];  	//distance X
+		distY = y - player->e.y[0];  	//distance Y
 		t = max((fast_abs(distX) / player->car.speedX), (fast_abs(distY) / player->car.speedY)); // # of steps
 		stX = distX / t; 			// size of step X
 		stY = distY / t;			// size of step Y
@@ -180,7 +178,7 @@ void AIstopped(TPlayer *player, TBall *ball)
 {
 	if (ball->turn == 2) {
 		if (player->onTarget == 0) {
-			setAITarget(ball->bouncex + ball->vx, ball->bouncey + ball->vy, player);
+			setAITarget(ball->bouncex + ball->vx, ball->bouncey + ( 2 * ball->vy), player);
 		} else if (distance(player->e.x[0], player->e.y[0], ball->e.x[0], ball->e.y[0]) < HIT_RANGE) {
 			AIhitting_enter(player);
 		}

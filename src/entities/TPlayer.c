@@ -32,6 +32,7 @@ const TPlayer tempPlayer1 =
         ,   { 40 * SCALE, 40 * SCALE }
         ,   { 160 * SCALE, 160 * SCALE }
         ,   { 0, 0 }
+        ,   0, 0, 0
         ,   PLAYER_WIDTH, PLAYER_HEIGHT
         ,   &g_frames[0][0]
         ,   1
@@ -201,9 +202,10 @@ void selectSpritePlayer(TPlayer *player, u8 ai)
 
 void moveRight(TPlayer *player, i16 step)
 {
-    if ((player->e.x[0] + (player->e.w * SCALE) + step) < (WIDTH * SCALE))
+    if ((((player->e.x[0] + player->e.w) * SCALE) + step) < (WIDTH * SCALE))
     {
-        player->e.x[0] += step;
+        player->e.rx += step;
+        player->e.x[0] = player->e.rx / SCALE;
         player->look  = M_right;
         player->e.draw = 1;
     }
@@ -213,11 +215,13 @@ void moveLeft(TPlayer *player, i16 step)
 {
     if ((player->e.x[0] - step) > (160 * SCALE))
     {
+        player->e.rx = 0;
         player->e.x[0] = 0;
     }
     else
     {
-        player->e.x[0] -= step;
+        player->e.rx -= step;
+        player->e.x[0] = player->e.rx / SCALE;
     }
     player->look  = M_left;
     player->e.draw = 1;
@@ -225,13 +229,15 @@ void moveLeft(TPlayer *player, i16 step)
 
 void moveUp(TPlayer *player, i16 step)
 {
-    if ((player->e.y[0] - step) > (200 * SCALE))
+    if ((player->e.ry - step) > (200 * SCALE))
     {
+        player->e.ry = 0;
         player->e.y[0] = 0;
     }
     else
     {
-        player->e.y[0] -= step;
+        player->e.ry -= step;
+        player->e.y[0] = player->e.ry / SCALE;
     }
     //player->look  = M_right;
     player->look = M_up;
@@ -240,10 +246,10 @@ void moveUp(TPlayer *player, i16 step)
 
 void moveDown(TPlayer *player, i16 step)
 {
-    if ((player->e.y[0] + (player->e.h * SCALE) + step) < (HEIGHT * SCALE))
+    if ((((player->e.y[0] + player->e.h) * SCALE) + step) < (HEIGHT * SCALE))
     {
-        player->e.y[0] += step;
-        //player->look  = M_right;
+        player->e.ry += step;
+        player->e.y[0] = player->e.ry / SCALE;
         player->look = M_down;
         player->e.draw = 1;
     }

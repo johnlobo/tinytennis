@@ -60,13 +60,8 @@ void orderSpriteList(){
 
 void eraseEntity(TEntity *e)
 {
-    //u8 *pvmem;
-    u8 posx, posy;
-    
-    posx = e->x[1] / SCALE;
-    posy = e->y[1] / SCALE;
-    if (((posx + e->w) <= WIDTH) && ((posy + e->h) <= HEIGHT)){
-        cpct_etm_drawTileBox2x4 (posx / 2, posy / 4, (e->w / 2) + 1, (e->h / 4) + 1, MAP_WIDTH, g_scrbuffers[0], court);
+    if (((e->x[1] + e->w) <= WIDTH) && ((e->y[1] + e->h) <= HEIGHT)){
+        cpct_etm_drawTileBox2x4 (e->x[1] / 2, e->y[1] / 4, (e->w / 2) + 1, (e->h / 4) + 1, MAP_WIDTH, g_scrbuffers[0], court);
     }
 
 }
@@ -74,12 +69,9 @@ void eraseEntity(TEntity *e)
 void drawEntity(TEntity *e)
 {
     u8 *pvmem;
-    u8 posx, posy;
     
-    posx = e->x[0] / SCALE;
-    posy = e->y[0] / SCALE;
-     if (((posx + e->w) <= WIDTH) && ((posy + e->h) <= HEIGHT)){
-        pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], posx, posy);
+     if (((e->x[0]  + e->w) <= WIDTH) && ((e->y[0]  + e->h) <= HEIGHT)){
+        pvmem = cpct_getScreenPtr((u8 *) g_scrbuffers[0], e->x[0] , e->y[0] );
         cpct_drawSpriteMaskedAlignedTable(e->frame->sprite, pvmem, e->w, e->h, g_tablatrans);
     }
 }
