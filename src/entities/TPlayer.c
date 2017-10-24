@@ -29,10 +29,10 @@ const TPlayer tempPlayer1 =
 {
 
     {   1
-        ,   { 40 * SCALE, 40 * SCALE }
-        ,   { 160 * SCALE, 160 * SCALE }
+        ,   { 40, 40 }
+        ,   { 160, 160 }
         ,   { 0, 0 }
-        ,   0, 0, 0
+        ,   40 * SCALE, 160 * SCALE, 0
         ,   PLAYER_WIDTH, PLAYER_HEIGHT
         ,   &g_frames[0][0]
         ,   1
@@ -213,7 +213,7 @@ void moveRight(TPlayer *player, i16 step)
 
 void moveLeft(TPlayer *player, i16 step)
 {
-    if ((player->e.x[0] - step) > (160 * SCALE))
+    if ((player->e.rx - step) > (160 * SCALE))
     {
         player->e.rx = 0;
         player->e.x[0] = 0;
@@ -392,7 +392,7 @@ void stopped(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     else if (cpct_isKeyPressed(keys->fire2))
     {
         waitKeyUp(keys->fire2);
-        newBall(40 * SCALE, 40 , ball);
+        newBall(playerAI->e.x[0] + (playerAI->e.w / 2), playerAI->e.y[0] + (playerAI->e.h / 2), ball);
         //setAITarget(ball->bouncex, ball->bouncey, playerAI);
     }
 }

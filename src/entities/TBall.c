@@ -180,7 +180,7 @@ void initBall(TBall *ball)
     cpct_memset(ball, 0, sizeof(TBall));
 }
 
-void newBall(i32 x, i32 y, TBall *ball)
+void newBall(u8 x, u8 y, TBall *ball)
 {
     if (ball->active) {
         // Shadow Entity
@@ -192,22 +192,22 @@ void newBall(i32 x, i32 y, TBall *ball)
     }
     // Shadow entity
     ball->e.id = 3;
-    ball->e.rx = x;
-    ball->e.ry = y;
+    ball->e.rx = x * SCALE;
+    ball->e.ry = y * SCALE;
     ball->e.rz = ((cpct_rand8() % 2) + 4) * SCALE;
-    ball->e.x[0] = ball->e.x[1] = ball->e.rx / SCALE;
-    ball->e.y[0] = ball->e.y[1] = ball->e.ry / SCALE;
-    ball->e.z[0] = ball->e.z[1] = ball->e.rz / SCALE;
+    ball->e.x[0] = ball->e.x[1] = x;
+    ball->e.y[0] = ball->e.y[1] = y;
+    ball->e.z[0] = ball->e.z[1] = 0;
     ball->e.frame = &b2_frame;
     ball->e.w = BALL_WIDTH;
     ball->e.h = BALL_HEIGHT;
     ball->e.draw = 1;
     //Ball entity
     ball->e_ball.id = 4;
-    ball->e_ball.rx = x;
-    ball->e_ball.ry = y - (ball->e.rz  / 2);
-    ball->e.rz = 0;
-    ball->e_ball.x[0] = ball->e_ball.x[1] = ball->e.x[0];
+    ball->e_ball.rx = ball->e.rx;
+    ball->e_ball.ry = ball->e.ry - (ball->e.rz  / 2);
+    ball->e_ball.rz = ball->e.rz / SCALE;;
+    ball->e_ball.x[0] = ball->e_ball.x[1] = x;
     ball->e_ball.y[0] = ball->e_ball.y[1] = ball->e_ball.ry / SCALE;
     ball->e_ball.z[0] = ball->e_ball.z[1] = 0;
     ball->e_ball.frame = &b1_frame;

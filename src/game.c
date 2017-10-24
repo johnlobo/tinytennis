@@ -75,7 +75,6 @@ void shot(TBall *ball, TPlayer *player) {
     if (player->e.id == 1){
         setAITarget(ball->bouncex - (player->e.w / 2), ball->bouncey - player->e.h, &player2);
     }
-    ball->nBounces = 0;
 }
 
 //
@@ -83,26 +82,14 @@ void shot(TBall *ball, TPlayer *player) {
 //
 
 void checkPlayerCollision(TBall *ball, TPlayer *player) {
-    u8 bx, by, px, py;
     u8 hit;
-    u8 *pvideo;
-    px = player->e.x[0] / SCALE;
-    py = player->e.y[0] / SCALE;
-    bx = ball->e.x[0] / SCALE;
-    by = ball->e.y[0] / SCALE;
     //hit = fast_collision(px, py, player->e.w, player->e.h, bx, by, ball->e.w, ball->e.h);
-    hit = collision(px - 1, py - 1, player->e.w + 1, player->e.h + 1, bx, by, ball->e.w, ball->e.h);
+    hit = collision(player->e.x[0] - 1, player->e.y[0] - 1, player->e.w + 1, player->e.h + 1, ball->e.x[0], ball->e.y[0], ball->e.w, ball->e.h);
     if (hit) {
         player->e.draw = 1;
         if (player->hit > 0) {
-            pvideo = cpct_getScreenPtr(SCR_VMEM, 22, 76);
-            cpct_drawSolidBox(pvideo, #0, 22, 10);
-            drawText("   SHOT   ", 24, 80, 0);
             shot(ball, player);
         } else {
-            pvideo = cpct_getScreenPtr(SCR_VMEM, 22, 76);
-            cpct_drawSolidBox(pvideo, #0, 22, 10);
-            drawText("BODY TOUCH", 24, 80, 0);
             bodyTouch(ball);
         }
     } else {
@@ -163,9 +150,9 @@ void game(TMatch *match, TKeys *keys)
         if ((ball.active) && (c % 2 == 0)) {
             updateBall(&ball);
             // Check collision with players
-            if (ball.e.z[0] < (24 * SCALE))
+            if (ball.e.z[0] < 24 )
             {
-                if (ball.e.y[0] > (100 * SCALE))
+                if (ball.e.y[0] > 100)
                 {
                     if (player1.side == SD_down)
                     {

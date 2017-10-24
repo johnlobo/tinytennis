@@ -23,10 +23,10 @@ const TPlayer tempAIPlayer =
 {
 
 	{	2
-		,   { 40 * SCALE, 40 * SCALE }
+		,   { 40, 40 }
 		, 	{ 0, 0 }
 		, 	{ 0, 0 }
-	 	,   0, 0, 0
+	 	,   40 * SCALE, 0, 0
 		,	PLAYER_WIDTH, PLAYER_HEIGHT
 		,	&g_frames[1][12]
 		,	1
@@ -59,7 +59,7 @@ void AIstopped_enter(TPlayer *player)
 	player->e.draw = 1;
 }
 
-void AIhitting(TPlayer *player, TBall *ball)
+void AIhitting(TPlayer *player)
 {
 	if (player->hit > 1)
 	{
@@ -200,7 +200,7 @@ void executeStateAI(TPlayer *player, TBall *ball)
 		AImovingToTarget(player, ball);
 		break;
 	case ST_AIhitting:
-		AIhitting(player, ball);
+		AIhitting(player);
 		break;
 	}
 }

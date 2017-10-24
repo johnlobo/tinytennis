@@ -40,7 +40,7 @@ extern TBall ball;
 
 void updateBall(TBall *ball);
 void initBall(TBall *ball);
-void newBall(i32 x, i32 y, TBall *ball);
+void newBall(u8 x, u8 y, TBall *ball);
 void calcBounce(TBall *ball);
 
 #endif
