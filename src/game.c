@@ -109,14 +109,6 @@ void checkPlayerCollision(TBall *ball, TPlayer *player) {
     }
 }
 
-void entityDrawUpdate(TEntity *e)
-{
-    e->x[1] = e->x[0];
-    e->y[1] = e->y[0];
-    e->z[1] = e->z[0];
-    e->draw = 0;
-}
-
 // Main init
 void initGame()
 {
@@ -195,16 +187,9 @@ void game(TMatch *match, TKeys *keys)
             }
         }
         updateDusts();
+        orderSpriteList();
         // Draw actors
         cpct_waitVSYNC();
-        orderSpriteList();
         printSprites();
-        //printScoreBoard(0,0, match);
-        //pvideo = cpct_getScreenPtr(SCR_VMEM, 22, 76);
-        //cpct_drawSolidBox(SCR_VMEM, #0, 10, 12);
-        //drawNumber((u8) (player2.e.x[0] /SCALE),4,0,0);
-        //drawNumber((u8) (player2.e.y[0] /SCALE),4,0,6);
-        //drawNumber(player2.targetX,4,0,13);
-        //drawNumber(player2.targetY,4,0,20);
     }
 }

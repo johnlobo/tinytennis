@@ -31,7 +31,7 @@ void calcBounce(TBall *ball)
 {
     u8 t;
     t = - (2 * ball->vz) / GRAVITY;
-    ball->bouncex = (ball->e.x[0] + (ball->vx * t)) / SCALE;
+    ball->bouncex = ball->e.x[0] + ((ball->vx * t) / SCALE);
     if (ball->bouncex > 200) { //Negative number -> Left side
         ball->bouncex = 0;
     } else if (ball->bouncex > 79) {
@@ -42,7 +42,7 @@ void calcBounce(TBall *ball)
     } else if (ball->bouncex > 199) {
         ball->bouncex = 199;      //Down side
     }
-    ball->bouncey = (ball->e.y[0] + (ball->vy * t)) / SCALE;
+    ball->bouncey = ball->e.y[0] + ((ball->vy * t) / SCALE);
 }
 
 //
@@ -180,18 +180,24 @@ void newBall(i32 x, i32 y, TBall *ball)
     }
     // Shadow entity
     ball->e.id = 3;
-    ball->e.x[0] = ball->e.x[1] = x;
-    ball->e.y[0] = ball->e.y[1] = y;
-    ball->e.z[0] = ball->e.z[1] = ((cpct_rand8() % 2) + 4) * SCALE;
+    ball->e.rx = x;
+    ball->e.ry = y;
+    ball->e.rz = ((cpct_rand8() % 2) + 4) * SCALE;
+    ball->e.x[0] = ball->e.x[1] = x / SCALE;
+    ball->e.y[0] = ball->e.y[1] = y / SCALE;
+    ball->e.z[0] = ball->e.z[1] = z / SCALE;
     ball->e.frame = &b2_frame;
     ball->e.w = BALL_WIDTH;
     ball->e.h = BALL_HEIGHT;
     ball->e.draw = 1;
     //Ball entity
     ball->e_ball.id = 4;
-    ball->e_ball.x[0] = ball->e.x[1] = x;
-    ball->e_ball.y[0] = ball->e.y[1] = y - (ball->e.z[0]  / 2);
-    ball->e_ball.z[0] = ball->e.z[1] = 0;
+    ball->e_ball.rx = x;
+    ball->e_ball.ry = y - (ball->e.rz  / 2);
+    ball->e.rz = 0;
+    ball->e_ball.x[0] = ball->e_ball.x[1] = ball->e.x[0];
+    ball->e_ball.y[0] = ball->e_ball.y[1] = ball->e_ball.ry / SCALE;
+    ball->e_ball.z[0] = ball->e_ball.z[1] = 0;
     ball->e_ball.frame = &b1_frame;
     ball->e_ball.w = BALL_WIDTH;
     ball->e_ball.h = BALL_HEIGHT;

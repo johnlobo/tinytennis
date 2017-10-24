@@ -36,3 +36,6 @@ include cfg/build_config.mk
 ## USE GLOBAL MAKEFILE (general rules for building CPCtelera projects)
 ##
 include $(CPCT_PATH)/cfg/global_main_makefile.mk
+
+$(shell rm ../www/cpc/$(DSK))
+$(shell cp $(DSK) ../www/cpc/file)
