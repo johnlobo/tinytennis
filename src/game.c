@@ -16,23 +16,25 @@
 
 #include <cpctelera.h>
 #include "defines.h"
-#include "sprites/ball.h"
-#include "sprites/player1.h"
-#include "sprites/palette.h"
+#include "menu/menu.h"
+#include "ai/ai.h"
+#include "entities/TDust.h"
+#include "entities/TBall.h"
+#include "entities/TPlayer.h"
+#include "entities/TMatch.h"
+#include "entities/TScoreboard.h"
+#include "entities/TBallMachine.h"
+#include "spriteList/spriteList.h"
 #include "util/util.h"
 #include "util/video.h"
 #include "keyboard/keyboard.h"
-#include "entities/TBall.h"
-#include "entities/TPlayer.h"
 #include "text/text.h"
+#include "sprites/ball.h"
+#include "sprites/player1.h"
+#include "sprites/palette.h"
 #include "sprites/court01.h"
 #include "levels/court01.h"
-#include "ai/ai.h"
-#include "entities/TDust.h"
-#include "menu/menu.h"
-#include "entities/TMatch.h"
-#include "entities/TScoreboard.h"
-#include "spriteList/spriteList.h"
+
 
 //const i16 trajetoriesX[10] = {-128, -96, -64, -32, 0 , 0, 32, 64, 96, 128};
 
@@ -84,7 +86,7 @@ void shot(TBall *ball, TPlayer *player) {
 void checkPlayerCollision(TBall *ball, TPlayer *player) {
     u8 hit;
     //hit = fast_collision(px, py, player->e.w, player->e.h, bx, by, ball->e.w, ball->e.h);
-    hit = collision(player->e.x[0] - 1, player->e.y[0] - 1, player->e.w + 1, player->e.h + 1, ball->e.x[0], ball->e.y[0], ball->e.w, ball->e.h);
+    hit = collision(&player->e, &ball->e);
     if (hit) {
         player->e.draw = 1;
         if (player->hit > 0) {
@@ -97,7 +99,84 @@ void checkPlayerCollision(TBall *ball, TPlayer *player) {
     }
 }
 
-// Main init
+// Init Game
+void initPractice()
+{
+    cpct_etm_setTileset2x4(tile_tileset);
+    initPlayer1(&player1);
+    initBallMachine();
+    initBall(&ball);
+    initDustList();
+    initSpriteList();
+    addSprite(&player1.e);
+    cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[0], court);
+    
+    pauseGame = 0;
+}
+
+// Game Loop
+void practice(TKeys *keys)
+{
+    initPractice();
+    
+     while (1)
+    {
+        //Abort Game
+        if (cpct_isKeyPressed(keys->abort)) {
+            break;
+        }
+        // Pause Game
+        if (cpct_isKeyPressed(keys->pause)) {
+            pauseGame = 1;
+            waitKeyUp(keys->pause);
+        }
+        while (pauseGame) {
+            if (cpct_isKeyPressed(keys->pause)) {
+                pauseGame = 0;
+                waitKeyUp(keys->pause);
+            }
+        }
+        // Players block
+        executeState(&player1, &player2, &ball, keys);
+        selectSpritePlayer(&player1, 0);
+        // Ball block
+        //if ((ball.active) && (c % 2 == 0)) {
+        if (ball.active) {
+            updateBall(&ball);
+            // Check collision with players
+            if (ball.e.rz < (24 * SCALE))
+            {
+                if (ball.e.y[0] > 100)
+                {
+                    if (player1.side == SD_down)
+                    {
+                        playerAux = &player1;
+                    } else
+                    {
+                        playerAux = &player2;
+                    }
+                } else
+                {
+                    if (player1.side == SD_up)
+                    {
+                        playerAux = &player1;
+                    } else
+                    {
+                        playerAux = &player2;
+                    }
+                }
+                checkPlayerCollision(&ball, playerAux);
+            }
+        }
+        updateDusts();
+        orderSpriteList();
+        // Draw actors
+        cpct_waitVSYNC();
+        printSprites();
+    }
+}
+
+// Init Game
 void initGame()
 {
     cpct_etm_setTileset2x4(tile_tileset);
@@ -117,7 +196,7 @@ void initGame()
 void game(TMatch *match, TKeys *keys)
 {
     u32 c;
-    u8 *pvideo;
+    //u8 *pvideo;
 
     initGame();
     //fadeIn(&sp_palette[0]);

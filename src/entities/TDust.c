@@ -17,8 +17,6 @@
 #include "../sprites/dust.h"
 #include "../spriteList/spriteList.h"
 #include "../defines.h"
-#include "../util/video.h"
-#include "../levels/court01.h"
 
 const TFrame d_frames[3] = {
     { M_up, sp_dust_2 }  

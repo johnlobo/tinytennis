@@ -19,6 +19,7 @@
 #include "entities/TMatch.h"
 #include "keyboard/keyboard.h"
 
+void practice(TKeys *keys);
 void game(TMatch *match, TKeys *keys);
 
 #endif
