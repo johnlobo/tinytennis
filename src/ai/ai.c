@@ -25,7 +25,6 @@ const TPlayer tempAIPlayer =
 	{	2
 		,   { 40, 40 }
 		, 	{ 0, 0 }
-		, 	{ 0, 0 }
 	 	,   40 * SCALE, 0, 0
 		,	PLAYER_WIDTH, PLAYER_HEIGHT
 		,	&g_frames[1][12]
@@ -133,8 +132,8 @@ void setAITarget(u8 x, u8 y, TPlayer *player)
 		player->targetX = x;
 		player->targetY = y;
 		// Calculate the steps to target
-		distX = x - player->e.x[0];  	//distance X
-		distY = y - player->e.y[0];  	//distance Y
+		distX = (x * SCALE) - player->e.rx;  	//distance X
+		distY = (y * SCALE) - player->e.ry;  	//distance Y
 		t = max((fast_abs(distX) / player->car.speedX), (fast_abs(distY) / player->car.speedY)); // # of steps
 		stX = distX / t; 			// size of step X
 		stY = distY / t;			// size of step Y

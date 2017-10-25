@@ -28,6 +28,16 @@
 #define PLAYER_WIDTH   SP_PLAYER1_00_W
 #define PLAYER_HEIGHT   SP_PLAYER1_00_H
 
+// Sprites States
+#define PLAYER_FRAMES   18
+// Animaciones
+#define ANIM_PAUSE      8
+#define ANIM_HIT_PAUSE  8
+#define WALKING_FRAMES  4
+#define UP_FRAMES       4
+#define DOWN_FRAMES     4
+#define HITTING_FRAMES  5
+
 typedef struct
 {
     i16 speedX, speedY;
@@ -53,16 +63,6 @@ typedef struct
     i16 stepX, stepY;
 } TPlayer;
 
-
-// Sprites States
-#define PLAYER_FRAMES   18
-// Animaciones
-#define ANIM_PAUSE      8
-#define ANIM_HIT_PAUSE  8
-#define WALKING_FRAMES  4
-#define UP_FRAMES       4
-#define DOWN_FRAMES     4
-#define HITTING_FRAMES  5
 
 extern const TFrame g_frames[2][PLAYER_FRAMES];
 extern TFrame *const anim_walking[2][WALKING_FRAMES];

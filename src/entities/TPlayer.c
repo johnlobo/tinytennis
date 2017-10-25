@@ -31,7 +31,6 @@ const TPlayer tempPlayer1 =
     {   1
         ,   { 40, 40 }
         ,   { 160, 160 }
-        ,   { 0, 0 }
         ,   40 * SCALE, 160 * SCALE, 0
         ,   PLAYER_WIDTH, PLAYER_HEIGHT
         ,   &g_frames[0][0]

@@ -72,18 +72,7 @@ void delay(u32 cycles)
 
 u8 hasReachedTarget(TEntity *e, u8 x, u8 y, i16 stepX, i16 stepY)
 {
-    u8 posX0, posY0;
-    u8 posX1, posY1;
-
-    posX0 = e->x[0] / SCALE;
-    posY0 = e->y[0] / SCALE;
-    posX1 = stepX / SCALE;
-    posY1 = stepY / SCALE;
-
-    //return ((((posX0 <= x) && (x <= posX1)) || ((posX0 >= x) && (x >= posX1))) &&
-    //        (((posY0 <= y) && (y <= posY1)) || ((posY0 >= y) && (y >= posY1))));
-    //return distance(posX0,posY0,posX1, posY1)<2;
-    return (fast_abs(posX0 - x) <= fast_abs(posX1)) && (fast_abs(posY0 - y) <= fast_abs(posY1));
+    return (fast_abs(e->x[0] - x) <= fast_abs(stepX / SCALE)) && (fast_abs(e->y[0] - y) <= fast_abs(stepY / SCALE));
 }
 //////////////////////////////////////////////////////////////////
 // Name

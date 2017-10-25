@@ -81,7 +81,6 @@ void entityUpdate(TEntity *e)
 {
     e->x[1] = e->x[0];
     e->y[1] = e->y[0];
-    e->z[1] = e->z[0];
     e->draw = 0;
 }
 

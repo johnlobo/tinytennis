@@ -63,7 +63,7 @@ void bodyTouch(TBall *ball) {
 // Player Shot
 //
 void shot(TBall *ball, TPlayer *player) {
-    ball->vx = trajetoriesX[(player->hitDirH / 2) + 5];
+    ball->vx = trajetoriesX[(player->hit / 4)];
     ball->vz = 3 * SCALE;
     if (player->look == M_up) {
         ball->vy = -3 * SCALE;
@@ -147,10 +147,11 @@ void game(TMatch *match, TKeys *keys)
         selectSpritePlayer(&player1, 0);
         selectSpritePlayer(&player2, 1);
         // Ball block
-        if ((ball.active) && (c % 2 == 0)) {
+        //if ((ball.active) && (c % 2 == 0)) {
+        if (ball.active) {
             updateBall(&ball);
             // Check collision with players
-            if (ball.e.z[0] < 24 )
+            if (ball.e.rz < (24 * SCALE))
             {
                 if (ball.e.y[0] > 100)
                 {

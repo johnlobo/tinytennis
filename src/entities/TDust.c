@@ -46,7 +46,6 @@ void createDust(u8 x, u8 y){
             dusts.dustList[i].e.rz = 0;
             dusts.dustList[i].e.x[0] = dusts.dustList[i].e.x[1] = x;
             dusts.dustList[i].e.y[0] = dusts.dustList[i].e.y[1] = y;
-            dusts.dustList[i].e.z[0] = dusts.dustList[i].e.z[1] = 0;
             dusts.dustList[i].e.w = DUST_WIDTH;
             dusts.dustList[i].e.h = DUST_HEIGHT;
             dusts.dustList[i].e.frame = &d_frames[2];

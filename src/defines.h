@@ -73,7 +73,7 @@ typedef struct
 typedef struct
 {
     u8 id;
-    u8 x[2], y[2], z[2];
+    u8 x[2], y[2];
     u16 rx, ry, rz;
     u8 w, h;
     TFrame *frame;

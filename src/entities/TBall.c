@@ -80,7 +80,7 @@ u8 checkBoundaries(TBall *ball) {
         // Shadow entity
         ball->e.ry = (200 * SCALE) - (BALL_HEIGHT * SCALE);
         // Ball entity
-        ball->e_ball.ry =  ball->e.y[0] - (ball->e.z[0]  / 2);
+        ball->e_ball.ry =  ball->e.ry - (ball->e.rz  / 2);
         // Common
         ball->vy = -ball->vy * (FRICTION / 4);
         result = 1;
@@ -89,10 +89,8 @@ u8 checkBoundaries(TBall *ball) {
     if (result) {
         ball->e.x[0] = ball->e.rx / 256;
         ball->e.y[0] = ball->e.ry / 256;
-        ball->e.z[0] = ball->e.rz / 256;
         ball->e_ball.x[0] = ball->e_ball.rx / 256;
         ball->e_ball.y[0] = ball->e_ball.ry / 256;
-        ball->e_ball.z[0] = ball->e_ball.rz / 256;
         calcBounce(ball);
     }
     return result;
@@ -105,7 +103,7 @@ u8 checkBoundaries(TBall *ball) {
 
 u8 checkNet(TBall *ball) {
     u8 result = 0;
-    if (((ball->e.z[0] < 8) && ((ball->e.x[0] > 10) && (ball->e.x[0] < 70 ))) &&
+    if (((ball->e.rz < (8 * SCALE)) && ((ball->e.x[0] > 10) && (ball->e.x[0] < 70 ))) &&
             (((ball->e.y[1] >= 90) && (ball->e.y[0] < 90) && (ball->vy < 0)) ||
              ((ball->e.y[1] <= 90) && (ball->e.y[0] > 90) && (ball->vy > 0))))
     {
@@ -138,22 +136,23 @@ void updateBall(TBall *ball)
     ball->e.rx += ball->vx;
     ball->e.ry += ball->vy;
     ball->e.rz += ball->vz;
-    if (ball->e.rz > 240 * SCALE) {
+    if (ball->e.rz > (240 * SCALE)) {
         ball->e.rz = 0;
     }
+    ball->e.x[0] = ball->e.rx / SCALE;
+    ball->e.y[0] = ball->e.ry / SCALE;
     ball->e.draw = 1;
     // Ball entity
     ball->e_ball.rx = ball->e.rx;
     ball->e_ball.ry = ball->e.ry - (ball->e.rz  / 2);
     ball->e_ball.draw = 1;
-    ball->e.x[0] = ball->e.rx / SCALE;
-    ball->e.y[0] = ball->e.ry / SCALE;
-    ball->e.z[0] = ball->e.rz / SCALE;
+    ball->e_ball.x[0] = ball->e_ball.rx / SCALE;
+    ball->e_ball.y[0] = ball->e_ball.ry / SCALE;
     // If ball is in the limits of the court, check collision with the net
     if ((ball->active) && (!checkBoundaries(ball))) {
         checkNet(ball);
         // Check bounce
-        if ((ball->e.z[0] == 0) && (ball->vz < 0))
+        if (((ball->e.rz / SCALE) == 0) && (ball->vz < 0))
         {
             if (ball->nBounces<4){
                 ball->nBounces++;
@@ -162,9 +161,7 @@ void updateBall(TBall *ball)
                 ball->vy = ball->vy * FRICTION;
                 ball->vz = -ball->vz * (3 * FRICTION / 4);
                 ball->e.rz = 0;
-                ball->e.z[0] = ball->e.rz / SCALE;
                 ball->e_ball.rz = 0;
-                ball->e_ball.z[0] = ball->e.rz / SCALE;
                 calcBounce(ball);
             } else {
                 //Deactivate ball
@@ -197,7 +194,6 @@ void newBall(u8 x, u8 y, TBall *ball)
     ball->e.rz = ((cpct_rand8() % 2) + 4) * SCALE;
     ball->e.x[0] = ball->e.x[1] = x;
     ball->e.y[0] = ball->e.y[1] = y;
-    ball->e.z[0] = ball->e.z[1] = 0;
     ball->e.frame = &b2_frame;
     ball->e.w = BALL_WIDTH;
     ball->e.h = BALL_HEIGHT;
@@ -206,10 +202,9 @@ void newBall(u8 x, u8 y, TBall *ball)
     ball->e_ball.id = 4;
     ball->e_ball.rx = ball->e.rx;
     ball->e_ball.ry = ball->e.ry - (ball->e.rz  / 2);
-    ball->e_ball.rz = ball->e.rz / SCALE;;
+    ball->e_ball.rz = 0;
     ball->e_ball.x[0] = ball->e_ball.x[1] = x;
     ball->e_ball.y[0] = ball->e_ball.y[1] = ball->e_ball.ry / SCALE;
-    ball->e_ball.z[0] = ball->e_ball.z[1] = 0;
     ball->e_ball.frame = &b1_frame;
     ball->e_ball.w = BALL_WIDTH;
     ball->e_ball.h = BALL_HEIGHT;
