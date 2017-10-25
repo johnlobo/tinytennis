@@ -126,6 +126,11 @@ void myInterruptHandler()
     }
 }
 
+void playPracticeMenuOption() {
+    practice(&keys);
+}
+
+
 void playGameMenuOption() {
     //fadeOut(&sp_palette[0]);
     if (!seed)
@@ -172,7 +177,7 @@ void checkKeyboardMenu(TIcon *icon) {
         delay(30);
     }
 
-    if (cpct_isKeyPressed(Joy0_Fire1) || cpct_isKeyPressed(keys.fire1)) {
+    if (cpct_isKeyPressed(Joy0_Fire1) || cpct_isKeyPressed(Joy0_Fire2) || cpct_isKeyPressed(keys.fire1) || cpct_isKeyPressed(keys.fire2)) {
 
         switch (icon->selectedOption) {
         case 1:
@@ -181,7 +186,8 @@ void checkKeyboardMenu(TIcon *icon) {
             break;
         case 2:
             icon->selectedOption = 2;
-
+            playPracticeMenuOption();
+            drawMenu();
             break;
         case 3:
             icon->selectedOption = 3;
@@ -201,8 +207,8 @@ void checkKeyboardMenu(TIcon *icon) {
 
         waitKeyUp(Key_2);
         icon->selectedOption = 2;
-
-
+        playPracticeMenuOption();
+        drawMenu();
     }
     else if (cpct_isKeyPressed(Key_3)) {
 

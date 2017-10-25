@@ -281,7 +281,7 @@ void walking_enter(u8 look, TPlayer *player)
 void stopped_enter(TPlayer *player)
 {
     player->state = ST_stopped;
-    if (player->side = SD_down) {
+    if (player->side == SD_down) {
         player->look = M_up;
     } else {
         player->look = M_down;
@@ -300,10 +300,10 @@ void hitting_animate(TPlayer *player)
 
 void hitting(TPlayer *player, TKeys *keys)
 {
-    if ((cpct_isKeyPressed(keys->right)) && (player->hitDirH < MAX_DIR_H)) {
+    if ((cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right)) && (player->hitDirH < MAX_DIR_H)) {
         player->hitDirH++;
     }
-    if ((cpct_isKeyPressed(keys->left)) && (player->hitDirH > MIN_DIR_H)) {
+    if ((cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left)) && (player->hitDirH > MIN_DIR_H)) {
         player->hitDirH--;
     }
     if (player->hit > 0)
@@ -349,46 +349,46 @@ void serving(TPlayer *player)
 
 void stopped(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
 {
-    if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->right)))
+    if ((cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right)))
     {
         walking_enter(M_right, player);
     }
-    else if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->left)))
+    else if ((cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left)))
     {
         walking_enter(M_left, player);
     }
-    else if ((cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(keys->right)))
+    else if ((cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right)))
     {
         walking_enter(M_right, player);
     }
-    else if ((cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(keys->left)))
+    else if ((cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left)))
     {
         walking_enter(M_left, player);
     }
-    else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->up)))
+    else if ((player->phase == GM_play) && (cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(keys->up)))
     {
         walking_enter(player->look, player);
     }
-    else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->down)))
+    else if ((player->phase == GM_play) && (cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(keys->down)))
     {
         walking_enter(player->look, player);
     }
-    else if (cpct_isKeyPressed(keys->right))
+    else if (cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right))
     {
         walking_enter(M_right, player);
     }
-    else if (cpct_isKeyPressed(keys->left))
+    else if (cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left))
     {
         walking_enter(M_left, player);
     }
-    else if (cpct_isKeyPressed(keys->fire1))
+    else if (cpct_isKeyPressed(Joy0_Fire1) || cpct_isKeyPressed(keys->fire1))
     {
         if (player->phase == GM_play)
             hitting_enter(player, ball);
         else
             serving_enter(player);
     }
-    else if (cpct_isKeyPressed(keys->fire2))
+    else if (cpct_isKeyPressed(Joy0_Fire2) || cpct_isKeyPressed(keys->fire2))
     {
         waitKeyUp(keys->fire2);
         newBall(playerAI->e.x[0] + (playerAI->e.w / 2), playerAI->e.y[0] + (playerAI->e.h / 2), ball);
@@ -419,63 +419,63 @@ void down_animate(TPlayer *player)
     player->e.draw = 1;
 }
 
-void walking(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
+void walking(TPlayer *player, TBall *ball, TKeys *keys)
 {
     u8 moved = 0;
-    if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->right)))
+    if ((cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right)))
     {
         moveUp(player, player->vstep);
         moveRight(player, player->hstep);
         walking_animate(M_right, player);
         moved = 1;
     }
-    else if ((cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(keys->left)))
+    else if (cpct_isKeyPressed(Joy0_Up) || (cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left)))
     {
         moveUp(player, player->vstep);
         moveLeft(player, player->hstep);
         walking_animate(M_left, player);
         moved = 1;
     }
-    else if ((cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(keys->right)))
+    else if ((cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right)))
     {
         moveDown(player, player->vstep);
         moveRight(player, player->hstep);
         walking_animate(M_right, player);
         moved = 1;
     }
-    else if ((cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(keys->left)))
+    else if (cpct_isKeyPressed(Joy0_Down) || (cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left)))
     {
         moveDown(player, player->vstep);
         moveLeft(player, player->hstep);
         moved = 1;
     }
-    else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->up)))
+    else if ((player->phase == GM_play) && (cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(keys->up)))
     {
         moveUp(player, player->vstep);
         up_animate(player);
         moved = 1;
     }
-    else if ((player->phase == GM_play) && (cpct_isKeyPressed(keys->down)))
+    else if ((player->phase == GM_play) && (cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(keys->down)))
     {
         moveDown(player, player->vstep);
         down_animate(player);
         moved = 1;
     }
-    else if (cpct_isKeyPressed(keys->right))
+    else if (cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right))
     {
         moveRight(player, player->hstep);
         walking_animate(M_right, player);
         moved = 1;
     }
-    else if (cpct_isKeyPressed(keys->left))
+    else if (cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left))
     {
         moveLeft(player, player->hstep);
         walking_animate(M_left, player);
         moved = 1;
     }
-    if (cpct_isKeyPressed(keys->fire1))
+    if (cpct_isKeyPressed(Joy0_Fire1) || cpct_isKeyPressed(keys->fire1))
     {
-        if (player->side = SD_down) {
+        if (player->side == SD_down) {
             player->look = M_up;
         } else {
             player->look = M_down;
@@ -483,12 +483,10 @@ void walking(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
         hitting_enter(player, ball);
         moved = 1;
     }
-    if (cpct_isKeyPressed(keys->fire2))
+    if (cpct_isKeyPressed(Joy0_Fire2) || cpct_isKeyPressed(keys->fire2))
     {
-        //newBall(player->e.x[0], player->e.y[0], ball);
         waitKeyUp(keys->fire2);
         newBall(40 * SCALE, 40 , ball);
-        //setAITarget(ball->bouncex, ball->bouncey, playerAI);
         moved = 1;
     }
     if (!moved)
@@ -500,17 +498,17 @@ void walking(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
 
 void preparing(TPlayer *player, TKeys *keys)
 {
-    if (cpct_isKeyPressed(keys->right))
+    if (cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right))
     {
         moveRight(player, player->hstep);
         walking_animate(M_right, player);
     }
-    else if (cpct_isKeyPressed(keys->left))
+    else if (cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left))
     {
         moveLeft(player, player->hstep);
         walking_animate(M_left, player);
     }
-    else if (cpct_isKeyPressed(keys->fire1))
+    else if (cpct_isKeyPressed(Joy0_Fire1) || cpct_isKeyPressed(keys->fire1))
     {
         serving_enter(player);
     }
@@ -529,7 +527,7 @@ void executeState(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
         stopped(player, playerAI, ball, keys);
         break;
     case ST_walking:
-        walking(player, playerAI, ball, keys);
+        walking(player, ball, keys);
         break;
     case ST_hitting:
     case ST_hitting_back:

@@ -54,11 +54,6 @@ void bodyTouch(TBall *ball) {
     ball->vy = -ball->vy * (FRICTION / 6);
     ball->vz = ball->vz * (FRICTION / 6);
     calcBounce(ball);
-    //pvideo = cpct_getScreenPtr(SCR_VMEM, 22, 76);
-    //cpct_drawSolidBox(pvideo, #0, 22, 10);
-    //drawText("   HIT   ", 24,80,0);
-    //delay(340);
-    //cpct_etm_drawTileBox2x4 (11, 19, 21, 3, MAP_WIDTH, g_scrbuffers[0], court);
 }
 
 //
@@ -119,6 +114,8 @@ void practice(TKeys *keys)
 {
     initPractice();
     
+    activateBallMachine();
+    
      while (1)
     {
         //Abort Game
@@ -141,35 +138,18 @@ void practice(TKeys *keys)
         selectSpritePlayer(&player1, 0);
         // Ball block
         //if ((ball.active) && (c % 2 == 0)) {
+        updateBallMachine(&ball);
         if (ball.active) {
             updateBall(&ball);
             // Check collision with players
             if (ball.e.rz < (24 * SCALE))
             {
-                if (ball.e.y[0] > 100)
-                {
-                    if (player1.side == SD_down)
-                    {
-                        playerAux = &player1;
-                    } else
-                    {
-                        playerAux = &player2;
-                    }
-                } else
-                {
-                    if (player1.side == SD_up)
-                    {
-                        playerAux = &player1;
-                    } else
-                    {
-                        playerAux = &player2;
-                    }
-                }
-                checkPlayerCollision(&ball, playerAux);
+                checkPlayerCollision(&ball, &player1);
             }
         }
         updateDusts();
-        orderSpriteList();
+
+        //orderSpriteList();
         // Draw actors
         cpct_waitVSYNC();
         printSprites();
