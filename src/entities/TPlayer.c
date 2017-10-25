@@ -383,10 +383,17 @@ void stopped(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     }
     else if (cpct_isKeyPressed(Joy0_Fire1) || cpct_isKeyPressed(keys->fire1))
     {
-        if (player->phase == GM_play)
+        if (player->phase == GM_play){
+            if (player->side == SD_down) {
+                player->look = M_up;
+            } else {
+                player->look = M_down;
+            }
             hitting_enter(player, ball);
-        else
+        }
+        else{
             serving_enter(player);
+        }
     }
     else if (cpct_isKeyPressed(Joy0_Fire2) || cpct_isKeyPressed(keys->fire2))
     {

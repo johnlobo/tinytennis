@@ -99,13 +99,14 @@ void initPractice()
 {
     cpct_etm_setTileset2x4(tile_tileset);
     initPlayer1(&player1);
+    initAIPlayer(&player2);
     initBallMachine();
     initBall(&ball);
     initDustList();
     initSpriteList();
     addSprite(&player1.e);
     cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[0], court);
-    
+    createBallMachine(36,6);
     pauseGame = 0;
 }
 
@@ -113,8 +114,6 @@ void initPractice()
 void practice(TKeys *keys)
 {
     initPractice();
-    
-    activateBallMachine();
     
      while (1)
     {

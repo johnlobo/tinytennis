@@ -47,7 +47,8 @@ void createBallMachine(u8 x, u8 y){
     ballMachine.c.speed = 3;
     ballMachine.c. dir= 1;
     ballMachine.ballSpped = 1;
-    
+    ballMachine.active = 1; 
+
     
     pvideo = cpct_getScreenPtr(CPCT_VMEM_START, x, y);
     cpct_drawSprite(sp_machine, pvideo, SP_MACHINE_W, SP_MACHINE_H);
@@ -79,7 +80,7 @@ void updateBallMachine(TBall *ball){
         cpct_drawSprite(&(*cannon_frame[ballMachine.c.angle]), pvideo, SP_CANNON_0_W, SP_CANNON_0_H);   
         
         if (((c % ballMachine.c.speed) == 0) && (ball->active == 0)){
-             newBall(ballMachine.x + (SP_MACHINE_W / 2), ballMachine.y + (SP_MACHINE_H / 2), ball);
+             newBall(ballMachine.x + (SP_MACHINE_W / 2), ballMachine.y + (SP_MACHINE_H), ball);
         }
     }
     
