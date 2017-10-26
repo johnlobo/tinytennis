@@ -66,7 +66,6 @@ typedef enum { SD_up, SD_down } ESides;
 
 typedef struct
 {
-    ELook look;
     u8 *sprite;
 } TFrame;
 

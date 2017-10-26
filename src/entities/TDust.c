@@ -19,9 +19,9 @@
 #include "../defines.h"
 
 const TFrame d_frames[3] = {
-    { M_up, sp_dust_2 }  
-    ,   { M_up, sp_dust_1 }
-    ,   { M_up, sp_dust_0 }
+    { sp_dust_2 }  
+    ,   { sp_dust_1 }
+    ,   { sp_dust_0 }
 };
 
 TDustList dusts;

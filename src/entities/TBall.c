@@ -23,8 +23,8 @@
 #include "TDust.h"
 #include "../spriteList/spriteList.h"
 
-const TFrame b1_frame = { M_up, sp_ball_0 };
-const TFrame b2_frame = { M_up, sp_ball_1 };
+const TFrame b1_frame = { sp_ball_0 };
+const TFrame b2_frame = { sp_ball_1 };
 
 
 void calcBounce(TBall *ball)

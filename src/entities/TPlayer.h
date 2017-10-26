@@ -22,7 +22,7 @@
 #include "../util/util.h"
 #include "../keyboard/keyboard.h"
 
-#define MAX_DIR_H 10
+#define MAX_DIR_H 9
 #define MIN_DIR_H -10
 
 #define PLAYER_WIDTH   SP_PLAYER1_00_W

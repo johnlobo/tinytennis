@@ -88,20 +88,20 @@ void printSprites(){
     u8 i;
     
     for (i=0;i<MAX_SPRITE_LIST;i++){
-        //if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
-        if (spriteList.list[i] != 0x0000){
+        if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
+        //if (spriteList.list[i] != 0x0000){
             eraseEntity((TEntity*) &(*spriteList.list[i]));
         }
     }
     for (i=0;i<MAX_SPRITE_LIST;i++){
-        //if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
-        if (spriteList.list[i] != 0x0000){
+        if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
+        //if (spriteList.list[i] != 0x0000){
             drawEntity((TEntity*) &(*spriteList.list[i]));
         }
     }
     for (i=0;i<MAX_SPRITE_LIST;i++){
-        //if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
-        if (spriteList.list[i] != 0x0000){
+        if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
+        //if (spriteList.list[i] != 0x0000){
             entityUpdate((TEntity*) &(*spriteList.list[i]));
         }
     }

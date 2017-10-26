@@ -54,33 +54,38 @@ const TPlayer tempPlayer1 =
 
 const TFrame g_frames[2][PLAYER_FRAMES] = {
     {
-        { M_right, sp_player1_00 },  { M_right, sp_player1_01 }
-        ,  { M_right, sp_player1_02 },  { M_right, sp_player1_03 }
-        ,  { M_right, sp_player1_04 },  { M_right, sp_player1_05 }
-        ,  { M_right, sp_player1_06 },  { M_right, sp_player1_07 }
-        ,  { M_right, sp_player1_08 },  { M_right, sp_player1_09 }
-        ,  { M_right, sp_player1_10 },  { M_right, sp_player1_11 }
-        ,  { M_right, sp_player1_12 },  { M_right, sp_player1_13 }
-        ,  { M_right, sp_player1_14 },  { M_right, sp_player1_15 }
-        ,  { M_right, sp_player1_16 },  { M_right, sp_player1_17 }
+        { sp_player1_00 },  { sp_player1_01 }
+        ,  { sp_player1_02 },  { sp_player1_03 }
+        ,  { sp_player1_04 },  { sp_player1_05 }
+        ,  { sp_player1_06 },  { sp_player1_07 }
+        ,  { sp_player1_08 },  { sp_player1_09 }
+        ,  { sp_player1_10 },  { sp_player1_11 }
+        ,  { sp_player1_12 },  { sp_player1_13 }
+        ,  { sp_player1_14 },  { sp_player1_15 }
+        ,  { sp_player1_16 },  { sp_player1_17 }
     },
     {
-        { M_right, sp_player2_00 },  { M_right, sp_player2_01 }
-        ,  { M_right, sp_player2_02 },  { M_right, sp_player2_03 }
-        ,  { M_right, sp_player2_04 },  { M_right, sp_player2_05 }
-        ,  { M_right, sp_player2_06 },  { M_right, sp_player2_07 }
-        ,  { M_right, sp_player2_08 },  { M_right, sp_player2_09 }
-        ,  { M_right, sp_player2_10 },  { M_right, sp_player2_11 }
-        ,  { M_right, sp_player2_12 },  { M_right, sp_player2_13 }
-        ,  { M_right, sp_player2_14 },  { M_right, sp_player2_15 }
-        ,  { M_right, sp_player2_16 },  { M_right, sp_player2_17 }
+        { sp_player2_00 },  { sp_player2_01 }
+        ,  { sp_player2_02 },  {  sp_player2_03 }
+        ,  { sp_player2_04 },  {  sp_player2_05 }
+        ,  { sp_player2_06 },  {  sp_player2_07 }
+        ,  { sp_player2_08 },  {  sp_player2_09 }
+        ,  { sp_player2_10 },  {  sp_player2_11 }
+        ,  { sp_player2_12 },  {  sp_player2_13 }
+        ,  { sp_player2_14 },  {  sp_player2_15 }
+        ,  { sp_player2_16 },  {  sp_player2_17 }
     }
 };
 
 // Global Variables
-TFrame *const anim_walking[2][WALKING_FRAMES] = {
+TFrame *const anim_walking_right[2][WALKING_FRAMES] = {
     {&g_frames[0][1], &g_frames[0][2], &g_frames[0][3], &g_frames[0][1]},
     {&g_frames[1][1], &g_frames[1][2], &g_frames[1][3], &g_frames[1][1] }
+};
+
+TFrame *const anim_walking_left[2][WALKING_FRAMES] = {
+    {&g_frames[0][4], &g_frames[0][5], &g_frames[0][6], &g_frames[0][4]},
+    {&g_frames[1][4], &g_frames[1][5], &g_frames[1][6], &g_frames[1][4] }
 };
 
 TFrame *const anim_up[2][UP_FRAMES] = {
@@ -123,15 +128,6 @@ void assignFrame(TFrame **animation, TPlayer *player, u8 pause)
     player->e.frame = animation[player->nframe / pause];
 }
 
-void turnFrame(TPlayer *player)
-{
-    TFrame *f = player->e.frame;
-    if (f->look != player->look)
-    {
-        cpct_hflipSpriteM0(player->e.w, player->e.h, f->sprite);
-        f->look = player->look;
-    }
-}
 void selectSpritePlayer(TPlayer *player, u8 ai)
 {
     switch (player->state)
@@ -160,10 +156,11 @@ void selectSpritePlayer(TPlayer *player, u8 ai)
         {
             assignFrame(anim_down[ai], player, ANIM_PAUSE);
         }
-        else
+        else if (player->look == M_right)
         {
-            assignFrame(anim_walking[ai], player, ANIM_PAUSE);
-            turnFrame(player);
+            assignFrame(anim_walking_right[ai], player, ANIM_PAUSE);
+        } else {
+            assignFrame(anim_walking_left[ai], player, ANIM_PAUSE);
         }
         break;
     }
@@ -301,10 +298,10 @@ void hitting_animate(TPlayer *player)
 void hitting(TPlayer *player, TKeys *keys)
 {
     if ((cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right)) && (player->hitDirH < MAX_DIR_H)) {
-        player->hitDirH++;
+        player->hitDirH+=2;
     }
     if ((cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left)) && (player->hitDirH > MIN_DIR_H)) {
-        player->hitDirH--;
+        player->hitDirH-=2;
     }
     if (player->hit > 0)
     {
@@ -398,7 +395,7 @@ void stopped(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     else if (cpct_isKeyPressed(Joy0_Fire2) || cpct_isKeyPressed(keys->fire2))
     {
         waitKeyUp(keys->fire2);
-        newBall(playerAI->e.x[0] + (playerAI->e.w / 2), playerAI->e.y[0] + (playerAI->e.h / 2), ball);
+        newBall(playerAI->e.x[0] + (playerAI->e.w / 2), playerAI->e.y[0] + (playerAI->e.h), ball);
         //setAITarget(ball->bouncex, ball->bouncey, playerAI);
     }
 }

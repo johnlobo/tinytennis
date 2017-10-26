@@ -22,7 +22,7 @@
 #include "../entities/TBall.h"
 
 const i8 bmAngles[5] = {-127, -64,  0, 64,  127};
-const TFrame bm_frame = { M_down, sp_machine };
+const TFrame bm_frame = { sp_machine };
 const u8 *cannon_frame[5] = {sp_cannon_0, sp_cannon_1, sp_cannon_2, sp_cannon_3, sp_cannon_4 };
 
 TBallMachine ballMachine;
