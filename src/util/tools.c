@@ -116,10 +116,10 @@ i16 sign(i16 x)
 // Returns:
 //    
 
-//u8 collision(u8 x1, u8 y1, u8 w1, u8 h1, u8 x2, u8 y2, u8 w2, u8 h2)
-//{
-//    return  ((y1 < y2 + h2) && (h1 + y1 > y2) && (x1 < x2 + w2) && (x1 + w1 > x2));
-//}
+u8 collision(u8 x1, u8 y1, u8 w1, u8 h1, u8 x2, u8 y2, u8 w2, u8 h2)
+{
+    return  ((y1 < y2 + h2) && (h1 + y1 > y2) && (x1 < x2 + w2) && (x1 + w1 > x2));
+}
 
 //////////////////////////////////////////////////////////////////
 // Name
@@ -130,7 +130,7 @@ i16 sign(i16 x)
 // Returns:
 //    
 
-u8 collision(TEntity *e1, TEntity *e2)
+u8 entityCollision(TEntity *e1, TEntity *e2)
 {
     return  ((e1->y[0] < e2->y[0] + e2->h) && (e1->h + e1->y[0] > e2->y[0]) && (e1->x[0] < e2->x[0] + e2->w) && (e1->x[0] + e1->w > e2->x[0]));
 }

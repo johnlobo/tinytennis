@@ -103,9 +103,11 @@ u8 checkBoundaries(TBall *ball) {
 
 u8 checkNet(TBall *ball) {
     u8 result = 0;
-    if (((ball->e.rz < (8 * SCALE)) && ((ball->e.x[0] > 10) && (ball->e.x[0] < 70 ))) &&
-            (((ball->e.y[1] >= 90) && (ball->e.y[0] < 90) && (ball->vy < 0)) ||
-             ((ball->e.y[1] <= 90) && (ball->e.y[0] > 90) && (ball->vy > 0))))
+    if (
+        (((ball->e.x[0] > 10) && (ball->e.x[0] < 70 ))) &&
+        (((ball->e.y[1] >= 90) && (ball->e.y[0] < 90) && (ball->vy < 0)) ||
+        ((ball->e.y[1] <= 90) && (ball->e.y[0] > 90) && (ball->vy > 0))))
+    //if (ball->e.x[0], ball->e.y[0], ball->e.w, ball->e.h, 10,90,60,)
     {
         ball->vx = ball->vx * (FRICTION / 4);
         ball->vy = -ball->vy * (FRICTION / 4);
@@ -150,12 +152,17 @@ void updateBall(TBall *ball)
     ball->e_ball.y[0] = ball->e_ball.ry / SCALE;
     // If ball is in the limits of the court, check collision with the net
     if ((ball->active) && (!checkBoundaries(ball))) {
-        checkNet(ball);
+        if (ball->e.rz < (8 * SCALE)){
+            checkNet(ball);
+        }
         // Check bounce
         if (((ball->e.rz / SCALE) == 0) && (ball->vz < 0))
         {
             if (ball->nBounces<4){
                 ball->nBounces++;
+                if (ball->nBounces>1){
+                    ball->live = 0;
+                }
                 createDust(ball->e.x[0], ball->e.y[0]);
                 ball->vx = ball->vx * FRICTION;
                 ball->vy = ball->vy * FRICTION;
@@ -214,6 +221,7 @@ void newBall(u8 x, u8 y, TBall *ball)
     ball->vy = (2 + (cpct_rand8() % 2)) * SCALE;
     ball->vz = (2 + (cpct_rand8() % 5)) * SCALE;
     ball->turn = 1;
+    ball->live = 1;
     ball->active = 1;
     ball->nBounces = 0;
     calcBounce(ball);

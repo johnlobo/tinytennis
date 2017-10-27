@@ -87,20 +87,20 @@ void entityUpdate(TEntity *e)
 void printSprites(){
     u8 i;
     
-    for (i=0;i<MAX_SPRITE_LIST;i++){
-        if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
+    for (i=0;i<spriteList.count;i++){
+        if (spriteList.list[i]->draw){
         //if (spriteList.list[i] != 0x0000){
             eraseEntity((TEntity*) &(*spriteList.list[i]));
         }
     }
-    for (i=0;i<MAX_SPRITE_LIST;i++){
-        if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
+    for (i=0;i<spriteList.count;i++){
+        if (spriteList.list[i]->draw){
         //if (spriteList.list[i] != 0x0000){
             drawEntity((TEntity*) &(*spriteList.list[i]));
         }
     }
-    for (i=0;i<MAX_SPRITE_LIST;i++){
-        if ((spriteList.list[i] != 0x0000) && (spriteList.list[i]->draw)){
+    for (i=0;i<spriteList.count;i++){
+        if (spriteList.list[i]->draw){
         //if (spriteList.list[i] != 0x0000){
             entityUpdate((TEntity*) &(*spriteList.list[i]));
         }
@@ -119,8 +119,12 @@ void deleteSprite(u8 id, u8 erase){
         if (erase){
            eraseEntity((TEntity*) &(*spriteList.list[i]));
         }
+        if (i<(spriteList.count-1)){
+            spriteList.list[i] = spriteList.list[spriteList.count];
+        } else {
+            cpct_memset(&spriteList.list[i], 0, 2);  // 2 is the size of a pointer
+        }
         spriteList.count--;
-        cpct_memset(&spriteList.list[i], 0, 2);  // 2 is the size of a pointer
     }
 }
 
