@@ -17,11 +17,9 @@
 #include "keyboard.h"
 #include "../text/text.h"
 
-
 const TKeys tempKeys = {    Key_CursorUp, Key_CursorDown, Key_CursorLeft, Key_CursorRight,
                             Key_Space, Key_Return, Key_H, Key_Esc, Key_M
                        };
-
 
 //////////////////////////////////////////////////////////////////
 // wait4UserKeypress

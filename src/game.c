@@ -35,16 +35,11 @@
 #include "sprites/court01.h"
 #include "levels/court01.h"
 
-
-//const i16 trajetoriesX[10] = {-128, -96, -64, -32, 0 , 0, 32, 64, 96, 128};
-
 TBall ball;
 TPlayer player1;
 TPlayer player2;
 TPlayer *playerAux;
 EGamePhases phase;
-u8 pauseGame;
-
 
 //
 // Body touch
@@ -60,6 +55,7 @@ void bodyTouch(TBall *ball) {
 // Player Shot
 //
 void shot(TBall *ball, TPlayer *player) {
+    ball->nBounces = 0;
     ball->vx = trajetoriesX[(player->hitDirH / 2) + 5];
     ball->vz = 3 * SCALE;
     if (player->look == M_up) {
@@ -67,10 +63,12 @@ void shot(TBall *ball, TPlayer *player) {
     } else {
         ball->vy = 3 * SCALE;
     }
-    ball->turn = 2;
     calcBounce(ball);
     if (player->e.id == 1){
+        ball->turn = 2;
         setAITarget(ball->bouncex - (player->e.w / 2), ball->bouncey - player->e.h, &player2);
+    } else {
+        ball->turn = 1;
     }
 }
 
@@ -81,10 +79,10 @@ void shot(TBall *ball, TPlayer *player) {
 void checkPlayerCollision(TBall *ball, TPlayer *player) {
     u8 hit;
     //hit = fast_collision(px, py, player->e.w, player->e.h, bx, by, ball->e.w, ball->e.h);
-    hit = collision(&player->e, &ball->e);
+    hit = entityCollision(&player->e, &ball->e);
     if (hit) {
         player->e.draw = 1;
-        if (player->hit > 0) {
+        if ((player->e.id == ball->turn) && (player->hit > 0)) {
             shot(ball, player);
         } else {
             bodyTouch(ball);
@@ -94,7 +92,10 @@ void checkPlayerCollision(TBall *ball, TPlayer *player) {
     }
 }
 
-// Init Game
+//
+// Init Practice
+//
+
 void initPractice()
 {
     cpct_etm_setTileset2x4(tile_tileset);
@@ -107,12 +108,17 @@ void initPractice()
     addSprite(&player1.e);
     cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[0], court);
     createBallMachine(36,6);
-    pauseGame = 0;
 }
 
-// Game Loop
+//
+// Practice Loop
+//
+
 void practice(TKeys *keys)
 {
+    u8 pauseGame = 0;
+    u8 abortGame = 0;
+    
     initPractice();
     
      while (1)
@@ -155,10 +161,13 @@ void practice(TKeys *keys)
     }
 }
 
-// Init Game
-void initGame()
+
+//
+// Init Point
+//
+
+void initPoint()
 {
-    cpct_etm_setTileset2x4(tile_tileset);
     initPlayer1(&player1);
     initAIPlayer(&player2);
     initBall(&ball);
@@ -167,26 +176,30 @@ void initGame()
     addSprite(&player1.e);
     addSprite(&player2.e);
     cpct_etm_drawTilemap2x4_f(MAP_WIDTH, MAP_HEIGHT, g_scrbuffers[0], court);
-    pauseGame = 0;
 }
 
+//
+// playPoint
+//
 
-// Game Loop
-void game(TMatch *match, TKeys *keys)
+u8 playPoint(TKeys *keys)
 {
-    u32 c;
+    u32 c = 0;
+    u8 pointLive = 1;
+    u8 winner = 0;
+    u8 pauseGame = 0;
+    u8 abortGame = 0;
     //u8 *pvideo;
 
-    initGame();
-    //fadeIn(&sp_palette[0]);
-    c = 0;
+    initPoint();
+
     // Loop forever
-    while (1)
+    while ((pointLive == 1)  && (abortGame == 0))
     {
         c++;
         //Abort Game
         if (cpct_isKeyPressed(keys->abort)) {
-            break;
+            abortGame = 1;
         }
         // Pause Game
         if (cpct_isKeyPressed(keys->pause)) {
@@ -234,9 +247,58 @@ void game(TMatch *match, TKeys *keys)
             }
         }
         updateDusts();
-        orderSpriteList();
+        //orderSpriteList();
         // Draw actors
         cpct_waitVSYNC();
         printSprites();
+        
+        if ((ball.winner!=0) && (ball.active == 0)){
+            pointLive = 0;
+        }
+    }
+    
+    if (abortGame){
+        return 3;
+    } else {
+        return ball.winner;
+    }
+}
+
+//
+// Init Game
+//
+
+void initGame()
+{
+    cpct_etm_setTileset2x4(tile_tileset);
+    initPoint();
+}
+
+//
+// Game
+//
+
+void game(TMatch *match, TKeys *keys)
+{
+    u8 pointResult;
+    initGame();
+    
+    printScoreBoard(20,80,match);
+    wait4UserKeypress();
+    
+    while (match->finished == 0){
+        pointResult = playPoint(keys);
+        if (pointResult < 3){
+            addPoint(pointResult - 1, match);
+            printScoreBoard(20,80,match);
+            wait4UserKeypress();
+        }else{
+            break;
+        }
+    }
+    
+    if (match->finished){
+        drawText("MATCH FINISHED", 0,40,1);
+        drawText((u8*) &match->playersName[match->winner], 0,60,1);
     }
 }

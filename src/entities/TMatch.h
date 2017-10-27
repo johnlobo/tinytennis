@@ -33,11 +33,13 @@ typedef struct {
     u8 numberOfSets;
     u8 currentSet;
     u8 finished;
+    u8 winner;
 } TMatch;
 
 
 void initMatch(TMatch *match);
 void createMatch(u8 nSets, u8 *player1Name, u8 *player2Name, TMatch *match);
-u8 addPoint(u8 player, TMatch *match);
+void addPoint(u8 player1, TMatch *match);
+
 
 #endif

@@ -20,11 +20,19 @@
 
 void printScoreBoard(u8 x, u8 y, TMatch *match){
 	u8 *pvideo;
+	u8 i;
 
 	pvideo = cpct_getScreenPtr(SCR_VMEM, x, y);
-	cpct_drawSolidBox(SCR_VMEM, cpct_px2byteM0(4,4), 38, 20);
+	cpct_drawSolidBox(pvideo, cpct_px2byteM0(4,4), 38, 20);
 	pvideo = cpct_getScreenPtr(SCR_VMEM, x + 1, y + 2);
     cpct_drawSolidBox(pvideo, #0, 36, 16);
     drawText("PLAYER 1", x+2,y+3,0);
     drawText("PLAYER 2", x+2,y+9,0);
+	drawNumber(match->sets[i].games[0],1,x+20,y+3);
+	drawNumber(match->sets[i].games[1],1,x+20,y+9);
+	for (i=0; i<match->numberOfSets; i++){
+		drawNumber(match->sets[i].games[0],1,x+28+(i*3),y+3);
+		drawNumber(match->sets[i].games[1],1,x+28+(i*3),y+9);
+	}
+	
 }

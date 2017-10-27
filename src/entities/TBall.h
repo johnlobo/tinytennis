@@ -34,6 +34,7 @@ typedef struct
     u8 bouncex, bouncey;
     u8 nBounces;
     u8 live;
+    u8 winner;
     u8 active;
 } TBall;
 

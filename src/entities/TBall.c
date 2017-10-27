@@ -14,14 +14,15 @@
 //------------------------------------------------------------------------------
 
 #include <cpctelera.h>
-#include "TBall.h"
 #include "../defines.h"
-#include "../sprites/ball.h"
+#include "TBall.h"
+#include "TDust.h"
 #include "../util/video.h"
 #include "../util/util.h"
 #include "../levels/court01.h"
-#include "TDust.h"
 #include "../spriteList/spriteList.h"
+#include "../sprites/ball.h"
+#include "../text/text.h"
 
 const TFrame b1_frame = { sp_ball_0 };
 const TFrame b2_frame = { sp_ball_1 };
@@ -109,6 +110,7 @@ u8 checkNet(TBall *ball) {
         ((ball->e.y[1] <= 90) && (ball->e.y[0] > 90) && (ball->vy > 0))))
     //if (ball->e.x[0], ball->e.y[0], ball->e.w, ball->e.h, 10,90,60,)
     {
+        drawText("NET!!", 0,95,1);
         ball->vx = ball->vx * (FRICTION / 4);
         ball->vy = -ball->vy * (FRICTION / 4);
         ball->vz = ball->vz * (FRICTION / 4);
@@ -130,6 +132,15 @@ void deactivateBall(TBall *ball) {
     ball->active = 0;
 }
 
+
+u8 insideCourt(TBall *ball){
+    return (
+        (ball->e.x[0]>10) &&
+        (ball->e.x[0]<70) &&
+        (ball->e.y[0]>20) &&
+        (ball->e.y[0]<180) 
+    );
+}
 
 void updateBall(TBall *ball)
 {
@@ -160,8 +171,20 @@ void updateBall(TBall *ball)
         {
             if (ball->nBounces<4){
                 ball->nBounces++;
-                if (ball->nBounces>1){
+                if (ball->nBounces == 1){
+                    if (insideCourt(ball) == 0){  //BALL OUT
+                        drawText("OUT!!", 0,95,1);
+                        ball->live = 0;
+                        ball->winner = ball->turn;
+                    }
+                } else if (ball->live == 1) {  // POINT
+                    drawText("POINT!!", 0,95,1);
                     ball->live = 0;
+                    if (ball->turn == 2){
+                        ball->winner = 1;
+                    } else {
+                        ball->winner = 2;
+                    }
                 }
                 createDust(ball->e.x[0], ball->e.y[0]);
                 ball->vx = ball->vx * FRICTION;

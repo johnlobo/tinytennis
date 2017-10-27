@@ -75,6 +75,8 @@ void createMatch(u8 nSets, u8 *player1Name, u8 *player2Name, TMatch *match){
     strCopy(player2Name, (u8*) match->playersName[1]);
     
     match->numberOfSets = nSets;
+    
+    match->finished = 0;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -85,7 +87,7 @@ void createMatch(u8 nSets, u8 *player1Name, u8 *player2Name, TMatch *match){
 // Returns:
 //    
 //
-u8 addPoint(u8 player1, TMatch *match){
+void addPoint(u8 player1, TMatch *match){
     u8 player2 = !player1;
     
     if (match->game.finished){
@@ -93,9 +95,14 @@ u8 addPoint(u8 player1, TMatch *match){
     }
     match->game.points[player1]++;
     if ((match->game.points[player1]>4) ||
-       ((match->game.points[player1]>3) && (match->game.points[player2]<3))){
-           match->game.finished = 1;
-           return 1;
+       ((match->game.points[player1]>3) && (match->game.points[player2]<3))){  // GAME WON
+            match->sets[match->currentSet].games[player1]++;
+            if ((match->sets[match->currentSet].games[player1]>5) && ((match->sets[match->currentSet].games[player1] - match->sets[match->currentSet].games[player2]>1))){ // SET WON
+                match->currentSet++;
+                if (match->currentSet >= match->numberOfSets){ // MATCH WON
+                    match->finished = 1;
+                    match->winner = player1;
+                }
+            }
         }
-    return 0;
 }

@@ -137,6 +137,11 @@ void playGameMenuOption() {
         seed++;
     cpct_srand(seed)
     //deActivateMusic();
+    
+    initMatch(&match);
+    
+    createMatch(3, "David", "AI", &match);
+    
     game(&match, &keys);
     //decompress((u8*)EXO_outlaws, (u8*)EXOBUFFER_ADDRESS);
     //loopMusic = TRUE
@@ -251,7 +256,6 @@ void initMain()
 
     // Initilize Keys
     initKeys(&keys);
-    initMatch(&match);
 }
 
 void main(void)
