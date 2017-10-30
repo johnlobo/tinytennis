@@ -19,9 +19,13 @@
 #include "../defines.h"
 #include "../entities/TPlayer.h"
 #include "../entities/TBall.h"
+#include "../sprites/player2.h"
 
 #define TARGET_CENTER_X 40
 #define TARGET_CENTER_Y 0
+
+#define PLAYER2_WIDTH   SP_PLAYER2_00_W
+#define PLAYER2_HEIGHT   SP_PLAYER2_00_H
 
 #define HIT_RANGE PLAYER_HEIGHT * 2
 

@@ -299,10 +299,10 @@ void hitting(TPlayer *player, TKeys *keys)
 {
     if ((cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right)) && (player->hitDirH < MAX_DIR_H)) {
         player->hitDirH+=2;
-    }
-    if ((cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left)) && (player->hitDirH > MIN_DIR_H)) {
+    }else if ((cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left)) && (player->hitDirH > MIN_DIR_H)) {
         player->hitDirH-=2;
     }
+    
     if (player->hit > 0)
     {
         player->hit--;

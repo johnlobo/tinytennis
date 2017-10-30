@@ -43,8 +43,8 @@ void initMatchGame(TMatch *match){
 void initMatch(TMatch *match){
     u8 i;
 
-    match->playersName[0][0] = '/0';
-    match->playersName[1][0] = '/0';
+    match->playersName[0][0] = '\0';
+    match->playersName[1][0] = '\0';
     
     for (i=0; i<5; i++){
         match->sets[i].games[0] = 0;
@@ -97,6 +97,7 @@ void addPoint(u8 player1, TMatch *match){
     if ((match->game.points[player1]>4) ||
        ((match->game.points[player1]>3) && (match->game.points[player2]<3))){  // GAME WON
             match->sets[match->currentSet].games[player1]++;
+            initMatchGame(match);
             if ((match->sets[match->currentSet].games[player1]>5) && ((match->sets[match->currentSet].games[player1] - match->sets[match->currentSet].games[player2]>1))){ // SET WON
                 match->currentSet++;
                 if (match->currentSet >= match->numberOfSets){ // MATCH WON

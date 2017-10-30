@@ -77,7 +77,7 @@ u8 strLength(u8 str[]) {
 
 void strCopy(u8 *str1, u8 *str2){
     u8 i = 0;
-    while (str1[i] != '/0'){
+    while (str1[i] != '\0'){
         str2[i] = str1[i];
         i++;
     } 

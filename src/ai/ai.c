@@ -26,7 +26,7 @@ const TPlayer tempAIPlayer =
 		,   { 40, 40 }
 		, 	{ 0, 0 }
 	 	,   40 * SCALE, 0, 0
-		,	PLAYER_WIDTH, PLAYER_HEIGHT
+		,	PLAYER2_WIDTH, PLAYER2_HEIGHT
 		,	&g_frames[1][12]
 		,	1
 	}

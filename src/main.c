@@ -140,7 +140,7 @@ void playGameMenuOption() {
     
     initMatch(&match);
     
-    createMatch(3, "David", "AI", &match);
+    createMatch(3, "DAVID\0", "AI\0", &match);
     
     game(&match, &keys);
     //decompress((u8*)EXO_outlaws, (u8*)EXOBUFFER_ADDRESS);

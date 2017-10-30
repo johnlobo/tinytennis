@@ -27,13 +27,14 @@ typedef struct {
 } TSet;
 
 typedef struct {
-    u8 playersName[2][20];
-    TSet sets[5];
-    TGame game;
     u8 numberOfSets;
     u8 currentSet;
     u8 finished;
     u8 winner;
+    TGame game;
+    TSet sets[5];
+    u8 playersName[2][20];
+    
 } TMatch;
 
 

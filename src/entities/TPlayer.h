@@ -32,7 +32,7 @@
 #define PLAYER_FRAMES   18
 // Animaciones
 #define ANIM_PAUSE      8
-#define ANIM_HIT_PAUSE  8
+#define ANIM_HIT_PAUSE  4
 #define WALKING_FRAMES  4
 #define UP_FRAMES       4
 #define DOWN_FRAMES     4
