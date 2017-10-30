@@ -19,6 +19,9 @@
 
 .globl _print_sprites
 _print_sprites::
+    push ix                 ;;Keep registers
+    push hl
+    push bc
     ld ix, #_spriteList     ;; load sprite list address in IX
     ld a, 0 (ix)            ;; check if the number of sprites is greater than one
     or a    
@@ -38,9 +41,11 @@ loop_sl_ps:
     pop bc
 next_sl_ps:
     pop ix                  ;; restore in ix the position in the spreite list
-    ld d, #0
-    ld e, #2
-    add ix, de              ;; jumps to the next item in the list
+    inc ix
+    inc ix                  ;; jumps to the next item in the list
     djnz loop_sl_ps         ;; if there are still some sprites to print get back to loop
 exit_sl_ps:
+    pop bc
+    pop hl
+    pop ix
     ret
