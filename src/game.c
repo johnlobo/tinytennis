@@ -250,6 +250,9 @@ u8 playPoint(TKeys *keys)
         //orderSpriteList();
         // Draw actors
         cpct_waitVSYNC();
+        
+        //print_sprites();
+        
         printSprites();
         
         if ((ball.winner!=0) && (ball.active == 0)){

@@ -25,6 +25,7 @@ typedef struct {
     TEntity *list[MAX_SPRITE_LIST];
 } TSpriteList;
     
+extern void print_sprites();
 
 void initSpriteList();
 void addSprite(TEntity *e);
