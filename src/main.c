@@ -120,7 +120,7 @@ void myInterruptHandler()
         cpct_scanKeyboard_if();
         break;
     case 5:
-        playMusic();
+        //playMusic();
     case 6:
         i = 0;
     }

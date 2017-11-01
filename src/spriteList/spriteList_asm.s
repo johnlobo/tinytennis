@@ -9,6 +9,7 @@
 .globl _drawEntity
 .globl _entityUpdate
 .globl _print_sprites
+.globl cpct_waitVSYNC_asm
 
 
 ;;
@@ -31,7 +32,7 @@ _print_sprites::
     ld ix, #_spriteList     ;; load sprite list address in IX
     ld a, 0 (ix)            ;; check if the number of sprites is greater than one
     or a    
-    jr z, exit_sl_ps
+    jp z, exit_sl_ps
     ld b,a                  ;; if so, load the number of sprites in B
     push bc
 loop1_sl_ps:
@@ -45,7 +46,7 @@ loop1_sl_ps:
     jr z, next1_sl_ps        ;; if draw = 0 skip the sprite
     push bc
     push hl
-    call	_eraseEntity
+    call _eraseEntity
     pop hl
     pop bc
 next1_sl_ps:
@@ -57,9 +58,9 @@ next1_sl_ps:
                             ;; Second Loop draw Sprites
                             ;;
     ld ix, #0               ;; move the value of bc store in teh stack to bc passing by IX
-	  add	ix,sp
+	add	ix,sp
     ld b, 1 (ix)
-     ld ix, #_spriteList     ;; load sprite list address in IX
+    ld ix, #_spriteList     ;; load sprite list address in IX
 loop2_sl_ps:
     ld l, 1 (ix)            ;; check the address of the first sprite in HL
     ld h, 2 (ix)            ;; check the address of the first sprite in HL
@@ -71,7 +72,7 @@ loop2_sl_ps:
     jr z, next2_sl_ps        ;; if draw = 0 skip the sprite
     push bc
     push hl
-    call	_drawEntity
+    call _drawEntity
     pop hl
     pop bc
 next2_sl_ps:
@@ -83,9 +84,9 @@ next2_sl_ps:
                             ;; Third Loop update Sprites
                             ;;
     ld ix, #0               ;; move the value of bc store in teh stack to bc passing by IX
-	  add	ix,sp
+	add	ix,sp
     ld b, 1 (ix)
-     ld ix, #_spriteList     ;; load sprite list address in IX
+    ld ix, #_spriteList     ;; load sprite list address in IX
 loop3_sl_ps:
     ld l, 1 (ix)            ;; check the address of the first sprite in HL
     ld h, 2 (ix)            ;; check the address of the first sprite in HL
@@ -108,10 +109,7 @@ next3_sl_ps:
                             ;;
                             ;; End of routine
                             ;;
-                            ;;
-                            ;; End of routine
-                            ;;
-    exit_sl_ps:
+exit_sl_ps:
     pop bc
     pop bc
     pop hl
