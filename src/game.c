@@ -55,7 +55,9 @@ void bodyTouch(TBall *ball) {
 // Player Shot
 //
 void shot(TBall *ball, TPlayer *player) {
-    ball->nBounces = 0;
+    if (ball->live){
+        ball->nBounces = 0;
+    }
     ball->vx = trajetoriesX[(player->hitDirH / 2) + 5];
     ball->vz = 3 * SCALE;
     if (player->look == M_up) {
@@ -88,7 +90,7 @@ void checkPlayerCollision(TBall *ball, TPlayer *player) {
             bodyTouch(ball);
         }
     } else {
-        cpct_etm_drawTileBox2x4 (11, 19, 21, 3, MAP_WIDTH, g_scrbuffers[0], court);
+        //cpct_etm_drawTileBox2x4 (11, 19, 21, 3, MAP_WIDTH, g_scrbuffers[0], court);
     }
 }
 
@@ -251,9 +253,9 @@ u8 playPoint(TKeys *keys)
         // Draw actors
         //cpct_waitVSYNC();
         
-        print_sprites();
+        //print_sprites();
         
-        //printSprites();
+        printSprites();
         
         if ((ball.winner!=0) && (ball.active == 0)){
             pointLive = 0;

@@ -110,12 +110,14 @@ u8 checkNet(TBall *ball) {
         ((ball->e.y[1] <= 90) && (ball->e.y[0] > 90) && (ball->vy > 0))))
     //if (ball->e.x[0], ball->e.y[0], ball->e.w, ball->e.h, 10,90,60,)
     {
-        drawText("NET!!", 0,95,1);
+        drawText("NET", 0,95,1);
         ball->vx = ball->vx * (FRICTION / 4);
         ball->vy = -ball->vy * (FRICTION / 4);
         ball->vz = ball->vz * (FRICTION / 4);
         calcBounce(ball);
         result = 1;
+        ball->live = 0;
+        ball->winner = ball->turn;
     }
     return result;
 }
@@ -173,12 +175,12 @@ void updateBall(TBall *ball)
                 ball->nBounces++;
                 if (ball->nBounces == 1){
                     if (insideCourt(ball) == 0){  //BALL OUT
-                        drawText("OUT!!", 0,95,1);
+                        drawText("OUT", 0,95,1);
                         ball->live = 0;
                         ball->winner = ball->turn;
                     }
                 } else if (ball->live == 1) {  // POINT
-                    drawText("POINT!!", 0,95,1);
+                    drawText("POINT", 0,95,1);
                     ball->live = 0;
                     if (ball->turn == 2){
                         ball->winner = 1;
@@ -240,9 +242,9 @@ void newBall(u8 x, u8 y, TBall *ball)
     ball->e_ball.h = BALL_HEIGHT;
     ball->e_ball.draw = 1;
     //common
-    ball->vx = trajetoriesX[cpct_rand8() % 10];
-    ball->vy = (2 + (cpct_rand8() % 2)) * SCALE;
-    ball->vz = (2 + (cpct_rand8() % 5)) * SCALE;
+    ball->vx = trajetoriesX[(cpct_rand8() % 6) + 2];
+    ball->vy = (2 + (cpct_rand8() % 2)) * (SCALE / 2);
+    ball->vz = (3 + (cpct_rand8() % 5)) * SCALE;
     ball->turn = 1;
     ball->live = 1;
     ball->active = 1;
