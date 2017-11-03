@@ -23,95 +23,97 @@
 ;;
 
 _print_sprites::
-    push ix                 ;;Keep registers
-    push hl
-    push bc 
                             ;;
                             ;; First Loop erase Sprites
-                            ;;
-    ld ix, #_spriteList     ;; load sprite list address in IX
-    ld a, 0 (ix)            ;; check if the number of sprites is greater than one
-    or a    
-    jp z, exit_sl_ps
+							;;
+	ld hl, #_spriteList
+    ld a, (hl)
+	or a, a
+	ret	Z        			;;
     ld b,a                  ;; if so, load the number of sprites in B
     push bc
 loop1_sl_ps:
-    ld l, 1 (ix)            ;; check the address of the first sprite in HL
-    ld h, 2 (ix)            ;; check the address of the first sprite in HL
-    push ix                 ;; saves IX
-    push hl                 ;; loads the adress for the first sprite in IX
-    pop ix
-    ld a, 15 (ix)           ;; check if "draw" value
-    or a
-    jr z, next1_sl_ps        ;; if draw = 0 skip the sprite
-    push bc
-    push hl
-    call _eraseEntity
-    pop hl
-    pop bc
+	inc hl
+    ld e, (hl)            ;; check the address of the first sprite in HL
+	inc hl
+	ld d, (hl)            ;; check the address of the first sprite in HL
+	push hl
+	ex de, hl
+	push bc
+	ld bc, #15
+	add hl, bc
+	ld a, (hl)           ;; check if "draw" value
+	or a
+	jr z, next1_sl_ps        ;; if draw = 0 skip the sprite
+	sbc hl, bc
+	push hl
+	call _eraseEntity
+	pop hl
 next1_sl_ps:
-    pop ix                  ;; restore in ix the position in the spreite list
-    inc ix
-    inc ix                  ;; jumps to the next item in the list
-    djnz loop1_sl_ps        ;; if there are still some sprites to print get back to loop
+	pop bc
+	pop hl
+	djnz loop1_sl_ps        ;; if there are still some sprites to print get back to loop
                             ;;
                             ;; Second Loop draw Sprites
                             ;;
-    ld ix, #0               ;; move the value of bc store in teh stack to bc passing by IX
-	add	ix,sp
-    ld b, 1 (ix)
-    ld ix, #_spriteList     ;; load sprite list address in IX
+    ld hl, #0               ;; move the value of bc store in teh stack to bc passing by HL
+	add	hl,sp
+	inc hl
+    ld b, (hl)
+	ld hl, #_spriteList
 loop2_sl_ps:
-    ld l, 1 (ix)            ;; check the address of the first sprite in HL
-    ld h, 2 (ix)            ;; check the address of the first sprite in HL
-    push ix                 ;; saves IX
-    push hl                 ;; loads the adress for the first sprite in IX
-    pop ix
-    ld a, 15 (ix)           ;; check if "draw" value
-    or a
-    jr z, next2_sl_ps        ;; if draw = 0 skip the sprite
-    push bc
-    push hl
-    call _drawEntity
-    pop hl
-    pop bc
-next2_sl_ps:
-    pop ix                  ;; restore in ix the position in the spreite list
-    inc ix
-    inc ix                  ;; jumps to the next item in the list
-    djnz loop2_sl_ps
+	inc hl
+    ld e, (hl)            ;; check the address of the first sprite in HL
+	inc hl
+	ld d, (hl)            ;; check the address of the first sprite in HL
+	push hl
+	ex de, hl
+	push bc
+	ld bc, #15
+	add hl, bc
+	ld a, (hl)           ;; check if "draw" value
+	or a
+	jr z, next2_s1_ps        ;; if draw = 0 skip the sprite
+	sbc hl, bc
+	push hl
+	call _drawEntity
+	pop hl
+next2_s1_ps:
+	pop bc
+	pop hl
+	djnz loop2_sl_ps        ;; if there are still some sprites to print get back to loop
                             ;;
                             ;; Third Loop update Sprites
                             ;;
-    ld ix, #0               ;; move the value of bc store in teh stack to bc passing by IX
-	add	ix,sp
-    ld b, 1 (ix)
-    ld ix, #_spriteList     ;; load sprite list address in IX
+    ld hl, #0               ;; move the value of bc store in teh stack to bc passing by HL
+	add	hl,sp
+	inc hl
+    ld b, (hl)
+	ld hl, #_spriteList
 loop3_sl_ps:
-    ld l, 1 (ix)            ;; check the address of the first sprite in HL
-    ld h, 2 (ix)            ;; check the address of the first sprite in HL
-    push ix                 ;; saves IX
-    push hl                 ;; loads the adress for the first sprite in IX
-    pop ix
-    ld a, 15 (ix)           ;; check if "draw" value
-    or a
-    jr z, next3_sl_ps        ;; if draw = 0 skip the sprite
-    push bc
-    push hl
-    call _entityUpdate
-    pop hl
-    pop bc
+	inc hl
+    ld e, (hl)            ;; check the address of the first sprite in HL
+	inc hl
+	ld d, (hl)            ;; check the address of the first sprite in HL
+	push hl
+	ex de, hl
+	push bc
+	ld bc, #15
+	add hl, bc
+	ld a, (hl)           ;; check if "draw" value
+	or a
+	jr z, next3_sl_ps        ;; if draw = 0 skip the sprite
+	sbc hl, bc
+	push hl
+	call _entityUpdate
+	pop hl
 next3_sl_ps:
-    pop ix                  ;; restore in ix the position in the spreite list
-    inc ix
-    inc ix                  ;; jumps to the next item in the list
-    djnz loop3_sl_ps
+	pop bc
+	pop hl
+	djnz loop3_sl_ps        ;; if there are still some sprites to print get back to loop
                             ;;
                             ;; End of routine
                             ;;
 exit_sl_ps:
     pop bc
-    pop bc
-    pop hl
-    pop ix
     ret
