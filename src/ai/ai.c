@@ -30,7 +30,6 @@ const TPlayer tempAIPlayer =
 		,	&g_frames[1][12]
 		,	1
 	}
-	,   256, 512
 	,   0
 	,   M_down
 	,	GM_play
@@ -39,7 +38,7 @@ const TPlayer tempAIPlayer =
 	,	0
 	,	0, 0
 	, {
-		255, 512, 255, 255 // Character definition
+		128, 256, 255, 255 // Character definition
 
 	}
 	, 0

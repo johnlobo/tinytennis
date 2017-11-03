@@ -48,7 +48,6 @@ typedef struct
 typedef struct
 {
     TEntity e;
-    i16 hstep, vstep;
     u8 nframe;
     ELook look;
     u8 phase;

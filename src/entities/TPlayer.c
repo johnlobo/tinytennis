@@ -36,7 +36,6 @@ const TPlayer tempPlayer1 =
         ,   &g_frames[0][0]
         ,   1
     }
-    ,   256, 512
     ,   0
     ,   M_up
     ,   GM_play
@@ -45,7 +44,7 @@ const TPlayer tempPlayer1 =
     ,   0
     ,   0, 0
     , {
-        255, 512, 255, 255
+        128, 256, 255, 255
     }
     , 0
     , 0, 0
@@ -225,28 +224,36 @@ void moveLeft(TPlayer *player, i16 step)
 
 void moveUp(TPlayer *player, i16 step)
 {
-    if ((player->e.ry - step) > (200 * SCALE))
-    {
+    if (((player->e.ry - step) > (200 * SCALE)) && (player->side == SD_up)) {
         player->e.ry = 0;
         player->e.y[0] = 0;
     }
+    else if (((player->e.ry - step) < (80 * SCALE)) && (player->side == SD_down)) {
+        player->e.ry = 80 * SCALE;
+        player->e.y[0] = 80;   
+    }    
     else
     {
         player->e.ry -= step;
         player->e.y[0] = player->e.ry / SCALE;
     }
-    //player->look  = M_right;
-    player->look = M_up;
     player->e.draw = 1;
 }
 
 void moveDown(TPlayer *player, i16 step)
 {
-    if ((((player->e.y[0] + player->e.h) * SCALE) + step) < (HEIGHT * SCALE))
-    {
+    if (((((player->e.y[0] + player->e.h) * SCALE) + step) > (HEIGHT * SCALE)) && (player->side == SD_down)){
+        player->e.ry = (HEIGHT - player->e.h) * SCALE;
+        player->e.y[0] = HEIGHT - player->e.h;
+        player->e.draw = 1;
+    } else if (((((player->e.y[0] + player->e.h) * SCALE) + step) > (80 * SCALE)) && (player->side == SD_up)){
+        player->e.ry = (80 - player->e.h) * SCALE;
+        player->e.y[0] = 80 - player->e.h;
+        player->e.draw = 1;
+    }
+    else{
         player->e.ry += step;
         player->e.y[0] = player->e.ry / SCALE;
-        player->look = M_down;
         player->e.draw = 1;
     }
 }
@@ -364,11 +371,11 @@ void stopped(TPlayer *player, TPlayer *playerAI, TBall *ball, TKeys *keys)
     }
     else if ((player->phase == GM_play) && (cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(keys->up)))
     {
-        walking_enter(player->look, player);
+        walking_enter(M_up, player);
     }
     else if ((player->phase == GM_play) && (cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(keys->down)))
     {
-        walking_enter(player->look, player);
+        walking_enter(M_down, player);
     }
     else if (cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right))
     {
@@ -428,52 +435,52 @@ void walking(TPlayer *player, TBall *ball, TKeys *keys)
     u8 moved = 0;
     if ((cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right)))
     {
-        moveUp(player, player->vstep);
-        moveRight(player, player->hstep);
+        moveUp(player, player->car.speedY);
+        moveRight(player, player->car.speedX);
         walking_animate(M_right, player);
         moved = 1;
     }
     else if (cpct_isKeyPressed(Joy0_Up) || (cpct_isKeyPressed(keys->up)) && (cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left)))
     {
-        moveUp(player, player->vstep);
-        moveLeft(player, player->hstep);
+        moveUp(player, player->car.speedY);
+        moveLeft(player, player->car.speedX);
         walking_animate(M_left, player);
         moved = 1;
     }
     else if ((cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right)))
     {
-        moveDown(player, player->vstep);
-        moveRight(player, player->hstep);
+        moveDown(player, player->car.speedY);
+        moveRight(player, player->car.speedX);
         walking_animate(M_right, player);
         moved = 1;
     }
     else if (cpct_isKeyPressed(Joy0_Down) || (cpct_isKeyPressed(keys->down)) && (cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left)))
     {
-        moveDown(player, player->vstep);
-        moveLeft(player, player->hstep);
+        moveDown(player, player->car.speedY);
+        moveLeft(player, player->car.speedX);
         moved = 1;
     }
     else if ((player->phase == GM_play) && (cpct_isKeyPressed(Joy0_Up) || cpct_isKeyPressed(keys->up)))
     {
-        moveUp(player, player->vstep);
+        moveUp(player, player->car.speedY);
         up_animate(player);
         moved = 1;
     }
     else if ((player->phase == GM_play) && (cpct_isKeyPressed(Joy0_Down) || cpct_isKeyPressed(keys->down)))
     {
-        moveDown(player, player->vstep);
+        moveDown(player, player->car.speedY);
         down_animate(player);
         moved = 1;
     }
     else if (cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right))
     {
-        moveRight(player, player->hstep);
+        moveRight(player, player->car.speedX);
         walking_animate(M_right, player);
         moved = 1;
     }
     else if (cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left))
     {
-        moveLeft(player, player->hstep);
+        moveLeft(player, player->car.speedX);
         walking_animate(M_left, player);
         moved = 1;
     }
@@ -504,12 +511,12 @@ void preparing(TPlayer *player, TKeys *keys)
 {
     if (cpct_isKeyPressed(Joy0_Right) || cpct_isKeyPressed(keys->right))
     {
-        moveRight(player, player->hstep);
+        moveRight(player, player->car.speedX);
         walking_animate(M_right, player);
     }
     else if (cpct_isKeyPressed(Joy0_Left) || cpct_isKeyPressed(keys->left))
     {
-        moveLeft(player, player->hstep);
+        moveLeft(player, player->car.speedX);
         walking_animate(M_left, player);
     }
     else if (cpct_isKeyPressed(Joy0_Fire1) || cpct_isKeyPressed(keys->fire1))
