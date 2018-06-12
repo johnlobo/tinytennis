@@ -22,6 +22,6 @@ u8 strLength(u8 str[]);
 void strCopy(u8 *str1, u8 *str2);
 void drawNumber(i32 aNumber, u8 length, u8 xPos, u8 yPos);
 void drawText(u8 text[], u8 xPos, u8 yPos, u8 centered);
-
+void showMessage(u8 text[], u8 x, u8 y);
 
 #endif

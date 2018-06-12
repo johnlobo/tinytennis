@@ -27,17 +27,17 @@ void printScoreBoard(u8 x, u8 y, TMatch *match){
 	u8 i;
 
 	pvideo = cpct_getScreenPtr(SCR_VMEM, x, y);
-	cpct_drawSolidBox(pvideo, cpct_px2byteM0(4,4), 38, 20);
+	cpct_drawSolidBox(pvideo, cpct_px2byteM0(4,4), 38, 21);
 	pvideo = cpct_getScreenPtr(SCR_VMEM, x + 1, y + 2);
-    cpct_drawSolidBox(pvideo, #0, 36, 16);
-    drawText((u8*) &match->playersName[0], x+2,y+3,0);
-    drawText((u8*) &match->playersName[1], x+2,y+9,0);
-	drawText((u8*) &pointsText[match->game.points[0]],x+22,y+3, 0);
-	drawText((u8*) &pointsText[match->game.points[1]],x+22,y+9 ,0
+    cpct_drawSolidBox(pvideo, #0, 36, 17);
+    drawText((u8*) &match->playersName[0], x+2,y+4,0);
+    drawText((u8*) &match->playersName[1], x+2,y+10,0);
+	drawText((u8*) &pointsText[match->game.points[0]],x+22,y+4, 0);
+	drawText((u8*) &pointsText[match->game.points[1]],x+22,y+10 ,0
 		);
 	for (i=0; i<match->numberOfSets; i++){
-		drawNumber(match->sets[i].games[0],1,x+28+(i*3),y+3);
-		drawNumber(match->sets[i].games[1],1,x+28+(i*3),y+9);
+		drawNumber(match->sets[i].games[0],1,x+28+(i*3),y+4);
+		drawNumber(match->sets[i].games[1],1,x+28+(i*3),y+10);
 	}
 	
 }

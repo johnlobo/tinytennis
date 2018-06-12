@@ -242,8 +242,8 @@ void newBall(u8 x, u8 y, TBall *ball)
     ball->e_ball.h = BALL_HEIGHT;
     ball->e_ball.draw = 1;
     //common
-    ball->vx = trajetoriesX[(cpct_rand8() % 6) + 2];
-    ball->vy = (2 + (cpct_rand8() % 2)) * (SCALE / 2);
+    ball->vx = trajetoriesX[(cpct_rand8() % 4) + 2];
+    ball->vy = (2 + (cpct_rand8() % 2)) * SCALE;
     ball->vz = (3 + (cpct_rand8() % 5)) * SCALE;
     ball->turn = 1;
     ball->live = 1;

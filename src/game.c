@@ -34,6 +34,7 @@
 #include "sprites/palette.h"
 #include "sprites/court01.h"
 #include "levels/court01.h"
+#include "text/text.h"
 
 TBall ball;
 TPlayer player1;
@@ -195,10 +196,12 @@ u8 playPoint(TKeys *keys)
 
     initPoint();
 
+    c = 0;
     // Loop forever
     while ((pointLive == 1)  && (abortGame == 0))
     {
         c++;
+        delay (1);
         //Abort Game
         if (cpct_isKeyPressed(keys->abort)) {
             abortGame = 1;
@@ -220,8 +223,8 @@ u8 playPoint(TKeys *keys)
         selectSpritePlayer(&player1, 0);
         selectSpritePlayer(&player2, 1);
         // Ball block
-        //if ((ball.active) && (c % 2 == 0)) {
-        if (ball.active) {
+        if ((ball.active) && (c % 4 == 0)) {
+        //if (ball.active) {
             updateBall(&ball);
             // Check collision with players
             if (ball.e.rz < (24 * SCALE))
@@ -303,7 +306,7 @@ void game(TMatch *match, TKeys *keys)
     }
     
     if (match->finished){
-        drawText("MATCH FINISHED", 0,40,1);
+        showMessage("MATCH FINISHED\0", 26,85);
         drawText((u8*) &match->playersName[match->winner], 0,60,1);
     }
 }

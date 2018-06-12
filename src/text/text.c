@@ -157,3 +157,24 @@ void drawText(u8 text[], u8 xPos, u8 yPos, u8 centered) {
         character = text[++x];
     }
 }
+
+//////////////////////////////////////////////////////////////////
+// showMessage
+//
+//  initializes the whole program
+//
+// Returns:
+//    void
+//
+
+void showMessage(u8 text[], u8 x, u8 y){
+    u8 *pvideo;
+    u8 length;
+
+    length = strLength(text);
+    pvideo = cpct_getScreenPtr(SCR_VMEM, x, y);
+    cpct_drawSolidBox(pvideo, cpct_px2byteM0(4,4), (length*2) + 4, 13);
+    pvideo = cpct_getScreenPtr(SCR_VMEM, x + 1, y + 2);
+    cpct_drawSolidBox(pvideo, #0, (length*2) + 2, 9);
+    drawText(text, x+2,y+4,0);
+}
